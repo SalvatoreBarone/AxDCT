@@ -8,7 +8,7 @@ int main(int argc, char** argv )
 
     Mat image = imread( argv[1], 1 );
 
-    assert( image.data && "No image data")
+    assert( image.data && "No image data");
 
     namedWindow("Original Image", WINDOW_AUTOSIZE );
     imshow("Original Image", image);
