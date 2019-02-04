@@ -19,32 +19,10 @@
 //
 
 /******************************************************************************
- * @file   main.cpp
+ * @file   main.h
  * @author Andrea Aletto
  * @date   4 feb 2019
- * @brief  Implementation of main executable functions
+ * @brief  Declaration of main executable functions
  ******************************************************************************/
 
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
-#include "main.h"
-
-using namespace cv;
-
-int main(int argc, char** argv )
-{
-    assert( argc == 2 && "usage: displayImg <Image_Path>\n");
-
-    Mat image = imread( argv[1], 1 );
-
-    assert( image.data && "No image data");
-
-    namedWindow("Original Image", WINDOW_AUTOSIZE );
-    imshow("Original Image", image);
-
-
-    //TODO: In image ho la matrice dei pixel dell'immagine
-    
-    waitKey(0);
-    return 0;
-}
+int dummy() { return 0; }

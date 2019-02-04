@@ -5,4 +5,6 @@ find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 add_executable( displayImg main.cpp )
+
+target_include_directories(displayImg PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries( displayImg ${OpenCV_LIBS} )
