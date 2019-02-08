@@ -24,5 +24,16 @@
  * @date   4 feb 2019
  * @brief  Declaration of main executable functions
  ******************************************************************************/
+#ifndef _MAIN_H
+#define _MAIN_H
 
 #include <iostream>
+#include <stdio.h>
+#include <opencv2/opencv.hpp>
+#include <stdio.h>
+#include <stdlib.h>
+
+void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type = CV_8U);
+cv::Mat **splitInTiles(const cv::Mat &input);
+
+#endif
