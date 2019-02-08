@@ -35,15 +35,18 @@ int main(int argc, char** argv )
 {
     assert( argc == 2 && "usage: displayImg <Image_Path>\n");
 
-    Mat image = imread( argv[1], 1 );
+    Mat originalImage = imread( argv[1], IMREAD_GRAYSCALE );
+    Mat image = imread( argv[1], IMREAD_GRAYSCALE );
 
-    assert( image.data && "No image data");
+    assert( originalImage.data && "No image data");
 
     namedWindow("Original Image", WINDOW_AUTOSIZE );
-    imshow("Original Image", image);
-
+    imshow("Original Image", originalImage);
 
     //TODO: In image ho la matrice dei pixel dell'immagine
+
+    namedWindow("Modified Image", WINDOW_AUTOSIZE );
+    imshow("Modified Image", image);
     
     waitKey(0);
     return 0;

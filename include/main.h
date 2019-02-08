@@ -25,4 +25,4 @@
  * @brief  Declaration of main executable functions
  ******************************************************************************/
 
-int dummy() { return 0; }
+#include <iostream>
