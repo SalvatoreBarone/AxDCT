@@ -34,6 +34,7 @@
 #include <stdlib.h>
 
 void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type = CV_8U);
-cv::Mat **splitInTiles(const cv::Mat &input);
+cv::Mat **splitInTiles(const cv::Mat &input, int blockSize);
+cv::Mat mergeTiles( cv::Mat **tiles, int imgWidth, int imgLength, int blockSize = 8, bool deallocTiles = true);
 
 #endif
