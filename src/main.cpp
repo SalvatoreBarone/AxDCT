@@ -31,7 +31,7 @@
 #define CHECKPOINT (cerr<<__PRETTY_FUNCTION__<<__LINE__<<endl)
 
 using namespace cv;
-using namespace std;;
+using namespace std;
 
 int main(int argc, char** argv )
 {
@@ -47,10 +47,21 @@ int main(int argc, char** argv )
 
     //TODO: In image ho la matrice dei pixel dell'immagine
 
+    //TODO: converto to ycbcr
 
     //matrix_mult(originalImage, cv::Mat::zeros(512,512,CV_8U), image, 0);
     int blockSize = 8;
     Mat **tiles = splitInTiles(originalImage, 8);
+
+    Mat T;
+
+    retrieveParameters(AxDCT_Algorithm::BC12, T);
+
+    for(int i=0;i<originalImage.rows/blockSize;i++){
+        for(int j=0;j<originalImage.cols/blockSize;j++){
+            AxDCT(tiles[i][j], T, tiles[i][j]);
+        }
+    }
     
     for(int i=0;i<originalImage.rows/blockSize;i++){
         for(int j=0;j<originalImage.cols/blockSize;j++){
@@ -116,4 +127,61 @@ cv::Mat mergeTiles(cv::Mat **tiles, int imgWidth, int imgLength, int blockSize, 
     }
 
     return ret;
+}
+
+void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output){
+    matrix_mult(T, tile, output);
+    matrix_mult(output, T, output);
+}
+
+void retrieveParameters(const AxDCT_Algorithm alg, cv::Mat& T){
+    switch (alg)
+    {
+        case AxDCT_Algorithm::BC12 :
+            T = cv::Mat::zeros(8,8,CV_8U);
+
+            T.at<unsigned char>(0, 0) = 1; 
+            T.at<unsigned char>(0, 1) = 1;
+            T.at<unsigned char>(0, 2) = 1;
+            T.at<unsigned char>(0, 3) = 1;
+            T.at<unsigned char>(0, 4) = 1;
+            T.at<unsigned char>(0, 5) = 1;
+            T.at<unsigned char>(0, 6) = 1;
+            T.at<unsigned char>(0, 7) = 1;
+
+            T.at<unsigned char>(1, 0) = 1; 
+            T.at<unsigned char>(1, 7) = -1;
+
+            T.at<unsigned char>(2, 0) = 1;
+            T.at<unsigned char>(2, 3) = -1;
+            T.at<unsigned char>(2, 4) = -1;
+            T.at<unsigned char>(2, 7) = 1;
+
+            T.at<unsigned char>(3, 2) = -1;
+            T.at<unsigned char>(3, 5) = -1;
+
+            T.at<unsigned char>(4, 0) = 1; 
+            T.at<unsigned char>(4, 1) = -1;
+            T.at<unsigned char>(4, 2) = -1;
+            T.at<unsigned char>(4, 3) = 1;
+            T.at<unsigned char>(4, 4) = 1;
+            T.at<unsigned char>(4, 5) = -1;
+            T.at<unsigned char>(4, 6) = -1;
+            T.at<unsigned char>(4, 7) = 1;
+
+            T.at<unsigned char>(5, 1) = -1;
+            T.at<unsigned char>(5, 6) = 1;
+
+            T.at<unsigned char>(6, 1) = -1;
+            T.at<unsigned char>(6, 2) = 1;
+            T.at<unsigned char>(6, 5) = 1;
+            T.at<unsigned char>(6, 6) = -1;
+
+            T.at<unsigned char>(7, 3) = -1;
+            T.at<unsigned char>(7, 4) = 1;
+            break;
+    
+        default:
+            break;
+    }
 }
