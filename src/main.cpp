@@ -74,7 +74,7 @@ void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type){
         for(int j=0; j<B.cols; j++){
             for(int k=0; k<A.cols; k++){
                 // RES[i][j] += A[i][k] * B[k][j];
-                RES.at<unsigned char>(i,j) += A.at<unsigned char>(i,k) * B.at<unsigned char>(k,j);
+                RES.at<unsigned char>(i,j) = RES.at<unsigned char>(i,j) + A.at<unsigned char>(i,k) * B.at<unsigned char>(k,j);
             }
         }
     }    
