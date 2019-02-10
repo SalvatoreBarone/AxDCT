@@ -35,68 +35,31 @@ int main(int argc, char** argv )
 {
     assert( argc == 2 && "usage: displayImg <Image_Path>\n");
 
+    // Load img
     cv::Mat bgrImg = imread( argv[1], cv::IMREAD_COLOR );
-    cv::Mat ycrcbImg(512,512,CV_8U);
-
     assert( bgrImg.data && "No image data");
 
-    cv::namedWindow("Original Image", cv::WINDOW_AUTOSIZE );
-    imshow("Original Image", bgrImg);
+    // Init an empty matrix of size 512x512 of uint8
+    cv::Mat ycrcbImg(512,512,CV_8U);
 
-    //TODO: In image ho la matrice dei pixel dell'immagine
-
-    //TODO: converto to ycbcr
+    // Convert to ycrcb
     cv::cvtColor(bgrImg, ycrcbImg, cv::COLOR_BGR2YCrCb);
+
+    // Split ycrcb into 3 channels
     cv::Mat chan[3];
     cv::split(ycrcbImg, chan);
 
-    int blockSize = 8;
-    cv::Mat **tiles = splitInTiles(chan[0], 8);
+    // Print first block for each channel
+    PRINT_MAT(chan[0](cv::Rect(0, 0, 8, 8)), "LUMA (first 8x8 block)")
+    PRINT_MAT(chan[1](cv::Rect(0, 0, 8, 8)), "Cr (first 8x8 block)")
+    PRINT_MAT(chan[2](cv::Rect(0, 0, 8, 8)), "Cb (first 8x8 block)")
 
-    cv::Mat T, D, Q;
+    // Show results 
+    cv::namedWindow("Original Image", cv::WINDOW_AUTOSIZE );
+    imshow("Original Image", bgrImg);
 
-    retrieveParameters(AxDCT_Algorithm::BC12, T, D, Q);
-
-    for(int i=0;i<chan[0].rows/blockSize;i++){
-        for(int j=0;j<chan[0].cols/blockSize;j++){
-            if(i==0 && j==0) {
-                PRINT_MAT(tiles[i][j], "original tile");
-            }
-            
-            AxDCT(tiles[i][j], T, tiles[i][j]);
-            if(i==0 && j==0) {
-                PRINT_MAT(tiles[i][j], "DCT unquantizated");
-            }
-
-            quantizate(tiles[i][j], D, Q, tiles[i][j]);
-            if(i==0 && j==0) {
-                PRINT_MAT(tiles[i][j], "DCT quantizated");
-            }
-
-            dequantizate(tiles[i][j], Q, tiles[i][j]);
-            cv::idct(tiles[i][j], tiles[i][j]);
-
-            //T' DFD T
-            // matrix_mult(D, tiles[i][j], tiles[i][j], CV_64FC1);
-            // matrix_mult(tiles[i][j], D, tiles[i][j], CV_64FC1);
-
-            // cv::Mat T_t;
-            // cv::transpose(T, T_t);
-            // matrix_mult(T_t, tiles[i][j], tiles[i][j], CV_64FC1);
-            // matrix_mult(tiles[i][j], T, tiles[i][j], CV_64FC1);
-            // tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            tiles[i][j] += 128;
-        }
-    }
-    
-    for(int i=0;i<chan[0].rows/blockSize;i++){
-        for(int j=0;j<chan[0].cols/blockSize;j++){
-            ycrcbImg = mergeTiles(tiles, chan[0].rows, chan[0].cols);
-        }
-    }
-
-    cv::namedWindow("Modified Image", cv::WINDOW_AUTOSIZE );
-    imshow("Modified Image", ycrcbImg);
+    cv::namedWindow("Converted Image", cv::WINDOW_AUTOSIZE );
+    imshow("Converted Image", ycrcbImg);
     
     cv::waitKey(0);
     return 0;
