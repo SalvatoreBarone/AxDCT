@@ -39,12 +39,13 @@ enum AxDCT_Algorithm{
     BC12
 };
 
-void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type = CV_8U);
+void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type = CV_64FC1);
 cv::Mat **splitInTiles(const cv::Mat &input, int blockSize);
 cv::Mat mergeTiles( cv::Mat **tiles, int imgWidth, int imgLength, int blockSize = 8, bool deallocTiles = true);
 void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output);
-void retrieveParameters(const AxDCT_Algorithm alg, cv::Mat& T);
-
+void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output);
+void retrieveParameters(const AxDCT_Algorithm alg, cv::Mat& T, cv::Mat& D, cv::Mat& Q);
+void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output);
 
 
 #endif

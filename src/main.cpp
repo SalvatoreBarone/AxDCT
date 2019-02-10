@@ -28,64 +28,90 @@
 #include "main.h"
 #include <stdio.h>
 
-#define CHECKPOINT (cerr<<__PRETTY_FUNCTION__<<__LINE__<<endl)
-
-using namespace cv;
-using namespace std;
+#define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl)
+#define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
 
 int main(int argc, char** argv )
 {
     assert( argc == 2 && "usage: displayImg <Image_Path>\n");
 
-    Mat originalImage = imread( argv[1], IMREAD_GRAYSCALE );
-    Mat image = imread( argv[1], IMREAD_GRAYSCALE );
+    cv::Mat bgrImg = imread( argv[1], cv::IMREAD_COLOR );
+    cv::Mat ycrcbImg(512,512,CV_8U);
 
-    assert( originalImage.data && "No image data");
+    assert( bgrImg.data && "No image data");
 
-    namedWindow("Original Image", WINDOW_AUTOSIZE );
-    imshow("Original Image", originalImage);
+    cv::namedWindow("Original Image", cv::WINDOW_AUTOSIZE );
+    imshow("Original Image", bgrImg);
 
     //TODO: In image ho la matrice dei pixel dell'immagine
 
     //TODO: converto to ycbcr
+    cv::cvtColor(bgrImg, ycrcbImg, cv::COLOR_BGR2YCrCb);
+    cv::Mat chan[3];
+    cv::split(ycrcbImg, chan);
 
-    //matrix_mult(originalImage, cv::Mat::zeros(512,512,CV_8U), image, 0);
     int blockSize = 8;
-    Mat **tiles = splitInTiles(originalImage, 8);
+    cv::Mat **tiles = splitInTiles(chan[0], 8);
 
-    Mat T;
+    cv::Mat T, D, Q;
 
-    retrieveParameters(AxDCT_Algorithm::BC12, T);
+    retrieveParameters(AxDCT_Algorithm::BC12, T, D, Q);
 
-    for(int i=0;i<originalImage.rows/blockSize;i++){
-        for(int j=0;j<originalImage.cols/blockSize;j++){
+    for(int i=0;i<chan[0].rows/blockSize;i++){
+        for(int j=0;j<chan[0].cols/blockSize;j++){
+            if(i==0 && j==0) {
+                PRINT_MAT(tiles[i][j], "original tile");
+            }
+            
             AxDCT(tiles[i][j], T, tiles[i][j]);
+            if(i==0 && j==0) {
+                PRINT_MAT(tiles[i][j], "DCT unquantizated");
+            }
+
+            quantizate(tiles[i][j], D, Q, tiles[i][j]);
+            if(i==0 && j==0) {
+                PRINT_MAT(tiles[i][j], "DCT quantizated");
+            }
+
+            dequantizate(tiles[i][j], Q, tiles[i][j]);
+            cv::idct(tiles[i][j], tiles[i][j]);
+
+            //T' DFD T
+            // matrix_mult(D, tiles[i][j], tiles[i][j], CV_64FC1);
+            // matrix_mult(tiles[i][j], D, tiles[i][j], CV_64FC1);
+
+            // cv::Mat T_t;
+            // cv::transpose(T, T_t);
+            // matrix_mult(T_t, tiles[i][j], tiles[i][j], CV_64FC1);
+            // matrix_mult(tiles[i][j], T, tiles[i][j], CV_64FC1);
+            // tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            tiles[i][j] += 128;
         }
     }
     
-    for(int i=0;i<originalImage.rows/blockSize;i++){
-        for(int j=0;j<originalImage.cols/blockSize;j++){
-            image = mergeTiles(tiles, originalImage.rows, originalImage.cols);
+    for(int i=0;i<chan[0].rows/blockSize;i++){
+        for(int j=0;j<chan[0].cols/blockSize;j++){
+            ycrcbImg = mergeTiles(tiles, chan[0].rows, chan[0].cols);
         }
     }
 
-    namedWindow("Modified Image", WINDOW_AUTOSIZE );
-    imshow("Modified Image", image);
+    cv::namedWindow("Modified Image", cv::WINDOW_AUTOSIZE );
+    imshow("Modified Image", ycrcbImg);
     
-    waitKey(0);
+    cv::waitKey(0);
     return 0;
 }
 
 void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type){
     assert((A.cols == B.rows) && "Bad product multiplication");
 
-    RES = Mat(A.rows, B.cols, type);
+    RES = cv::Mat(A.rows, B.cols, type);
 
     for(int i=0; i<A.rows; i++){
         for(int j=0; j<B.cols; j++){
             for(int k=0; k<A.cols; k++){
                 // RES[i][j] += A[i][k] * B[k][j];
-                RES.at<unsigned char>(i,j) = RES.at<unsigned char>(i,j) + A.at<unsigned char>(i,k) * B.at<unsigned char>(k,j);
+                RES.at<double>(i,j) = RES.at<double>(i,j) + A.at<double>(i,k) * B.at<double>(k,j);
             }
         }
     }    
@@ -97,7 +123,7 @@ cv::Mat **splitInTiles(const cv::Mat &input, int blockSize){
     int r=input.rows/blockSize;
     int c=input.cols/blockSize;
 
-    Mat **ret = new cv::Mat*[r];
+    cv::Mat **ret = new cv::Mat*[r];
 
     for(int i=0; i<r; i++){
         ret[i] = new cv::Mat[c];
@@ -117,7 +143,7 @@ cv::Mat mergeTiles(cv::Mat **tiles, int imgWidth, int imgLength, int blockSize, 
     assert((imgWidth % blockSize == 0) && "Width must be multiple of block size");
     assert((imgLength % blockSize == 0) && "Length must be multiple of block size");
 
-    cv::Mat ret(imgWidth, imgLength, CV_8U);
+    cv::Mat ret(imgWidth, imgLength, CV_64FC1);
 
     for(int i=0; i<imgWidth/blockSize; i++){
         for(int j=0; j<imgLength/blockSize; j++){
@@ -130,55 +156,157 @@ cv::Mat mergeTiles(cv::Mat **tiles, int imgWidth, int imgLength, int blockSize, 
 }
 
 void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output){
-    matrix_mult(T, tile, output);
-    matrix_mult(output, T, output);
+
+    cv::Mat T_t;
+    cv::transpose(T, T_t);
+    matrix_mult(T, tile-128, output);
+    matrix_mult(output, T_t, output);
 }
 
-void retrieveParameters(const AxDCT_Algorithm alg, cv::Mat& T){
+void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output){
+    cv::Mat tileDCT;
+    tile.convertTo(tileDCT, CV_64FC1);
+    matrix_mult(D, tileDCT, output, CV_64FC1);
+    matrix_mult(output, D, output, CV_64FC1);
+    output.mul(1/Q);
+}
+
+void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
+    tile.copyTo(output);
+    output.mul(Q);
+}
+
+
+void retrieveParameters(const AxDCT_Algorithm alg, cv::Mat& T, cv::Mat& D, cv::Mat& Q){
     switch (alg)
     {
         case AxDCT_Algorithm::BC12 :
-            T = cv::Mat::zeros(8,8,CV_8U);
+            T = cv::Mat::zeros(8,8,CV_64FC1);
+            D = cv::Mat::zeros(8,8,CV_64FC1);
+            Q = cv::Mat::zeros(8,8,CV_64FC1);
 
-            T.at<unsigned char>(0, 0) = 1; 
-            T.at<unsigned char>(0, 1) = 1;
-            T.at<unsigned char>(0, 2) = 1;
-            T.at<unsigned char>(0, 3) = 1;
-            T.at<unsigned char>(0, 4) = 1;
-            T.at<unsigned char>(0, 5) = 1;
-            T.at<unsigned char>(0, 6) = 1;
-            T.at<unsigned char>(0, 7) = 1;
+            T.at<double>(0, 0) = 1; 
+            T.at<double>(0, 1) = 1;
+            T.at<double>(0, 2) = 1;
+            T.at<double>(0, 3) = 1;
+            T.at<double>(0, 4) = 1;
+            T.at<double>(0, 5) = 1;
+            T.at<double>(0, 6) = 1;
+            T.at<double>(0, 7) = 1;
 
-            T.at<unsigned char>(1, 0) = 1; 
-            T.at<unsigned char>(1, 7) = -1;
+            T.at<double>(1, 0) = 1; 
+            T.at<double>(1, 7) = -1;
 
-            T.at<unsigned char>(2, 0) = 1;
-            T.at<unsigned char>(2, 3) = -1;
-            T.at<unsigned char>(2, 4) = -1;
-            T.at<unsigned char>(2, 7) = 1;
+            T.at<double>(2, 0) = 1;
+            T.at<double>(2, 3) = -1;
+            T.at<double>(2, 4) = -1;
+            T.at<double>(2, 7) = 1;
 
-            T.at<unsigned char>(3, 2) = -1;
-            T.at<unsigned char>(3, 5) = -1;
+            T.at<double>(3, 2) = -1;
+            T.at<double>(3, 5) = 1;
 
-            T.at<unsigned char>(4, 0) = 1; 
-            T.at<unsigned char>(4, 1) = -1;
-            T.at<unsigned char>(4, 2) = -1;
-            T.at<unsigned char>(4, 3) = 1;
-            T.at<unsigned char>(4, 4) = 1;
-            T.at<unsigned char>(4, 5) = -1;
-            T.at<unsigned char>(4, 6) = -1;
-            T.at<unsigned char>(4, 7) = 1;
+            T.at<double>(4, 0) = 1; 
+            T.at<double>(4, 1) = -1;
+            T.at<double>(4, 2) = -1;
+            T.at<double>(4, 3) = 1;
+            T.at<double>(4, 4) = 1;
+            T.at<double>(4, 5) = -1;
+            T.at<double>(4, 6) = -1;
+            T.at<double>(4, 7) = 1;
 
-            T.at<unsigned char>(5, 1) = -1;
-            T.at<unsigned char>(5, 6) = 1;
+            T.at<double>(5, 1) = -1;
+            T.at<double>(5, 6) = 1;
 
-            T.at<unsigned char>(6, 1) = -1;
-            T.at<unsigned char>(6, 2) = 1;
-            T.at<unsigned char>(6, 5) = 1;
-            T.at<unsigned char>(6, 6) = -1;
+            T.at<double>(6, 1) = -1;
+            T.at<double>(6, 2) = 1;
+            T.at<double>(6, 5) = 1;
+            T.at<double>(6, 6) = -1;
 
-            T.at<unsigned char>(7, 3) = -1;
-            T.at<unsigned char>(7, 4) = 1;
+            T.at<double>(7, 3) = -1;
+            T.at<double>(7, 4) = 1;
+            
+
+            D.at<double>(0, 0) = 1/sqrt(8);
+            D.at<double>(1, 1) = 1/sqrt(2);
+            D.at<double>(2, 2) = 1/2      ;
+            D.at<double>(3, 3) = 1/sqrt(2);
+            D.at<double>(4, 4) = 1/sqrt(8);
+            D.at<double>(5, 5) = 1/sqrt(2);
+            D.at<double>(6, 6) = 1/2      ;
+            D.at<double>(7, 7) = 1/sqrt(2);    
+
+            Q.at<double>(0, 0) = 16;
+            Q.at<double>(1, 0) = 12;
+            Q.at<double>(2, 0) = 14;
+            Q.at<double>(3, 0) = 14;
+            Q.at<double>(4, 0) = 18;
+            Q.at<double>(5, 0) = 24;
+            Q.at<double>(6, 0) = 49;
+            Q.at<double>(7, 0) = 72;
+
+            Q.at<double>(0, 1) = 11;
+            Q.at<double>(1, 1) = 12;
+            Q.at<double>(2, 1) = 13;
+            Q.at<double>(3, 1) = 17;
+            Q.at<double>(4, 1) = 22;
+            Q.at<double>(5, 1) = 35;
+            Q.at<double>(6, 1) = 64;
+            Q.at<double>(7, 1) = 92;
+
+            Q.at<double>(0, 2) = 10;
+            Q.at<double>(1, 2) = 14;
+            Q.at<double>(2, 2) = 16;
+            Q.at<double>(3, 2) = 22;
+            Q.at<double>(4, 2) = 37;
+            Q.at<double>(5, 2) = 55;
+            Q.at<double>(6, 2) = 78;
+            Q.at<double>(7, 2) = 95;
+
+            Q.at<double>(0, 3) = 16;
+            Q.at<double>(1, 3) = 19;
+            Q.at<double>(2, 3) = 24;
+            Q.at<double>(3, 3) = 29;
+            Q.at<double>(4, 3) = 56;
+            Q.at<double>(5, 3) = 64;
+            Q.at<double>(6, 3) = 87;
+            Q.at<double>(7, 3) = 98;
+
+            Q.at<double>(0, 4) = 24;
+            Q.at<double>(1, 4) = 26;
+            Q.at<double>(2, 4) = 40;
+            Q.at<double>(3, 4) = 51;
+            Q.at<double>(4, 4) = 68;
+            Q.at<double>(5, 4) = 81;
+            Q.at<double>(6, 4) = 103;
+            Q.at<double>(7, 4) = 112;
+
+            Q.at<double>(0, 5) = 40;
+            Q.at<double>(1, 5) = 58;
+            Q.at<double>(2, 5) = 57;
+            Q.at<double>(3, 5) = 87;
+            Q.at<double>(4, 5) = 109;
+            Q.at<double>(5, 5) = 104;
+            Q.at<double>(6, 5) = 121;
+            Q.at<double>(7, 5) = 100;
+
+            Q.at<double>(0, 6) = 51;
+            Q.at<double>(1, 6) = 60;
+            Q.at<double>(2, 6) = 69;
+            Q.at<double>(3, 6) = 80;
+            Q.at<double>(4, 6) = 103;
+            Q.at<double>(5, 6) = 113;
+            Q.at<double>(6, 6) = 120;
+            Q.at<double>(7, 6) = 103;
+
+            Q.at<double>(0, 7) = 61;
+            Q.at<double>(1, 7) = 55;
+            Q.at<double>(2, 7) = 56;
+            Q.at<double>(3, 7) = 62;
+            Q.at<double>(4, 7) = 77;
+            Q.at<double>(5, 7) = 92;
+            Q.at<double>(6, 7) = 101;
+            Q.at<double>(7, 7) = 99;
+
             break;
     
         default:
