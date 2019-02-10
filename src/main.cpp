@@ -39,20 +39,28 @@ int main(int argc, char** argv )
     cv::Mat bgrImg = imread( argv[1], cv::IMREAD_COLOR );
     assert( bgrImg.data && "No image data");
 
-    // Init an empty matrix of size 512x512 of uint8
-    cv::Mat ycrcbImg(512,512,CV_8U);
+    // Declare an empty for dst image
+    cv::Mat ycrcbImg;
 
     // Convert to ycrcb
     cv::cvtColor(bgrImg, ycrcbImg, cv::COLOR_BGR2YCrCb);
 
+    // Split bgr into 3 channels
+    cv::Mat bgrChan[3];
+    cv::split(bgrImg, bgrChan);
+
     // Split ycrcb into 3 channels
-    cv::Mat chan[3];
-    cv::split(ycrcbImg, chan);
+    cv::Mat ycrcbChan[3];
+    cv::split(ycrcbImg, ycrcbChan);
 
     // Print first block for each channel
-    PRINT_MAT(chan[0](cv::Rect(0, 0, 8, 8)), "LUMA (first 8x8 block)")
-    PRINT_MAT(chan[1](cv::Rect(0, 0, 8, 8)), "Cr (first 8x8 block)")
-    PRINT_MAT(chan[2](cv::Rect(0, 0, 8, 8)), "Cb (first 8x8 block)")
+    PRINT_MAT(ycrcbChan[0](cv::Rect(0, 0, 8, 8)), "LUMA (first 8x8 block)")
+    PRINT_MAT(ycrcbChan[1](cv::Rect(0, 0, 8, 8)), "Cr (first 8x8 block)")
+    PRINT_MAT(ycrcbChan[2](cv::Rect(0, 0, 8, 8)), "Cb (first 8x8 block)")
+
+    PRINT_MAT(bgrChan[0](cv::Rect(0, 0, 8, 8)), "Blue (first 8x8 block)")
+    PRINT_MAT(bgrChan[1](cv::Rect(0, 0, 8, 8)), "Green (first 8x8 block)")
+    PRINT_MAT(bgrChan[2](cv::Rect(0, 0, 8, 8)), "Red (first 8x8 block)")
 
     // Show results 
     cv::namedWindow("Original Image", cv::WINDOW_AUTOSIZE );
