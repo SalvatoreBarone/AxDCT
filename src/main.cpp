@@ -28,7 +28,7 @@
 #include "main.h"
 #include <stdio.h>
 
-#define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl)
+#define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
 
 int main(int argc, char** argv )
@@ -56,6 +56,10 @@ int main(int argc, char** argv )
     cv::Mat T, D, Q;
 
     retrieveParameters(AxDCT_Algorithm::BC12, T, D, Q);
+    
+    cv::Mat res = cv::Mat::zeros(8,8,CV_16S);
+    matrix_mult(T, cv::Mat::eye(8,8, CV_16S), res, CV_16S);
+    PRINT_MAT(res, "T*I")
 
     for(int i=0;i<chan[0].rows/blockSize;i++){
         for(int j=0;j<chan[0].cols/blockSize;j++){
@@ -69,12 +73,19 @@ int main(int argc, char** argv )
             }
 
             quantizate(tiles[i][j], D, Q, tiles[i][j]);
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
             if(i==0 && j==0) {
                 PRINT_MAT(tiles[i][j], "DCT quantizated");
             }
 
-            dequantizate(tiles[i][j], Q, tiles[i][j]);
-            cv::idct(tiles[i][j], tiles[i][j]);
+            if(i==0 && j==0) {
+                PRINT_MAT(Q, "Luma Quantization Matrix");
+                PRINT_MAT(T, "Transformation Matrix");
+                PRINT_MAT(D, "Diagonal Matrix");
+            }
+
+            // dequantizate(tiles[i][j], Q, tiles[i][j]);
+            // cv::idct(tiles[i][j], tiles[i][j]);
 
             //T' DFD T
             // matrix_mult(D, tiles[i][j], tiles[i][j], CV_64FC1);
@@ -85,7 +96,6 @@ int main(int argc, char** argv )
             // matrix_mult(T_t, tiles[i][j], tiles[i][j], CV_64FC1);
             // matrix_mult(tiles[i][j], T, tiles[i][j], CV_64FC1);
             // tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            tiles[i][j] += 128;
         }
     }
     
@@ -105,16 +115,36 @@ int main(int argc, char** argv )
 void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type){
     assert((A.cols == B.rows) && "Bad product multiplication");
 
-    RES = cv::Mat(A.rows, B.cols, type);
+    cv::Mat A_converted(A.rows, A.cols, type), B_converted(B.rows, B.cols, type);
+
+    if(A.type() != type){
+        A.convertTo(A_converted, type);
+    } else {
+        A.copyTo(A_converted);
+    }
+
+    if(B.type() != type){
+        B.convertTo(B_converted, type);
+    } else {
+        B.copyTo(B_converted);
+    }
+
+    //TODO: check se res==NULL init RES
+    cv::Mat ret = cv::Mat::zeros(A.rows, B.cols, type);
 
     for(int i=0; i<A.rows; i++){
         for(int j=0; j<B.cols; j++){
             for(int k=0; k<A.cols; k++){
                 // RES[i][j] += A[i][k] * B[k][j];
-                RES.at<double>(i,j) = RES.at<double>(i,j) + A.at<double>(i,k) * B.at<double>(k,j);
+                //TODO: parametrizzare il tipo
+                if(type == CV_64FC1)
+                    ret.at<double>(i,j) = ret.at<double>(i,j) + A_converted.at<double>(i,k) * B_converted.at<double>(k,j);
+                else
+                    ret.at<int16_t>(i,j) = ret.at<int16_t>(i,j) + A_converted.at<int16_t>(i,k) * B_converted.at<int16_t>(k,j);
             }
         }
-    }    
+    }  
+    ret.copyTo(RES);  
 }
 
 cv::Mat **splitInTiles(const cv::Mat &input, int blockSize){
@@ -159,16 +189,29 @@ void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output){
 
     cv::Mat T_t;
     cv::transpose(T, T_t);
-    matrix_mult(T, tile-128, output);
-    matrix_mult(output, T_t, output);
+    matrix_mult(T, tile, output, CV_16S);
+    matrix_mult(output, T_t, output, CV_16S);
 }
 
 void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output){
     cv::Mat tileDCT;
     tile.convertTo(tileDCT, CV_64FC1);
+
+    /*  D * (TXT) */
     matrix_mult(D, tileDCT, output, CV_64FC1);
+
+    /*  (DTXT) * D' */
     matrix_mult(output, D, output, CV_64FC1);
-    output.mul(1/Q);
+
+    /*  (DTXTD)./Q */
+    output /= Q;
+
+    /* round */
+    for(int i=0; i<output.rows; i++){
+        for(int j=0; j<output.cols; j++){
+            output.at<double>(i,j) = round(output.at<double>(i,j));
+        }
+    }
 }
 
 void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
@@ -181,58 +224,58 @@ void retrieveParameters(const AxDCT_Algorithm alg, cv::Mat& T, cv::Mat& D, cv::M
     switch (alg)
     {
         case AxDCT_Algorithm::BC12 :
-            T = cv::Mat::zeros(8,8,CV_64FC1);
+            T = cv::Mat::zeros(8,8,CV_16S);
             D = cv::Mat::zeros(8,8,CV_64FC1);
             Q = cv::Mat::zeros(8,8,CV_64FC1);
 
-            T.at<double>(0, 0) = 1; 
-            T.at<double>(0, 1) = 1;
-            T.at<double>(0, 2) = 1;
-            T.at<double>(0, 3) = 1;
-            T.at<double>(0, 4) = 1;
-            T.at<double>(0, 5) = 1;
-            T.at<double>(0, 6) = 1;
-            T.at<double>(0, 7) = 1;
+            T.at<int16_t>(0, 0) = 1; 
+            T.at<int16_t>(0, 1) = 1;
+            T.at<int16_t>(0, 2) = 1;
+            T.at<int16_t>(0, 3) = 1;
+            T.at<int16_t>(0, 4) = 1;
+            T.at<int16_t>(0, 5) = 1;
+            T.at<int16_t>(0, 6) = 1;
+            T.at<int16_t>(0, 7) = 1;
 
-            T.at<double>(1, 0) = 1; 
-            T.at<double>(1, 7) = -1;
+            T.at<int16_t>(1, 0) = 1; 
+            T.at<int16_t>(1, 7) = -1;
 
-            T.at<double>(2, 0) = 1;
-            T.at<double>(2, 3) = -1;
-            T.at<double>(2, 4) = -1;
-            T.at<double>(2, 7) = 1;
+            T.at<int16_t>(2, 0) = 1;
+            T.at<int16_t>(2, 3) = -1;
+            T.at<int16_t>(2, 4) = -1;
+            T.at<int16_t>(2, 7) = 1;
 
-            T.at<double>(3, 2) = -1;
-            T.at<double>(3, 5) = 1;
+            T.at<int16_t>(3, 2) = -1;
+            T.at<int16_t>(3, 5) = 1;
 
-            T.at<double>(4, 0) = 1; 
-            T.at<double>(4, 1) = -1;
-            T.at<double>(4, 2) = -1;
-            T.at<double>(4, 3) = 1;
-            T.at<double>(4, 4) = 1;
-            T.at<double>(4, 5) = -1;
-            T.at<double>(4, 6) = -1;
-            T.at<double>(4, 7) = 1;
+            T.at<int16_t>(4, 0) = 1; 
+            T.at<int16_t>(4, 1) = -1;
+            T.at<int16_t>(4, 2) = -1;
+            T.at<int16_t>(4, 3) = 1;
+            T.at<int16_t>(4, 4) = 1;
+            T.at<int16_t>(4, 5) = -1;
+            T.at<int16_t>(4, 6) = -1;
+            T.at<int16_t>(4, 7) = 1;
 
-            T.at<double>(5, 1) = -1;
-            T.at<double>(5, 6) = 1;
+            T.at<int16_t>(5, 1) = -1;
+            T.at<int16_t>(5, 6) = 1;
 
-            T.at<double>(6, 1) = -1;
-            T.at<double>(6, 2) = 1;
-            T.at<double>(6, 5) = 1;
-            T.at<double>(6, 6) = -1;
+            T.at<int16_t>(6, 1) = -1;
+            T.at<int16_t>(6, 2) = 1;
+            T.at<int16_t>(6, 5) = 1;
+            T.at<int16_t>(6, 6) = -1;
 
-            T.at<double>(7, 3) = -1;
-            T.at<double>(7, 4) = 1;
+            T.at<int16_t>(7, 3) = -1;
+            T.at<int16_t>(7, 4) = 1;
             
 
             D.at<double>(0, 0) = 1/sqrt(8);
             D.at<double>(1, 1) = 1/sqrt(2);
-            D.at<double>(2, 2) = 1/2      ;
+            D.at<double>(2, 2) = 0.5      ;
             D.at<double>(3, 3) = 1/sqrt(2);
             D.at<double>(4, 4) = 1/sqrt(8);
             D.at<double>(5, 5) = 1/sqrt(2);
-            D.at<double>(6, 6) = 1/2      ;
+            D.at<double>(6, 6) = 0.5      ;
             D.at<double>(7, 7) = 1/sqrt(2);    
 
             Q.at<double>(0, 0) = 16;
