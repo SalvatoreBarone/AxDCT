@@ -19,26 +19,11 @@
 //
 
 /******************************************************************************
- * @file   main.h
+ * @file   axdct_algorithms.h
  * @author Andrea Aletto
  * @date   4 feb 2019
- * @brief  Declaration of main executable functions
+ * @brief  Include list of all AxDCT algorithms
  ******************************************************************************/
-#ifndef _MAIN_H
-#define _MAIN_H
 
-#include <iostream>
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
-#include <stdio.h>
-#include <stdlib.h>
-
-void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type = CV_64FC1);
-cv::Mat **splitInTiles(const cv::Mat &input, int blockSize);
-cv::Mat mergeTiles( cv::Mat **tiles, int imgWidth, int imgLength, int blockSize = 8, bool deallocTiles = true);
-void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output);
-void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output);
-void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output);
-
-
-#endif
+#include "algorithms/BC12.h"
+#include "algorithms/BAS09.h"

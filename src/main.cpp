@@ -27,8 +27,9 @@
 
 #include "main.h"
 #include <stdio.h>
+#include "axdct_algorithms.h"
 
-#define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl)
+#define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
 
 int main(int argc, char** argv )
@@ -42,32 +43,121 @@ int main(int argc, char** argv )
     // Declare an empty for dst image
     cv::Mat ycrcbImg;
 
-    // Convert to ycrcb
+    /* Convert BGR image into YCrCb */
     cv::cvtColor(bgrImg, ycrcbImg, cv::COLOR_BGR2YCrCb);
 
-    // Split bgr into 3 channels
-    cv::Mat bgrChan[3];
-    cv::split(bgrImg, bgrChan);
+    /* Split YCbCr into 3 channels */
+    std::vector<cv::Mat> chan(3);
+    cv::split(ycrcbImg, chan);
 
-    // Split ycrcb into 3 channels
-    cv::Mat ycrcbChan[3];
-    cv::split(ycrcbImg, ycrcbChan);
+    /* Retrieve parameters for transformation */
+    int blockSize = 8;
+    cv::Mat T, D, Q, CQ;
+    BAS09::retrieveParameters(T, D, Q, CQ);
 
-    // Print first block for each channel
-    PRINT_MAT(ycrcbChan[0](cv::Rect(0, 0, 8, 8)), "LUMA (first 8x8 block)")
-    PRINT_MAT(ycrcbChan[1](cv::Rect(0, 0, 8, 8)), "Cr (first 8x8 block)")
-    PRINT_MAT(ycrcbChan[2](cv::Rect(0, 0, 8, 8)), "Cb (first 8x8 block)")
+    /********* LUMA *********/
 
-    PRINT_MAT(bgrChan[0](cv::Rect(0, 0, 8, 8)), "Blue (first 8x8 block)")
-    PRINT_MAT(bgrChan[1](cv::Rect(0, 0, 8, 8)), "Green (first 8x8 block)")
-    PRINT_MAT(bgrChan[2](cv::Rect(0, 0, 8, 8)), "Red (first 8x8 block)")
+    /* Split channel in blocks 8x8 */
+    cv::Mat **tiles = splitInTiles(chan[0], 8);
 
-    // Show results 
-    cv::namedWindow("Original Image", cv::WINDOW_AUTOSIZE );
-    imshow("Original Image", bgrImg);
+    for(int i=0;i<chan[0].rows/blockSize;i++){
+        for(int j=0;j<chan[0].cols/blockSize;j++){
+            
+            /* Do the Approximate DCT */
+            AxDCT(tiles[i][j], T, tiles[i][j]);
 
-    cv::namedWindow("Converted Image", cv::WINDOW_AUTOSIZE );
-    imshow("Converted Image", ycrcbImg);
+            /* Quantization step */
+            quantizate(tiles[i][j], D, Q, tiles[i][j]);
+
+            /* Dequantization step */
+            dequantizate(tiles[i][j], Q, tiles[i][j]);
+
+            /* Do the exact IDCT */
+            cv::idct(tiles[i][j], tiles[i][j]);
+
+            /* Convert back to uint8 */
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[0].rows, chan[0].cols)).copyTo(chan[0]);
+    chan[0].convertTo(chan[0], CV_8U);
+
+    /**********************/
+
+    /********* Cr *********/
+
+    /* Split channel in blocks 8x8 */
+    tiles = splitInTiles(chan[1], 8);
+
+    for(int i=0;i<chan[1].rows/blockSize;i++){
+        for(int j=0;j<chan[1].cols/blockSize;j++){
+            
+            /* Do the Approximate DCT */
+            AxDCT(tiles[i][j], T, tiles[i][j]);
+
+            /* Quantization step */
+            quantizate(tiles[i][j], D, CQ, tiles[i][j]);
+
+            /* Dequantization step */
+            dequantizate(tiles[i][j], CQ, tiles[i][j]);
+
+            /* Do the exact IDCT */
+            cv::idct(tiles[i][j], tiles[i][j]);
+
+            /* Convert back to uint8 */
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[1].rows, chan[1].cols)).copyTo(chan[1]);
+    chan[1].convertTo(chan[1], CV_8U);
+
+    /**********************/
+
+    /********* Cb *********/
+
+    /* Split channel in blocks 8x8 */
+    tiles = splitInTiles(chan[2], 8);
+
+    for(int i=0;i<chan[2].rows/blockSize;i++){
+        for(int j=0;j<chan[2].cols/blockSize;j++){
+            
+            /* Do the Approximate DCT */
+            AxDCT(tiles[i][j], T, tiles[i][j]);
+
+            /* Quantization step */
+            quantizate(tiles[i][j], D, CQ, tiles[i][j]);
+
+            /* Dequantization step */
+            dequantizate(tiles[i][j], CQ, tiles[i][j]);
+
+            /* Do the exact IDCT */
+            cv::idct(tiles[i][j], tiles[i][j]);
+
+            /* Convert back to uint8 */
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[2].rows, chan[2].cols)).copyTo(chan[2]);
+    chan[2].convertTo(chan[2], CV_8U);
+
+    /**********************/
+    
+    /* Merge back channels */
+    cv::merge(chan, ycrcbImg);
+
+    /* Converto to BGR and show image */
+    cv::cvtColor(ycrcbImg, ycrcbImg, cv::COLOR_YCrCb2BGR);
+    cv::namedWindow("Modified Image", cv::WINDOW_AUTOSIZE );
+    imshow("Modified Image", ycrcbImg);
     
     cv::waitKey(0);
     return 0;
@@ -75,17 +165,44 @@ int main(int argc, char** argv )
 
 void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type){
     assert((A.cols == B.rows) && "Bad product multiplication");
+    assert( ((type == CV_16S)||(type == CV_8U)||(type == CV_64FC1)) && "Type currently not supported" );
 
-    RES = cv::Mat(A.rows, B.cols, type);
+    /* Init matrix for calc */
+    cv::Mat first(A.rows, A.cols, type);
+    cv::Mat second(B.rows, B.cols, type);
+
+    /* Type conversion if needed */
+    if(A.type() != type) A.convertTo(first, type);
+    else  A.copyTo(first);
+
+    if(B.type() != type) B.convertTo(second, type);
+    else B.copyTo(second);
+
+    /* Init output matrix if it is NULL or of wrong size */
+    if( !( RES.rows == A.rows && RES.cols == B.cols && RES.type() == type ) ) RES = cv::Mat::zeros(A.rows, B.cols, type);
+
+    cv::Mat ret = cv::Mat::zeros(A.rows, B.cols, type);
 
     for(int i=0; i<A.rows; i++){
         for(int j=0; j<B.cols; j++){
             for(int k=0; k<A.cols; k++){
-                // RES[i][j] += A[i][k] * B[k][j];
-                RES.at<double>(i,j) = RES.at<double>(i,j) + A.at<double>(i,k) * B.at<double>(k,j);
+                // The operation is: RES[i][j] += A[i][k] * B[k][j];
+                switch (type)
+                {
+                    case CV_8U:
+                        ret.at<unsigned char>(i,j) = ret.at<unsigned char>(i,j) + first.at<unsigned char>(i,k) * second.at<unsigned char>(k,j);
+                        break;
+                    case CV_16S:
+                        ret.at<int16_t>(i,j) = ret.at<int16_t>(i,j) + first.at<int16_t>(i,k) * second.at<int16_t>(k,j);
+                        break;
+                    case CV_64FC1:
+                        ret.at<double>(i,j) = ret.at<double>(i,j) + first.at<double>(i,k) * second.at<double>(k,j);
+                        break;
+                }
             }
         }
-    }    
+    }  
+    ret.copyTo(RES);  
 }
 
 cv::Mat **splitInTiles(const cv::Mat &input, int blockSize){
@@ -130,157 +247,34 @@ void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output){
 
     cv::Mat T_t;
     cv::transpose(T, T_t);
-    matrix_mult(T, tile-128, output);
-    matrix_mult(output, T_t, output);
+    matrix_mult(T, tile, output, CV_16S);
+    matrix_mult(output, T_t, output, CV_16S);
 }
 
 void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output){
     cv::Mat tileDCT;
     tile.convertTo(tileDCT, CV_64FC1);
+
+    /*  D * (TXT) */
     matrix_mult(D, tileDCT, output, CV_64FC1);
+
+    /*  (DTXT) * D' */
     matrix_mult(output, D, output, CV_64FC1);
-    output.mul(1/Q);
+
+    /*  (DTXTD)./Q */
+    output /= Q;
+
+    /* round */
+    for(int i=0; i<output.rows; i++){
+        for(int j=0; j<output.cols; j++){
+            output.at<double>(i,j) = round(output.at<double>(i,j));
+        }
+    }
 }
 
 void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
-    tile.copyTo(output);
-    output.mul(Q);
-}
-
-
-void retrieveParameters(const AxDCT_Algorithm alg, cv::Mat& T, cv::Mat& D, cv::Mat& Q){
-    switch (alg)
-    {
-        case AxDCT_Algorithm::BC12 :
-            T = cv::Mat::zeros(8,8,CV_64FC1);
-            D = cv::Mat::zeros(8,8,CV_64FC1);
-            Q = cv::Mat::zeros(8,8,CV_64FC1);
-
-            T.at<double>(0, 0) = 1; 
-            T.at<double>(0, 1) = 1;
-            T.at<double>(0, 2) = 1;
-            T.at<double>(0, 3) = 1;
-            T.at<double>(0, 4) = 1;
-            T.at<double>(0, 5) = 1;
-            T.at<double>(0, 6) = 1;
-            T.at<double>(0, 7) = 1;
-
-            T.at<double>(1, 0) = 1; 
-            T.at<double>(1, 7) = -1;
-
-            T.at<double>(2, 0) = 1;
-            T.at<double>(2, 3) = -1;
-            T.at<double>(2, 4) = -1;
-            T.at<double>(2, 7) = 1;
-
-            T.at<double>(3, 2) = -1;
-            T.at<double>(3, 5) = 1;
-
-            T.at<double>(4, 0) = 1; 
-            T.at<double>(4, 1) = -1;
-            T.at<double>(4, 2) = -1;
-            T.at<double>(4, 3) = 1;
-            T.at<double>(4, 4) = 1;
-            T.at<double>(4, 5) = -1;
-            T.at<double>(4, 6) = -1;
-            T.at<double>(4, 7) = 1;
-
-            T.at<double>(5, 1) = -1;
-            T.at<double>(5, 6) = 1;
-
-            T.at<double>(6, 1) = -1;
-            T.at<double>(6, 2) = 1;
-            T.at<double>(6, 5) = 1;
-            T.at<double>(6, 6) = -1;
-
-            T.at<double>(7, 3) = -1;
-            T.at<double>(7, 4) = 1;
-            
-
-            D.at<double>(0, 0) = 1/sqrt(8);
-            D.at<double>(1, 1) = 1/sqrt(2);
-            D.at<double>(2, 2) = 1/2      ;
-            D.at<double>(3, 3) = 1/sqrt(2);
-            D.at<double>(4, 4) = 1/sqrt(8);
-            D.at<double>(5, 5) = 1/sqrt(2);
-            D.at<double>(6, 6) = 1/2      ;
-            D.at<double>(7, 7) = 1/sqrt(2);    
-
-            Q.at<double>(0, 0) = 16;
-            Q.at<double>(1, 0) = 12;
-            Q.at<double>(2, 0) = 14;
-            Q.at<double>(3, 0) = 14;
-            Q.at<double>(4, 0) = 18;
-            Q.at<double>(5, 0) = 24;
-            Q.at<double>(6, 0) = 49;
-            Q.at<double>(7, 0) = 72;
-
-            Q.at<double>(0, 1) = 11;
-            Q.at<double>(1, 1) = 12;
-            Q.at<double>(2, 1) = 13;
-            Q.at<double>(3, 1) = 17;
-            Q.at<double>(4, 1) = 22;
-            Q.at<double>(5, 1) = 35;
-            Q.at<double>(6, 1) = 64;
-            Q.at<double>(7, 1) = 92;
-
-            Q.at<double>(0, 2) = 10;
-            Q.at<double>(1, 2) = 14;
-            Q.at<double>(2, 2) = 16;
-            Q.at<double>(3, 2) = 22;
-            Q.at<double>(4, 2) = 37;
-            Q.at<double>(5, 2) = 55;
-            Q.at<double>(6, 2) = 78;
-            Q.at<double>(7, 2) = 95;
-
-            Q.at<double>(0, 3) = 16;
-            Q.at<double>(1, 3) = 19;
-            Q.at<double>(2, 3) = 24;
-            Q.at<double>(3, 3) = 29;
-            Q.at<double>(4, 3) = 56;
-            Q.at<double>(5, 3) = 64;
-            Q.at<double>(6, 3) = 87;
-            Q.at<double>(7, 3) = 98;
-
-            Q.at<double>(0, 4) = 24;
-            Q.at<double>(1, 4) = 26;
-            Q.at<double>(2, 4) = 40;
-            Q.at<double>(3, 4) = 51;
-            Q.at<double>(4, 4) = 68;
-            Q.at<double>(5, 4) = 81;
-            Q.at<double>(6, 4) = 103;
-            Q.at<double>(7, 4) = 112;
-
-            Q.at<double>(0, 5) = 40;
-            Q.at<double>(1, 5) = 58;
-            Q.at<double>(2, 5) = 57;
-            Q.at<double>(3, 5) = 87;
-            Q.at<double>(4, 5) = 109;
-            Q.at<double>(5, 5) = 104;
-            Q.at<double>(6, 5) = 121;
-            Q.at<double>(7, 5) = 100;
-
-            Q.at<double>(0, 6) = 51;
-            Q.at<double>(1, 6) = 60;
-            Q.at<double>(2, 6) = 69;
-            Q.at<double>(3, 6) = 80;
-            Q.at<double>(4, 6) = 103;
-            Q.at<double>(5, 6) = 113;
-            Q.at<double>(6, 6) = 120;
-            Q.at<double>(7, 6) = 103;
-
-            Q.at<double>(0, 7) = 61;
-            Q.at<double>(1, 7) = 55;
-            Q.at<double>(2, 7) = 56;
-            Q.at<double>(3, 7) = 62;
-            Q.at<double>(4, 7) = 77;
-            Q.at<double>(5, 7) = 92;
-            Q.at<double>(6, 7) = 101;
-            Q.at<double>(7, 7) = 99;
-
-            break;
-    
-        default:
-            break;
-    }
+    assert(tile.type() == CV_64FC1 && "Wrong tile type");
+    assert(Q.type() == CV_64FC1 && "Wrong Q type");
+    cv::Mat deq = tile.mul(Q);
+    deq.copyTo(output);
 }

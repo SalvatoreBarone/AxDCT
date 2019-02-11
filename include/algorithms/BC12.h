@@ -19,26 +19,28 @@
 //
 
 /******************************************************************************
- * @file   main.h
+ * @file   BC12.h
  * @author Andrea Aletto
- * @date   4 feb 2019
- * @brief  Declaration of main executable functions
+ * @date   11 feb 2019
+ * @brief  Declaration of BC12 algorithm class
  ******************************************************************************/
-#ifndef _MAIN_H
-#define _MAIN_H
 
-#include <iostream>
-#include <stdio.h>
+#ifndef _BC12_H
+#define _BC12_H
+
 #include <opencv2/opencv.hpp>
-#include <stdio.h>
-#include <stdlib.h>
 
-void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type = CV_64FC1);
-cv::Mat **splitInTiles(const cv::Mat &input, int blockSize);
-cv::Mat mergeTiles( cv::Mat **tiles, int imgWidth, int imgLength, int blockSize = 8, bool deallocTiles = true);
-void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output);
-void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output);
-void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output);
+    class BC12
+    {
+        private:
+            BC12(){};
 
+        public:
+            static void retrieveParameters(cv::Mat& T, cv::Mat& D, cv::Mat& Q, cv::Mat& CQ);
+            static cv::Mat getT();
+            static cv::Mat getD();
+            static cv::Mat getQ();
+            static cv::Mat getCQ();
+    };
 
-#endif
+#endif /* _BC12_H */
