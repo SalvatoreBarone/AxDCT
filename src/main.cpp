@@ -165,33 +165,41 @@ int main(int argc, char** argv )
 
 void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type){
     assert((A.cols == B.rows) && "Bad product multiplication");
+    assert( ((type == CV_16S)||(type == CV_8U)||(type == CV_64FC1)) && "Type currently not supported" );
 
-    cv::Mat A_converted(A.rows, A.cols, type), B_converted(B.rows, B.cols, type);
+    /* Init matrix for calc */
+    cv::Mat first(A.rows, A.cols, type);
+    cv::Mat second(B.rows, B.cols, type);
 
-    if(A.type() != type){
-        A.convertTo(A_converted, type);
-    } else {
-        A.copyTo(A_converted);
-    }
+    /* Init output matrix if it is NULL or of wrong size */
+    if((!( RES.rows == A.rows && RES.cols == B.cols )) ) RES = cv::Mat::zeros(A.rows, B.cols, type);
 
-    if(B.type() != type){
-        B.convertTo(B_converted, type);
-    } else {
-        B.copyTo(B_converted);
-    }
+    /* Type conversion if needed */
+    if(A.type() != type) A.convertTo(first, type);
+    else  A.copyTo(first);
 
-    //TODO: check se res==NULL init RES
+    if(B.type() != type) B.convertTo(second, type);
+    else B.copyTo(second);
+    
+
     cv::Mat ret = cv::Mat::zeros(A.rows, B.cols, type);
 
     for(int i=0; i<A.rows; i++){
         for(int j=0; j<B.cols; j++){
             for(int k=0; k<A.cols; k++){
-                // RES[i][j] += A[i][k] * B[k][j];
-                //TODO: parametrizzare il tipo
-                if(type == CV_64FC1)
-                    ret.at<double>(i,j) = ret.at<double>(i,j) + A_converted.at<double>(i,k) * B_converted.at<double>(k,j);
-                else
-                    ret.at<int16_t>(i,j) = ret.at<int16_t>(i,j) + A_converted.at<int16_t>(i,k) * B_converted.at<int16_t>(k,j);
+                // The operation is: RES[i][j] += A[i][k] * B[k][j];
+                switch (type)
+                {
+                    case CV_8U:
+                        ret.at<unsigned char>(i,j) = ret.at<unsigned char>(i,j) + first.at<unsigned char>(i,k) * second.at<unsigned char>(k,j);
+                        break;
+                    case CV_16S:
+                        ret.at<int16_t>(i,j) = ret.at<int16_t>(i,j) + first.at<int16_t>(i,k) * second.at<int16_t>(k,j);
+                        break;
+                    case CV_64FC1:
+                        ret.at<double>(i,j) = ret.at<double>(i,j) + first.at<double>(i,k) * second.at<double>(k,j);
+                        break;
+                }
             }
         }
     }  
