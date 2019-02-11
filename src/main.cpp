@@ -51,13 +51,9 @@ int main(int argc, char** argv )
     int blockSize = 8;
     cv::Mat **tiles = splitInTiles(chan[0], 8);
 
-    cv::Mat T, D, Q;
+    cv::Mat T, D, Q, CQ;
 
-    retrieveParameters(AxDCT_Algorithm::BC12, T, D, Q);
-    
-    cv::Mat res = cv::Mat::zeros(8,8,CV_16S);
-    matrix_mult(T, cv::Mat::eye(8,8, CV_16S), res, CV_16S);
-    PRINT_MAT(res, "T*I")
+    retrieveParameters(AxDCT_Algorithm::BC12, T, D, Q, CQ);
 
     for(int i=0;i<chan[0].rows/blockSize;i++){
         for(int j=0;j<chan[0].cols/blockSize;j++){
@@ -227,13 +223,14 @@ void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
 }
 
 
-void retrieveParameters(const AxDCT_Algorithm alg, cv::Mat& T, cv::Mat& D, cv::Mat& Q){
+void retrieveParameters(const AxDCT_Algorithm alg, cv::Mat& T, cv::Mat& D, cv::Mat& Q, cv::Mat& CQ){
     switch (alg)
     {
         case AxDCT_Algorithm::BC12 :
             T = cv::Mat::zeros(8,8,CV_16S);
             D = cv::Mat::zeros(8,8,CV_64FC1);
             Q = cv::Mat::zeros(8,8,CV_64FC1);
+            CQ = cv::Mat::zeros(8,8,CV_64FC1);
 
             T.at<int16_t>(0, 0) = 1; 
             T.at<int16_t>(0, 1) = 1;
@@ -356,6 +353,78 @@ void retrieveParameters(const AxDCT_Algorithm alg, cv::Mat& T, cv::Mat& D, cv::M
             Q.at<double>(5, 7) = 92;
             Q.at<double>(6, 7) = 101;
             Q.at<double>(7, 7) = 99;
+
+            CQ.at<double>(0, 0) = 17;
+            CQ.at<double>(1, 0) = 18;
+            CQ.at<double>(2, 0) = 24;
+            CQ.at<double>(3, 0) = 47;
+            CQ.at<double>(4, 0) = 99;
+            CQ.at<double>(5, 0) = 99;
+            CQ.at<double>(6, 0) = 99;
+            CQ.at<double>(7, 0) = 99;
+
+            CQ.at<double>(0, 1) = 18;
+            CQ.at<double>(1, 1) = 21;
+            CQ.at<double>(2, 1) = 26;
+            CQ.at<double>(3, 1) = 66;
+            CQ.at<double>(4, 1) = 99;
+            CQ.at<double>(5, 1) = 99;
+            CQ.at<double>(6, 1) = 99;
+            CQ.at<double>(7, 1) = 99;
+
+            CQ.at<double>(0, 2) = 24;
+            CQ.at<double>(1, 2) = 26;
+            CQ.at<double>(2, 2) = 56;
+            CQ.at<double>(3, 2) = 99;
+            CQ.at<double>(4, 2) = 99;
+            CQ.at<double>(5, 2) = 99;
+            CQ.at<double>(6, 2) = 99;
+            CQ.at<double>(7, 2) = 99;
+
+            CQ.at<double>(0, 3) = 47;
+            CQ.at<double>(1, 3) = 66;
+            CQ.at<double>(2, 3) = 99;
+            CQ.at<double>(3, 3) = 99;
+            CQ.at<double>(4, 3) = 99;
+            CQ.at<double>(5, 3) = 99;
+            CQ.at<double>(6, 3) = 99;
+            CQ.at<double>(7, 3) = 99;
+
+            CQ.at<double>(0, 4) = 99;
+            CQ.at<double>(1, 4) = 99;
+            CQ.at<double>(2, 4) = 99;
+            CQ.at<double>(3, 4) = 99;
+            CQ.at<double>(4, 4) = 99;
+            CQ.at<double>(5, 4) = 99;
+            CQ.at<double>(6, 4) = 99;
+            CQ.at<double>(7, 4) = 99;
+
+            CQ.at<double>(0, 5) = 99;
+            CQ.at<double>(1, 5) = 99;
+            CQ.at<double>(2, 5) = 99;
+            CQ.at<double>(3, 5) = 99;
+            CQ.at<double>(4, 5) = 99;
+            CQ.at<double>(5, 5) = 99;
+            CQ.at<double>(6, 5) = 99;
+            CQ.at<double>(7, 5) = 99;
+
+            CQ.at<double>(0, 6) = 99;
+            CQ.at<double>(1, 6) = 99;
+            CQ.at<double>(2, 6) = 99;
+            CQ.at<double>(3, 6) = 99;
+            CQ.at<double>(4, 6) = 99;
+            CQ.at<double>(5, 6) = 99;
+            CQ.at<double>(6, 6) = 99;
+            CQ.at<double>(7, 6) = 99;
+
+            CQ.at<double>(0, 7) = 99;
+            CQ.at<double>(1, 7) = 99;
+            CQ.at<double>(2, 7) = 99;
+            CQ.at<double>(3, 7) = 99;
+            CQ.at<double>(4, 7) = 99;
+            CQ.at<double>(5, 7) = 99;
+            CQ.at<double>(6, 7) = 99;
+            CQ.at<double>(7, 7) = 99;
 
             break;
     
