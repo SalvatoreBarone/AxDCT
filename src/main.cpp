@@ -43,65 +43,119 @@ int main(int argc, char** argv )
     cv::namedWindow("Original Image", cv::WINDOW_AUTOSIZE );
     imshow("Original Image", bgrImg);
 
-
+    /* Convert BGR image into YCrCb */
     cv::cvtColor(bgrImg, ycrcbImg, cv::COLOR_BGR2YCrCb);
+
+    /* Split YCbCr into 3 channels */
     std::vector<cv::Mat> chan(3);
     cv::split(ycrcbImg, chan);
 
+    /* Retrieve parameters for transformation */
     int blockSize = 8;
-    cv::Mat **tiles = splitInTiles(chan[0], 8);
-
     cv::Mat T, D, Q, CQ;
-
     retrieveParameters(AxDCT_Algorithm::BC12, T, D, Q, CQ);
+
+    /********* LUMA *********/
+
+    /* Split channel in blocks 8x8 */
+    cv::Mat **tiles = splitInTiles(chan[0], 8);
 
     for(int i=0;i<chan[0].rows/blockSize;i++){
         for(int j=0;j<chan[0].cols/blockSize;j++){
-            if(i==0 && j==0) {
-                PRINT_MAT(tiles[i][j], "original tile");
-            }
             
+            /* Do the Approximate DCT */
             AxDCT(tiles[i][j], T, tiles[i][j]);
-            if(i==0 && j==0) {
-                PRINT_MAT(tiles[i][j], "DCT unquantizated");
-            }
 
+            /* Quantization step */
             quantizate(tiles[i][j], D, Q, tiles[i][j]);
-            // tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            if(i==0 && j==0) {
-                PRINT_MAT(tiles[i][j], "DCT quantizated");
-            }
 
-            if(i==0 && j==0) {
-                PRINT_MAT(Q, "Luma Quantization Matrix");
-                PRINT_MAT(T, "Transformation Matrix");
-                PRINT_MAT(D, "Diagonal Matrix");
-            }
-
+            /* Dequantization step */
             dequantizate(tiles[i][j], Q, tiles[i][j]);
-            // tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            
-            if(i==0 && j==0) {
-                PRINT_MAT(tiles[i][j], "DCT dequantizated");
-            }
 
+            /* Do the exact IDCT */
             cv::idct(tiles[i][j], tiles[i][j]);
-            
+
+            /* Convert back to uint8 */
             tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            if(i==0 && j==0) {
-                PRINT_MAT(tiles[i][j], "IDCT");
-            }
+            
         }
     }
-    
-    
-    
+
+    /* Merge blocks 8x8 into one matrix */
     (mergeTiles(tiles, chan[0].rows, chan[0].cols)).copyTo(chan[0]);
     chan[0].convertTo(chan[0], CV_8U);
 
-    cv::merge(chan, ycrcbImg);
-    cv::cvtColor(ycrcbImg, ycrcbImg, cv::COLOR_YCrCb2BGR);
+    /**********************/
 
+    /********* Cr *********/
+
+    /* Split channel in blocks 8x8 */
+    cv::Mat **tiles = splitInTiles(chan[1], 8);
+
+    for(int i=0;i<chan[1].rows/blockSize;i++){
+        for(int j=0;j<chan[1].cols/blockSize;j++){
+            
+            /* Do the Approximate DCT */
+            AxDCT(tiles[i][j], T, tiles[i][j]);
+
+            /* Quantization step */
+            quantizate(tiles[i][j], D, CQ, tiles[i][j]);
+
+            /* Dequantization step */
+            dequantizate(tiles[i][j], CQ, tiles[i][j]);
+
+            /* Do the exact IDCT */
+            cv::idct(tiles[i][j], tiles[i][j]);
+
+            /* Convert back to uint8 */
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[1].rows, chan[1].cols)).copyTo(chan[1]);
+    chan[1].convertTo(chan[1], CV_8U);
+
+    /**********************/
+
+    /********* Cb *********/
+
+    /* Split channel in blocks 8x8 */
+    cv::Mat **tiles = splitInTiles(chan[2], 8);
+
+    for(int i=0;i<chan[2].rows/blockSize;i++){
+        for(int j=0;j<chan[2].cols/blockSize;j++){
+            
+            /* Do the Approximate DCT */
+            AxDCT(tiles[i][j], T, tiles[i][j]);
+
+            /* Quantization step */
+            quantizate(tiles[i][j], D, CQ, tiles[i][j]);
+
+            /* Dequantization step */
+            dequantizate(tiles[i][j], CQ, tiles[i][j]);
+
+            /* Do the exact IDCT */
+            cv::idct(tiles[i][j], tiles[i][j]);
+
+            /* Convert back to uint8 */
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[2].rows, chan[2].cols)).copyTo(chan[2]);
+    chan[2].convertTo(chan[2], CV_8U);
+
+    /**********************/
+    
+    /* Merge back channels */
+    cv::merge(chan, ycrcbImg);
+
+    /* Converto to BGR and show image */
+    cv::cvtColor(ycrcbImg, ycrcbImg, cv::COLOR_YCrCb2BGR);
     cv::namedWindow("Modified Image", cv::WINDOW_AUTOSIZE );
     imshow("Modified Image", ycrcbImg);
     
@@ -178,7 +232,6 @@ cv::Mat mergeTiles(cv::Mat **tiles, int imgWidth, int imgLength, int blockSize, 
             if(deallocTiles) tiles[i][j].deallocate();
         }
     }
-    std::cout << ret.size();
 
     return ret;
 }
@@ -217,9 +270,6 @@ void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
     assert(Q.type() == CV_64FC1 && "Wrong Q type");
     cv::Mat deq = tile.mul(Q);
     deq.copyTo(output);
-    // tile.copyTo(output);
-    // output *= Q;
-    // output.mul(Q);
 }
 
 
