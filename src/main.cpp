@@ -47,7 +47,7 @@ int main(int argc, char** argv )
 
     //TODO: converto to ycbcr
     cv::cvtColor(bgrImg, ycrcbImg, cv::COLOR_BGR2YCrCb);
-    cv::Mat chan[3];
+    std::vector<cv::Mat> chan(3);
     cv::split(ycrcbImg, chan);
 
     int blockSize = 8;
@@ -103,21 +103,35 @@ int main(int argc, char** argv )
             // matrix_mult(T_t, tiles[i][j], tiles[i][j], CV_64FC1);
             // matrix_mult(tiles[i][j], T, tiles[i][j], CV_64FC1);
             
-            tiles[i][j].convertTo(tiles[i][j], CV_8UC1);
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
             if(i==0 && j==0) {
                 PRINT_MAT(tiles[i][j], "IDCT");
             }
         }
     }
     
-    // chan[0].convertTo(chan[0], CV_8UC1);
     
-    chan[0] = mergeTiles(tiles, chan[0].rows, chan[0].cols);
-    // cv::merge(chan, 3, ycrcbImg);
-    cv::cvtColor(ycrcbImg, ycrcbImg, cv::COLOR_YCrCb2BGR);
+    
+    (mergeTiles(tiles, chan[0].rows, chan[0].cols)).copyTo(chan[0]);
+    chan[0].convertTo(chan[0], CV_8U);
+
+    cv::Mat img;
+    cv::merge(chan, img);
+    // cv::cvtColor(ycrcbImg, ycrcbImg, cv::COLOR_YCrCb2BGR);
+    std::vector<cv::Mat> array_to_merge ;
+
+    array_to_merge.push_back(chan[0]);
+    array_to_merge.push_back(chan[1]);
+    array_to_merge.push_back(chan[2]);
+
+    // This line triggers a runtime error in Release mode
+    //cv::merge(array_to_merge,result); 
+
+    // This line works both in Release and Debug mode   
+    cv::merge(&array_to_merge[0], array_to_merge.size(), img);
 
     cv::namedWindow("Modified Image", cv::WINDOW_AUTOSIZE );
-    imshow("Modified Image", ycrcbImg);
+    imshow("Modified Image", chan[0]);
     
     cv::waitKey(0);
     return 0;
@@ -192,6 +206,7 @@ cv::Mat mergeTiles(cv::Mat **tiles, int imgWidth, int imgLength, int blockSize, 
             if(deallocTiles) tiles[i][j].deallocate();
         }
     }
+    std::cout << ret.size();
 
     return ret;
 }
