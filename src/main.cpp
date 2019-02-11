@@ -36,13 +36,12 @@ int main(int argc, char** argv )
 {
     assert( argc == 2 && "usage: displayImg <Image_Path>\n");
 
+    // Load img
     cv::Mat bgrImg = imread( argv[1], cv::IMREAD_COLOR );
-    cv::Mat ycrcbImg(512,512,CV_8U);
-
     assert( bgrImg.data && "No image data");
 
-    cv::namedWindow("Original Image", cv::WINDOW_AUTOSIZE );
-    imshow("Original Image", bgrImg);
+    // Declare an empty for dst image
+    cv::Mat ycrcbImg;
 
     /* Convert BGR image into YCrCb */
     cv::cvtColor(bgrImg, ycrcbImg, cv::COLOR_BGR2YCrCb);
