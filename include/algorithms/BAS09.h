@@ -19,11 +19,28 @@
 //
 
 /******************************************************************************
- * @file   axdct_algorithms.h
+ * @file   BAS09.h
  * @author Andrea Aletto
- * @date   4 feb 2019
- * @brief  Include list of all AxDCT algorithms
+ * @date   11 feb 2019
+ * @brief  Declaration of BAS09 algorithm class
  ******************************************************************************/
 
-#include "algorithms/BC12.h"
-#include "algorithms/BAS09.h"
+#ifndef _BAS09_H
+#define _BAS09_H
+
+#include <opencv2/opencv.hpp>
+
+    class BAS09
+    {
+        private:
+            BAS09(){};
+
+        public:
+            static void retrieveParameters(cv::Mat& T, cv::Mat& D, cv::Mat& Q, cv::Mat& CQ);
+            static cv::Mat getT();
+            static cv::Mat getD();
+            static cv::Mat getQ();
+            static cv::Mat getCQ();
+    };
+
+#endif /* _BAS09_H */

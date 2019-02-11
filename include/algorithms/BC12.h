@@ -19,7 +19,7 @@
 //
 
 /******************************************************************************
- * @file   BC12.cpp
+ * @file   BC12.h
  * @author Andrea Aletto
  * @date   11 feb 2019
  * @brief  Declaration of BC12 algorithm class

@@ -54,7 +54,7 @@ int main(int argc, char** argv )
     /* Retrieve parameters for transformation */
     int blockSize = 8;
     cv::Mat T, D, Q, CQ;
-    BC12::retrieveParameters(T, D, Q, CQ);
+    BAS09::retrieveParameters(T, D, Q, CQ);
 
     /********* LUMA *********/
 
