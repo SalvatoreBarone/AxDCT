@@ -90,7 +90,7 @@ int main(int argc, char** argv )
     /********* Cr *********/
 
     /* Split channel in blocks 8x8 */
-    cv::Mat **tiles = splitInTiles(chan[1], 8);
+    tiles = splitInTiles(chan[1], 8);
 
     for(int i=0;i<chan[1].rows/blockSize;i++){
         for(int j=0;j<chan[1].cols/blockSize;j++){
@@ -122,7 +122,7 @@ int main(int argc, char** argv )
     /********* Cb *********/
 
     /* Split channel in blocks 8x8 */
-    cv::Mat **tiles = splitInTiles(chan[2], 8);
+    tiles = splitInTiles(chan[2], 8);
 
     for(int i=0;i<chan[2].rows/blockSize;i++){
         for(int j=0;j<chan[2].cols/blockSize;j++){
