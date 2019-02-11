@@ -73,7 +73,7 @@ int main(int argc, char** argv )
             }
 
             quantizate(tiles[i][j], D, Q, tiles[i][j]);
-            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            // tiles[i][j].convertTo(tiles[i][j], CV_8U);
             if(i==0 && j==0) {
                 PRINT_MAT(tiles[i][j], "DCT quantizated");
             }
@@ -84,10 +84,17 @@ int main(int argc, char** argv )
                 PRINT_MAT(D, "Diagonal Matrix");
             }
 
-            // dequantizate(tiles[i][j], Q, tiles[i][j]);
-            // cv::idct(tiles[i][j], tiles[i][j]);
+            dequantizate(tiles[i][j], Q, tiles[i][j]);
+            // tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            
+            if(i==0 && j==0) {
+                PRINT_MAT(tiles[i][j], "DCT dequantizated");
+            }
 
-            //T' DFD T
+            cv::idct(tiles[i][j], tiles[i][j]);
+            // tiles[i][j].convertTo(tiles[i][j], CV_8UC1);
+
+            // //T' DFD T
             // matrix_mult(D, tiles[i][j], tiles[i][j], CV_64FC1);
             // matrix_mult(tiles[i][j], D, tiles[i][j], CV_64FC1);
 
@@ -95,15 +102,19 @@ int main(int argc, char** argv )
             // cv::transpose(T, T_t);
             // matrix_mult(T_t, tiles[i][j], tiles[i][j], CV_64FC1);
             // matrix_mult(tiles[i][j], T, tiles[i][j], CV_64FC1);
-            // tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            
+            tiles[i][j].convertTo(tiles[i][j], CV_8UC1);
+            if(i==0 && j==0) {
+                PRINT_MAT(tiles[i][j], "IDCT");
+            }
         }
     }
     
-    for(int i=0;i<chan[0].rows/blockSize;i++){
-        for(int j=0;j<chan[0].cols/blockSize;j++){
-            ycrcbImg = mergeTiles(tiles, chan[0].rows, chan[0].cols);
-        }
-    }
+    // chan[0].convertTo(chan[0], CV_8UC1);
+    
+    chan[0] = mergeTiles(tiles, chan[0].rows, chan[0].cols);
+    // cv::merge(chan, 3, ycrcbImg);
+    cv::cvtColor(ycrcbImg, ycrcbImg, cv::COLOR_YCrCb2BGR);
 
     cv::namedWindow("Modified Image", cv::WINDOW_AUTOSIZE );
     imshow("Modified Image", ycrcbImg);
@@ -215,8 +226,13 @@ void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat
 }
 
 void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
-    tile.copyTo(output);
-    output.mul(Q);
+    assert(tile.type() == CV_64FC1 && "Wrong tile type");
+    assert(Q.type() == CV_64FC1 && "Wrong Q type");
+    cv::Mat deq = tile.mul(Q);
+    deq.copyTo(output);
+    // tile.copyTo(output);
+    // output *= Q;
+    // output.mul(Q);
 }
 
 
