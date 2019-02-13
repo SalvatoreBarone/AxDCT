@@ -37,3 +37,6 @@
 # CMake
 build
 build/*
+
+chimera/output
+chimera/output/*

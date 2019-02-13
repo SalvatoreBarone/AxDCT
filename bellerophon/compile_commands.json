@@ -1,0 +1,14 @@
+[
+{
+  "command": "clang++  -std=c++11 -c ../chimera/output/mutants/main.cpp/2/main.cpp -I./include -I./include/algorithms -I/usr/local/include/opencv4 -lopencv_core",
+  "directory": "/home/andrea/AxDCT/code",
+  "file": "../chimera/output/mutants/main.cpp/2/main.cpp"
+},
+{
+  "command": "clang++  -std=c++11 -c bellerophon_functions.cpp -I../code/include -I../code/include/algorithms -I/usr/local/include/opencv4 -lopencv_core",
+  "directory": "/home/andrea/AxDCT/bellerophon/",
+  "file": "./bellerophon_functions.cpp"
+}
+
+]
+
