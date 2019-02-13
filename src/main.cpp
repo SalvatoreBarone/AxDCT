@@ -248,19 +248,34 @@ void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output){
 }
 
 void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output){
-    cv::Mat tileDCT;
+    /*
+        D matrix is merged with the Q matrix. Since D is diagonal, then: 
+        
+            D * (tile) * D' = (diag(D) * diag(D)') .* (tile)
+
+        This result should be divided elem-wise by Q.
+
+        An equivalent quantization is the following:
+        F = tile .* Y
+        where F is the DCT quantizated transformed tile and Y is the following matrix:
+
+        Y = ( diag(D) * diag(D)' ) ./ Q
+
+        Note that the Y matrix can be computed only once, offline.
+        
+    */
+    cv::Mat tileDCT, D_t, DDt;
     tile.convertTo(tileDCT, CV_64FC1);
+    
+    transpose(D.diag(), D_t);
+    matrix_mult<double>(D.diag(), D_t, DDt, CV_64FC1);
+    D_t.deallocate();   //cleanup
 
-    /*  D * (TXT) */
-    matrix_mult<double>(D, tileDCT, output, CV_64FC1);
-
-    /*  (DTXT) * D' */
-    matrix_mult<double>(output, D, output, CV_64FC1);
-
-    /*  (DTXTD)./Q */
+    output = tileDCT.mul(DDt);
+    DDt.deallocate(); //cleanup
     output /= Q;
 
-    /* round */
+    /* round */ //TODO: check if this can be done in a non pixel-by-pixel way
     for(int i=0; i<output.rows; i++){
         for(int j=0; j<output.cols; j++){
             output.at<double>(i,j) = round(output.at<double>(i,j));
