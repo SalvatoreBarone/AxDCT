@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.3)
 project(AxDCT LANGUAGES CXX)
 
 find_package( OpenCV REQUIRED )
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -ggdb3 -O0 --coverage")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -ggdb3 -O0")
 
 set(CMAKE_BUILD_TYPE Debug)
 

@@ -26,8 +26,7 @@
  ******************************************************************************/
 
 #include "main.h"
-#include <stdio.h>
-#include "axdct_algorithms.h"
+
 
 #define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
