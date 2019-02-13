@@ -53,7 +53,7 @@ int main(int argc, char** argv )
     /* Retrieve parameters for transformation */
     int blockSize = 8;
     cv::Mat T, D, Q, CQ;
-    BAS09::retrieveParameters(T, D, Q, CQ);
+    BC12::retrieveParameters(T, D, Q, CQ);
 
     /********* LUMA *********/
 
@@ -163,9 +163,16 @@ int main(int argc, char** argv )
     return 0;
 }
 
+template<typename T>
 void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type){
     assert((A.cols == B.rows) && "Bad product multiplication");
     assert( ((type == CV_16S)||(type == CV_8U)||(type == CV_64FC1)) && "Type currently not supported" );
+    assert(
+        (( ( std::is_same<T, unsigned char>::value ) && ( type == CV_8U    ) ) ||
+         ( ( std::is_same<T, short int    >::value ) && ( type == CV_16S   ) ) ||
+         ( ( std::is_same<T, double       >::value ) && ( type == CV_64FC1 ) ) ) &&
+         "Template type and requested destination type are incompatible"
+    );
 
     /* Init matrix for calc */
     cv::Mat first(A.rows, A.cols, type);
@@ -187,18 +194,7 @@ void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type){
         for(int j=0; j<B.cols; j++){
             for(int k=0; k<A.cols; k++){
                 // The operation is: RES[i][j] += A[i][k] * B[k][j];
-                switch (type)
-                {
-                    case CV_8U:
-                        ret.at<unsigned char>(i,j) = ret.at<unsigned char>(i,j) + first.at<unsigned char>(i,k) * second.at<unsigned char>(k,j);
-                        break;
-                    case CV_16S:
-                        ret.at<int16_t>(i,j) = ret.at<int16_t>(i,j) + first.at<int16_t>(i,k) * second.at<int16_t>(k,j);
-                        break;
-                    case CV_64FC1:
-                        ret.at<double>(i,j) = ret.at<double>(i,j) + first.at<double>(i,k) * second.at<double>(k,j);
-                        break;
-                }
+                ret.at<T>(i,j) = ret.at<T>(i,j) + first.at<T>(i,k) * second.at<T>(k,j);
             }
         }
     }  
@@ -247,8 +243,8 @@ void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output){
 
     cv::Mat T_t;
     cv::transpose(T, T_t);
-    matrix_mult(T, tile, output, CV_16S);
-    matrix_mult(output, T_t, output, CV_16S);
+    matrix_mult<int16_t>(T, tile, output, CV_16S);
+    matrix_mult<int16_t>(output, T_t, output, CV_16S);
 }
 
 void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output){
@@ -256,10 +252,10 @@ void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat
     tile.convertTo(tileDCT, CV_64FC1);
 
     /*  D * (TXT) */
-    matrix_mult(D, tileDCT, output, CV_64FC1);
+    matrix_mult<double>(D, tileDCT, output, CV_64FC1);
 
     /*  (DTXT) * D' */
-    matrix_mult(output, D, output, CV_64FC1);
+    matrix_mult<double>(output, D, output, CV_64FC1);
 
     /*  (DTXTD)./Q */
     output /= Q;
