@@ -163,7 +163,7 @@ int main(int argc, char** argv )
     return 0;
 }
 
-template<typename T>
+template<typename T> 
 void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type){
     assert((A.cols == B.rows) && "Bad product multiplication");
     assert( ((type == CV_16S)||(type == CV_8U)||(type == CV_64FC1)) && "Type currently not supported" );
