@@ -244,30 +244,54 @@ cv::Mat mergeTiles(cv::Mat **tiles, int imgWidth, int imgLength, int blockSize, 
 
 void AxDCT(const cv::Mat& tile, cv::Mat& output){
 
+    /* Copy input tile ina temp variable in order to overwrite values */ 
     cv::Mat temp;
     tile.copyTo(temp);
 
+    /* Row-wise transformation is required, but AxDCT-1D takes in input a column vector.
+       So first transpose the tile, second apply AxDCT-1D with tile columns. 
+     */ 
     transpose(temp, temp);
 
-    for(int j=0; j<temp.rows; j++){
+    /* Note: dct_col temporary variable is needed for build issues,
+       the operation is: 
+            temp.col(j) <- AxDCT-1D( temp.col(j) )    
+     */
+    for(int j=0; j<temp.cols; j++){
         cv::Mat dct_col = cv::Mat::zeros(8,1, CV_16S);
         AxDCT1D(temp.col(j), dct_col);
         dct_col.copyTo(temp.col(j));
     }
 
+    /* Now the column of temp are the AxDCT-1D of the rows of the original tile. */
+
+    /* At this point a column-wise transformation is required, but the column of temp are
+       the AxDCT-1D transformation of the rows. So a transposition is needed. 
+     */
     transpose(temp, temp);
 
+    /* Now it's possible to apply the AxDCT-1D transformation (identical to the former transformation). */
     for(int j=0; j<temp.cols; j++){
         cv::Mat dct_col = cv::Mat::zeros(8,1, CV_16S);
         AxDCT1D(temp.col(j), dct_col);
         dct_col.copyTo(temp.col(j));
     }    
 
+    /* In temp it's stored the AxDCT-2D of the input tile. Finally copy it to the output matrix */
     temp.copyTo(output);
 
 }
 
 void AxDCT1D(const cv::Mat& input, cv::Mat& output){
+    /* This function implements the 1D transformation of the algorithm BC12:
+
+       output = T * input  
+
+       where:
+            * T is the trannsformation matrix, of size 8x8
+            * input is the input column vector to transform, ofize 8x1 
+            * output is the transformated input vector, of size 8x1 
+    */
 
     assert(( (input.rows == 8) && (input.cols==1) ) && "Column vector of size 8x1 is needed for 1D-DCT.");
     assert( (input.type() == CV_16S) && "Unable to compute AxDCT-1D: element of type CV_16S required.");
