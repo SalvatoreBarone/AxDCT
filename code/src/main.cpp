@@ -26,10 +26,19 @@
  ******************************************************************************/
 
 #include "main.h"
-
+void AxDCT1D(const cv::Mat& input, cv::Mat& output);
 
 #define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
+
+// #define x0 input.at<int16_t>(0,0)
+// #define x1 input.at<int16_t>(1,0)
+// #define x2 input.at<int16_t>(2,0)
+// #define x3 input.at<int16_t>(3,0)
+// #define x4 input.at<int16_t>(4,0)
+// #define x5 input.at<int16_t>(5,0)
+// #define x6 input.at<int16_t>(6,0)
+// #define x7 input.at<int16_t>(7,0)
 
 int main(int argc, char** argv )
 {
@@ -49,6 +58,10 @@ int main(int argc, char** argv )
     std::vector<cv::Mat> chan(3);
     cv::split(ycrcbImg, chan);
 
+    chan[0].convertTo(chan[0], CV_16S);
+    chan[1].convertTo(chan[1], CV_16S);
+    chan[2].convertTo(chan[2], CV_16S);
+
     /* Retrieve parameters for transformation */
     int blockSize = 8;
     cv::Mat T, D, Q, CQ;
@@ -63,7 +76,7 @@ int main(int argc, char** argv )
         for(int j=0;j<chan[0].cols/blockSize;j++){
             
             /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], T, tiles[i][j]);
+            AxDCT(tiles[i][j], tiles[i][j]);
 
             /* Quantization step */
             quantizate(tiles[i][j], D, Q, tiles[i][j]);
@@ -95,7 +108,7 @@ int main(int argc, char** argv )
         for(int j=0;j<chan[1].cols/blockSize;j++){
             
             /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], T, tiles[i][j]);
+            AxDCT(tiles[i][j], tiles[i][j]);
 
             /* Quantization step */
             quantizate(tiles[i][j], D, CQ, tiles[i][j]);
@@ -127,7 +140,7 @@ int main(int argc, char** argv )
         for(int j=0;j<chan[2].cols/blockSize;j++){
             
             /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], T, tiles[i][j]);
+            AxDCT(tiles[i][j], tiles[i][j]);
 
             /* Quantization step */
             quantizate(tiles[i][j], D, CQ, tiles[i][j]);
@@ -238,12 +251,54 @@ cv::Mat mergeTiles(cv::Mat **tiles, int imgWidth, int imgLength, int blockSize, 
     return ret;
 }
 
-void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output){
+void AxDCT(const cv::Mat& tile, cv::Mat& output){
 
-    cv::Mat T_t;
-    cv::transpose(T, T_t);
-    matrix_mult<int16_t>(T, tile, output, CV_16S);
-    matrix_mult<int16_t>(output, T_t, output, CV_16S);
+    cv::Mat temp;
+    tile.copyTo(temp);
+
+    transpose(temp, temp);
+
+    for(int j=0; j<temp.rows; j++){
+        cv::Mat dct_col = cv::Mat::zeros(8,1, CV_16S);
+        AxDCT1D(temp.col(j), dct_col);
+        dct_col.copyTo(temp.col(j));
+    }
+
+    transpose(temp, temp);
+
+    for(int j=0; j<temp.cols; j++){
+        cv::Mat dct_col = cv::Mat::zeros(8,1, CV_16S);
+        AxDCT1D(temp.col(j), dct_col);
+        dct_col.copyTo(temp.col(j));
+    }    
+
+    temp.copyTo(output);
+
+}
+
+void AxDCT1D(const cv::Mat& input, cv::Mat& output){
+
+    assert(( (input.rows == 8) && (input.cols==1) ) && "Column vector of size 8x1 is needed for 1D-DCT.");
+    assert( (input.type() == CV_16S) && "Unable to compute AxDCT-1D: element of type CV_16S required.");
+
+    int16_t x0 = input.at<int16_t>(0,0);
+    int16_t x1 = input.at<int16_t>(1,0);
+    int16_t x2 = input.at<int16_t>(2,0);
+    int16_t x3 = input.at<int16_t>(3,0);
+    int16_t x4 = input.at<int16_t>(4,0);
+    int16_t x5 = input.at<int16_t>(5,0);
+    int16_t x6 = input.at<int16_t>(6,0);
+    int16_t x7 = input.at<int16_t>(7,0);
+
+    output.at<int16_t>(0,0) = x0 + x1 + x2 + x3 + x4 + x5 + x6 + x7;
+    output.at<int16_t>(1,0) = x0 - x7;
+    output.at<int16_t>(2,0) = x0 - x3 - x4 + x7;
+    output.at<int16_t>(3,0) = x5 - x2;
+    output.at<int16_t>(4,0) = x0 - x1 - x2 + x3 + x4 - x5 - x6 + x7;
+    output.at<int16_t>(5,0) = x6 - x1;
+    output.at<int16_t>(6,0) = x2 - x1 + x5 - x6;
+    output.at<int16_t>(7,0) = x4 - x3;
+    
 }
 
 void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output){
