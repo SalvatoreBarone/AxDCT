@@ -31,15 +31,6 @@ void AxDCT1D(const cv::Mat& input, cv::Mat& output);
 #define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
 
-// #define x0 input.at<int16_t>(0,0)
-// #define x1 input.at<int16_t>(1,0)
-// #define x2 input.at<int16_t>(2,0)
-// #define x3 input.at<int16_t>(3,0)
-// #define x4 input.at<int16_t>(4,0)
-// #define x5 input.at<int16_t>(5,0)
-// #define x6 input.at<int16_t>(6,0)
-// #define x7 input.at<int16_t>(7,0)
-
 int main(int argc, char** argv )
 {
     assert( argc == 2 && "usage: displayImg <Image_Path>\n");
@@ -291,13 +282,13 @@ void AxDCT1D(const cv::Mat& input, cv::Mat& output){
     int16_t x7 = input.at<int16_t>(7,0);
 
     output.at<int16_t>(0,0) = x0 + x1 + x2 + x3 + x4 + x5 + x6 + x7;
-    output.at<int16_t>(1,0) = x0 - x7;
-    output.at<int16_t>(2,0) = x0 - x3 - x4 + x7;
-    output.at<int16_t>(3,0) = x5 - x2;
-    output.at<int16_t>(4,0) = x0 - x1 - x2 + x3 + x4 - x5 - x6 + x7;
-    output.at<int16_t>(5,0) = x6 - x1;
-    output.at<int16_t>(6,0) = x2 - x1 + x5 - x6;
-    output.at<int16_t>(7,0) = x4 - x3;
+    output.at<int16_t>(1,0) = x0 + (-x7);
+    output.at<int16_t>(2,0) = x0 + (-x3) + (-x4) + x7;
+    output.at<int16_t>(3,0) = x5 + (-x2);
+    output.at<int16_t>(4,0) = x0 + (-x1) + (-x2) + x3 + x4 + (-x5) + (-x6) + x7;
+    output.at<int16_t>(5,0) = x6 + (-x1);
+    output.at<int16_t>(6,0) = x2 + (-x1) + x5 + (-x6);
+    output.at<int16_t>(7,0) = x4 + (-x3);
     
 }
 
