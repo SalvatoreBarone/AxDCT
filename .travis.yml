@@ -15,6 +15,12 @@ before_install:
 - sudo ldconfig
 - echo "OpenCV installed."
 - cd ../..
+- git clone https://github.com/andreaaletto/AxC-Adders.git adders
+- cd adders
+- mkdir build && cd build
+- cmake .. -G Ninja
+- ninja && sudo ninja install
+- cd ../..
 
 install:
 - cd code
