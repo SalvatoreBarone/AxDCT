@@ -29,7 +29,7 @@
 
 #include "algorithms_list.h"
 
-#define __USER_ALGORITHM BAS08
+#define __USER_ALGORITHM BC12
 
 
 #endif /* _AXDCT_USER_DEFINES_H */
