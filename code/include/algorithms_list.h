@@ -28,3 +28,4 @@
 #include "algorithms/AxDCT_algorithm.h"
 #include "algorithms/BC12.h"
 #include "algorithms/BAS09.h"
+#include "algorithms/BAS08.h"

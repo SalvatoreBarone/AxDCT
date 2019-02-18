@@ -285,7 +285,28 @@ cv::Mat BAS09::getCQ(){
 
 
 void BAS09::dct1d(const cv::Mat& input, cv::Mat& output){
-    
+
+    assert(( (input.rows == 8) && (input.cols==1) ) && "Column vector of size 8x1 is needed for 1D-DCT.");
+    assert( (input.type() == CV_16S) && "Unable to compute AxDCT-1D: element of type CV_16S required.");
+
+    int16_t x0 = input.at<int16_t>(0,0);
+    int16_t x1 = input.at<int16_t>(1,0);
+    int16_t x2 = input.at<int16_t>(2,0);
+    int16_t x3 = input.at<int16_t>(3,0);
+    int16_t x4 = input.at<int16_t>(4,0);
+    int16_t x5 = input.at<int16_t>(5,0);
+    int16_t x6 = input.at<int16_t>(6,0);
+    int16_t x7 = input.at<int16_t>(7,0);
+
+    output.at<int16_t>(0,0) = x0 + x1 + x2 + x3 + x4 + x5 + x6 + x7;
+    output.at<int16_t>(1,0) = x0 + x1 + x2 + x3 - x4 - x5 - x6 - x7;
+    output.at<int16_t>(2,0) = x0 + x1 - x2 - x3 - x4 - x5 + x6 + x7;
+    output.at<int16_t>(3,0) = x0 - x1 - x2 - x3 + x4 + x5 + x6 - x7;
+    output.at<int16_t>(4,0) = x0 - x1 - x2 + x3 + x4 - x5 - x6 + x7;
+    output.at<int16_t>(5,0) = x0 - x1 + x2 + x3 - x4 - x5 + x6 - x7;
+    output.at<int16_t>(6,0) = x0 - x1 + x2 - x3 - x4 + x5 - x6 + x7;
+    output.at<int16_t>(7,0) = x0 - x1 + x2 - x3 + x4 - x5 + x6 - x7;
+
 }
 
 void BAS09::y_quantizate(const cv::Mat& tile, cv::Mat& output){

@@ -5,6 +5,7 @@ add_library(axdctAlgorithms SHARED
     AxDCT_algorithm.cpp
     BC12.cpp
     BAS09.cpp
+    BAS08.cpp
 )
 
 target_include_directories(axdctAlgorithms PRIVATE ${CMAKE_SOURCE_DIR}/include/algorithms)
