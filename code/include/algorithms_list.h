@@ -19,32 +19,12 @@
 //
 
 /******************************************************************************
- * @file   dct.h
+ * @file   axdct_algorithms.h
  * @author Andrea Aletto
- * @date   16 feb 2019
- * @brief  Declaration of dct functions in approximate context
+ * @date   4 feb 2019
+ * @brief  Include list of all AxDCT algorithms
  ******************************************************************************/
 
-#ifndef _DCT_H
-#define _DCT_H
-
-#include <iostream>
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
-#include <stdio.h>
-#include <stdlib.h>
-#include <inexact_adders.h>
-#include "../utils/mat_operations.h"
-#include "../algorithms_list.h"
-#include "../user_defines.h"
-
-void AxDCT(const cv::Mat& tile, cv::Mat& output);
-void y_quantizate(const cv::Mat& tile, cv::Mat& output);
-void cb_quantizate(const cv::Mat& tile, cv::Mat& output);
-void cr_quantizate(const cv::Mat& tile, cv::Mat& output);
-
-void  y_dequantizate(const cv::Mat& tile, cv::Mat& output);
-void cb_dequantizate(const cv::Mat& tile, cv::Mat& output);
-void cr_dequantizate(const cv::Mat& tile, cv::Mat& output);
-
-#endif /* _DCT_H */
+#include "algorithms/AxDCT_algorithm.h"
+#include "algorithms/BC12.h"
+#include "algorithms/BAS09.h"

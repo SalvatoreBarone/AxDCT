@@ -26,7 +26,7 @@
  ******************************************************************************/
 
 #include "core/dct.h"
-#include "axdct_algorithms.h"
+#include "algorithms_list.h"
 
 #define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
@@ -55,8 +55,8 @@ int main(int argc, char** argv )
 
     /* Retrieve parameters for transformation */
     int blockSize = 8;
-    cv::Mat T, D, Q, CQ;
-    BC12::retrieveParameters(T, D, Q, CQ);
+    // cv::Mat T, D, Q, CQ;
+    // BC12::retrieveParameters(T, D, Q, CQ);
 
     /********* LUMA *********/
 
@@ -70,10 +70,10 @@ int main(int argc, char** argv )
             AxDCT(tiles[i][j], tiles[i][j]);
 
             /* Quantization step */
-            quantizate(tiles[i][j], D, Q, tiles[i][j]);
+            y_quantizate(tiles[i][j], tiles[i][j]);
 
             /* Dequantization step */
-            dequantizate(tiles[i][j], Q, tiles[i][j]);
+            y_dequantizate(tiles[i][j], tiles[i][j]);
 
             /* Do the exact IDCT */
             cv::idct(tiles[i][j], tiles[i][j]);
@@ -102,10 +102,10 @@ int main(int argc, char** argv )
             AxDCT(tiles[i][j], tiles[i][j]);
 
             /* Quantization step */
-            quantizate(tiles[i][j], D, CQ, tiles[i][j]);
+            cr_quantizate(tiles[i][j], tiles[i][j]);
 
             /* Dequantization step */
-            dequantizate(tiles[i][j], CQ, tiles[i][j]);
+            cr_dequantizate(tiles[i][j], tiles[i][j]);
 
             /* Do the exact IDCT */
             cv::idct(tiles[i][j], tiles[i][j]);
@@ -134,10 +134,10 @@ int main(int argc, char** argv )
             AxDCT(tiles[i][j], tiles[i][j]);
 
             /* Quantization step */
-            quantizate(tiles[i][j], D, CQ, tiles[i][j]);
+            cb_quantizate(tiles[i][j], tiles[i][j]);
 
             /* Dequantization step */
-            dequantizate(tiles[i][j], CQ, tiles[i][j]);
+            cb_dequantizate(tiles[i][j], tiles[i][j]);
 
             /* Do the exact IDCT */
             cv::idct(tiles[i][j], tiles[i][j]);

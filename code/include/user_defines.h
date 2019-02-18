@@ -19,11 +19,17 @@
 //
 
 /******************************************************************************
- * @file   axdct_algorithms.h
+ * @file   main.h
  * @author Andrea Aletto
  * @date   4 feb 2019
- * @brief  Include list of all AxDCT algorithms
+ * @brief  Declaration of main executable functions
  ******************************************************************************/
+#ifndef _AXDCT_USER_DEFINES_H
+#define _AXDCT_USER_DEFINES_H
 
-#include "algorithms/BC12.h"
-#include "algorithms/BAS09.h"
+#include "algorithms_list.h"
+
+#define __USER_ALGORITHM BC12
+
+
+#endif /* _AXDCT_USER_DEFINES_H */

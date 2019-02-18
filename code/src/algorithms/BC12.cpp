@@ -27,14 +27,9 @@
 
 #include "BC12.h"
 
-void BC12::retrieveParameters(cv::Mat& T, cv::Mat& D, cv::Mat& Q, cv::Mat& CQ){
-    
-    T = BC12::getT();
-    D = BC12::getD();
-    Q = BC12::getQ();
-    CQ = BC12::getCQ();
-    
-}
+static void quantizate(const cv::Mat&, const cv::Mat&, const cv::Mat&, cv::Mat&);
+static void dequantizate(const cv::Mat&, const cv::Mat&, cv::Mat&);
+
 
 cv::Mat BC12::getT(){
 
@@ -255,4 +250,155 @@ cv::Mat BC12::getCQ(){
     CQ.at<double>(7, 7) = 99;
 
     return CQ;
+}
+
+void BC12::dct1d(const cv::Mat& input, cv::Mat& output){
+    /* This function implements the 1D transformation of the algorithm BC12:
+
+       output = T * input  
+
+       where:
+            * T is the trannsformation matrix, of size 8x8
+            * input is the input column vector to transform, ofize 8x1 
+            * output is the transformated input vector, of size 8x1 
+    */
+
+    assert(( (input.rows == 8) && (input.cols==1) ) && "Column vector of size 8x1 is needed for 1D-DCT.");
+    assert( (input.type() == CV_16S) && "Unable to compute AxDCT-1D: element of type CV_16S required.");
+
+    /***** DIRECT TRANSFORMATION X=T*x --- 24 adds *****/
+/*
+    int16_t x0 = input.at<int16_t>(0,0);
+    int16_t x1 = input.at<int16_t>(1,0);
+    int16_t x2 = input.at<int16_t>(2,0);
+    int16_t x3 = input.at<int16_t>(3,0);
+    int16_t x4 = input.at<int16_t>(4,0);
+    int16_t x5 = input.at<int16_t>(5,0);
+    int16_t x6 = input.at<int16_t>(6,0);
+    int16_t x7 = input.at<int16_t>(7,0);
+
+    output.at<int16_t>(0,0) = x0 + x1 + x2 + x3 + x4 + x5 + x6 + x7;
+    output.at<int16_t>(1,0) = x0 + (-x7);
+    output.at<int16_t>(2,0) = x0 + (-x3) + (-x4) + x7;
+    output.at<int16_t>(3,0) = x5 + (-x2);
+    output.at<int16_t>(4,0) = x0 + (-x1) + (-x2) + x3 + x4 + (-x5) + (-x6) + x7;
+    output.at<int16_t>(5,0) = x6 + (-x1);
+    output.at<int16_t>(6,0) = x2 + (-x1) + x5 + (-x6);
+    output.at<int16_t>(7,0) = x4 + (-x3);
+*/
+
+
+    /****** Transformation using matrix factorization X = P*A3*A2*A1 * x --- 14 adds + 4 sign inversions ******/
+    int16_t x0a = input.at<int16_t>(0,0);
+    int16_t x1a = input.at<int16_t>(1,0);
+    int16_t x2a = input.at<int16_t>(2,0);
+    int16_t x3a = input.at<int16_t>(3,0);
+    int16_t x4a = input.at<int16_t>(4,0);
+    int16_t x5a = input.at<int16_t>(5,0);
+    int16_t x6a = input.at<int16_t>(6,0);
+    int16_t x7a = input.at<int16_t>(7,0);
+
+    int16_t x0b = x0a + x7a;
+    int16_t x1b = x1a + x6a;
+    int16_t x2b = x2a + x5a;
+    int16_t x3b = x3a + x4a;
+    int16_t x4b = x3a + (-x4a);
+    int16_t x5b = x2a + (-x5a);
+    int16_t x6b = x1a + (-x6a);
+    int16_t x7b = x0a + (-x7a);
+
+    int16_t x0c = x0b + x3b;
+    int16_t x1c = x1b + x2b;
+    int16_t x2c = x1b + (-x2b);
+    int16_t x3c = x0b + (-x3b);
+    int16_t x4c = -x4b;
+    int16_t x5c = -x5b;
+    int16_t x6c = -x6b;
+    int16_t x7c = x7b;
+
+    int16_t x0d = x0c + x1c;
+    int16_t x1d = x0c + (-x1c);
+    int16_t x2d = -x2c;
+    int16_t x3d = x3c;
+    int16_t x4d = x4c;
+    int16_t x5d = x5c;
+    int16_t x6d = x6c;
+    int16_t x7d = x7c;
+
+    output.at<int16_t>(0,0) = x0d;
+    output.at<int16_t>(1,0) = x7d;
+    output.at<int16_t>(2,0) = x3d;
+    output.at<int16_t>(3,0) = x5d;
+    output.at<int16_t>(4,0) = x1d;
+    output.at<int16_t>(5,0) = x6d;
+    output.at<int16_t>(6,0) = x2d;
+    output.at<int16_t>(7,0) = x4d;
+}
+
+void BC12::y_quantizate(const cv::Mat& tile, cv::Mat& output){
+    quantizate(tile, this->getD(), this->getQ(), output);
+}
+
+void BC12::cr_quantizate(const cv::Mat& tile, cv::Mat& output){
+    quantizate(tile, this->getD(), this->getCQ(), output);
+}
+
+void BC12::cb_quantizate(const cv::Mat& tile, cv::Mat& output){
+    quantizate(tile, this->getD(), this->getCQ(), output);
+}
+
+void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output){
+    /*
+        D matrix is merged with the Q matrix. Since D is diagonal, then: 
+        
+            D * (tile) * D' = (diag(D) * diag(D)') .* (tile)
+
+        This result should be divided elem-wise by Q.
+
+        An equivalent quantization is the following:
+        F = tile .* Y
+        where F is the DCT quantizated transformed tile and Y is the following matrix:
+
+        Y = ( diag(D) * diag(D)' ) ./ Q
+
+        Note that the Y matrix can be computed only once, offline.
+        
+    */
+    cv::Mat tileDCT, D_t, DDt;
+    tile.convertTo(tileDCT, CV_64FC1);
+    
+    transpose(D.diag(), D_t);
+    matrix_mult<double>(D.diag(), D_t, DDt, CV_64FC1);
+    // matrix_mult(D_diag, D_t, DDt, CV_64FC1);
+    D_t.deallocate();   //cleanup
+
+    output = tileDCT.mul(DDt);
+    DDt.deallocate(); //cleanup
+    output /= Q;
+
+    /* round */ //TODO: check if this can be done in a non pixel-by-pixel way
+    for(int i=0; i<output.rows; i++){
+        for(int j=0; j<output.cols; j++){
+            output.at<double>(i,j) = round(output.at<double>(i,j));
+        }
+    }
+}
+
+void BC12::y_dequantizate(const cv::Mat& tile, cv::Mat& output) {
+    dequantizate(tile, this->getQ(), output);
+}
+
+void BC12::cr_dequantizate(const cv::Mat& tile, cv::Mat& output){
+    dequantizate(tile, this->getCQ(), output);
+}
+
+void BC12::cb_dequantizate(const cv::Mat& tile, cv::Mat& output){
+    dequantizate(tile, this->getCQ(), output);
+}
+
+void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
+    assert(tile.type() == CV_64FC1 && "Wrong tile type");
+    assert(Q.type() == CV_64FC1 && "Wrong Q type");
+    cv::Mat deq = tile.mul(Q);
+    deq.copyTo(output);
 }

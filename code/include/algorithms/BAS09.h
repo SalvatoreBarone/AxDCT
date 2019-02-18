@@ -29,18 +29,28 @@
 #define _BAS09_H
 
 #include <opencv2/opencv.hpp>
+#include "AxDCT_algorithm.h"
 
-    class BAS09
-    {
-        private:
-            BAS09(){};
+class BAS09 : public AxDCT_algorithm
+{
 
-        public:
-            static void retrieveParameters(cv::Mat& T, cv::Mat& D, cv::Mat& Q, cv::Mat& CQ);
-            static cv::Mat getT();
-            static cv::Mat getD();
-            static cv::Mat getQ();
-            static cv::Mat getCQ();
-    };
+    private:
+        void dct1d(const cv::Mat& input, cv::Mat& output);
+
+        cv::Mat getT();
+        cv::Mat getD();
+        cv::Mat getQ();
+        cv::Mat getCQ();
+
+    public:
+        BAS09() : AxDCT_algorithm() {};
+        void y_quantizate(const cv::Mat&, cv::Mat&);
+        void cr_quantizate(const cv::Mat&, cv::Mat&);
+        void cb_quantizate(const cv::Mat&, cv::Mat&);
+
+        void y_dequantizate(const cv::Mat&, cv::Mat&);
+        void cr_dequantizate(const cv::Mat&, cv::Mat&);
+        void cb_dequantizate(const cv::Mat&, cv::Mat&);
+};
 
 #endif /* _BAS09_H */
