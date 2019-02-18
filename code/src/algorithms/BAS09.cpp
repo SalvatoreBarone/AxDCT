@@ -27,7 +27,7 @@
 
 #include "BAS09.h"
 
-static void quantizate(const cv::Mat&, const cv::Mat&, const cv::Mat&, cv::Mat&);
+static void quantizate(const cv::Mat&, const cv::Mat&, cv::Mat&);
 static void dequantizate(const cv::Mat&, const cv::Mat&, cv::Mat&);
 
 cv::Mat BAS09::getT(){
@@ -283,6 +283,37 @@ cv::Mat BAS09::getCQ(){
     return CQ;
 }
 
+cv::Mat BAS09::getYQuantizationMatix(){
+    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
+    
+    transpose(this->getD().diag(), D_t);
+    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
+
+    quantizationMatrix /= this->getQ();
+    return quantizationMatrix;
+
+}
+
+cv::Mat BAS09::getCbQuantizationMatix(){
+    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
+    
+    transpose(this->getD().diag(), D_t);
+    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
+
+    quantizationMatrix /= this->getCQ();
+    return quantizationMatrix;
+}
+
+cv::Mat BAS09::getCrQuantizationMatix(){
+    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
+    
+    transpose(this->getD().diag(), D_t);
+    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
+
+    quantizationMatrix /= this->getCQ();
+    return quantizationMatrix;
+}
+
 
 void BAS09::dct1d(const cv::Mat& input, cv::Mat& output){
 
@@ -310,18 +341,18 @@ void BAS09::dct1d(const cv::Mat& input, cv::Mat& output){
 }
 
 void BAS09::y_quantizate(const cv::Mat& tile, cv::Mat& output){
-    quantizate(tile, this->getD(), this->getQ(), output);
+    quantizate(tile, this->getYQuantizationMatix(), output);
 }
 
 void BAS09::cr_quantizate(const cv::Mat& tile, cv::Mat& output){
-    quantizate(tile, this->getD(), this->getCQ(), output);
+    quantizate(tile, this->getCrQuantizationMatix(), output);
 }
 
 void BAS09::cb_quantizate(const cv::Mat& tile, cv::Mat& output){
-    quantizate(tile, this->getD(), this->getCQ(), output);
+    quantizate(tile, this->getCbQuantizationMatix(), output);
 }
 
-void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output){
+void quantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
     /*
         D matrix is merged with the Q matrix. Since D is diagonal, then: 
         
@@ -338,22 +369,13 @@ void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat
         Note that the Y matrix can be computed only once, offline.
         
     */
-    cv::Mat tileDCT, D_t, DDt;
+    cv::Mat tileDCT;
     tile.convertTo(tileDCT, CV_64FC1);
-    
-    transpose(D.diag(), D_t);
-    matrix_mult<double>(D.diag(), D_t, DDt, CV_64FC1);
-    // matrix_mult(D_diag, D_t, DDt, CV_64FC1);
-    D_t.deallocate();   //cleanup
-
-    output = tileDCT.mul(DDt);
-    DDt.deallocate(); //cleanup
-    output /= Q;
-
-    /* round */ //TODO: check if this can be done in a non pixel-by-pixel way
+    output = cv::Mat::zeros(tile.rows, tile.cols, CV_64FC1);
+     
     for(int i=0; i<output.rows; i++){
         for(int j=0; j<output.cols; j++){
-            output.at<double>(i,j) = round(output.at<double>(i,j));
+            output.at<double>(i,j) = round( tileDCT.at<double>(i,j) * Q.at<double>(i,j) );
         }
     }
 }

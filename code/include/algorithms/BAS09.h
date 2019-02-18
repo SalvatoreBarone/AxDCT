@@ -41,6 +41,9 @@ class BAS09 : public AxDCT_algorithm
         cv::Mat getD();
         cv::Mat getQ();
         cv::Mat getCQ();
+        cv::Mat getYQuantizationMatix();
+        cv::Mat getCrQuantizationMatix();
+        cv::Mat getCbQuantizationMatix();
 
     public:
         BAS09() : AxDCT_algorithm() {};

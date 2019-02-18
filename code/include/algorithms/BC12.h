@@ -41,6 +41,9 @@ class BC12 : public AxDCT_algorithm
         cv::Mat getD();
         cv::Mat getQ();
         cv::Mat getCQ();
+        cv::Mat getYQuantizationMatix();
+        cv::Mat getCrQuantizationMatix();
+        cv::Mat getCbQuantizationMatix();
 
     public:
         BC12() : AxDCT_algorithm() {};
