@@ -1,8 +1,8 @@
 [
 {
-  "command": "clang++  -std=c++11 -c ../chimera/output/mutants/BC12.cpp/3/BC12.cpp -I./include -I./include/algorithms -I./include/core -I./include/utils -I/usr/local/include/opencv4 -lopencv_core",
+  "command": "clang++  -std=c++11 -c ../chimera/output/mutants/BC12.cpp/1/BC12.cpp -I./include -I./include/algorithms -I./include/core -I./include/utils -I/usr/local/include/opencv4 -lopencv_core",
   "directory": "/home/andrea/AxDCT/code",
-  "file": "../chimera/output/mutants/BC12.cpp/3/BC12.cpp"
+  "file": "../chimera/output/mutants/BC12.cpp/1/BC12.cpp"
 },
 {
   "command": "clang++  -std=c++11 -c bellerophon_functions.cpp -I../code/include -I../code/include/algorithms -I../code/include/core -I../code/include/utils -I/usr/local/include/opencv4 -lopencv_core",
