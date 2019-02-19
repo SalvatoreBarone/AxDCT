@@ -4,7 +4,19 @@ set -x
 echo "Launching bellerophon"
 echo "*********** REMEMBER TO RUN CMAKE ON ORIGINAL CODE FIRST!! ***********"
 
-bellerophon -v -arcs /usr/lib/libInexactAdders.a -arcs /home/andrea/AxDCT/code/build/libs/libaxdctAlgorithms.a -objs /usr/local/lib/libopencv_core.so.4.0.1 -objs /usr/local/lib/libopencv_imgproc.so.4.0.1 -objs /usr/local/lib/libopencv_imgcodecs.so.4.0.1 -objs /usr/local/lib/libopencv_highgui.so.4.0.1 -cd-dir ./ -r ../chimera/output/mutants/main.cpp/2/inax1_report.csv -t InAx1Aprx -P gaconfig.param 1e-7 -print-options
+bellerophon -v  -arcs /usr/lib/libInexactAdders.a  \
+                -arcs /home/andrea/AxDCT/code/build/libs/libaxdctAlgorithms.a  \
+                -arcs /home/andrea/AxDCT/code/build/libs/libaxdctCore.a  \
+                -arcs /home/andrea/AxDCT/code/build/libs/libutils.a  \
+                -objs /usr/local/lib/libopencv_core.so.4.0.1   \
+                -objs /usr/local/lib/libopencv_imgproc.so.4.0.1    \
+                -objs /usr/local/lib/libopencv_imgcodecs.so.4.0.1  \
+                -objs /usr/local/lib/libopencv_highgui.so.4.0.1    \
+                -cd-dir ./ \
+                -r ../chimera/output/mutants/BC12.cpp/3/inax1_report.csv   \
+                -t InAx1Aprx   \
+                -P gaconfig.param 1e-7
+                
 
 
 

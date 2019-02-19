@@ -10,8 +10,8 @@
 #include <fstream>
 #include <math.h>
 
-#include "main.h"
-#include "axdct_algorithms.h"
+
+#include "algorithms_list.h"
 #include "algorithms/BC12.h"
 
 
