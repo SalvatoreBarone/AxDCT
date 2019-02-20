@@ -65,3 +65,62 @@ void AxDCT_algorithm::dct(const cv::Mat& tile, cv::Mat& output){
     /* In temp it's stored the AxDCT-2D of the input tile. Finally copy it to the output matrix */
     temp.copyTo(output);
 }
+
+void AxDCT_algorithm::y_quantizate(const cv::Mat& tile, cv::Mat& output){
+    quantizate(tile, this->getYQuantizationMatix(), output);
+}
+
+void AxDCT_algorithm::cr_quantizate(const cv::Mat& tile, cv::Mat& output){
+    quantizate(tile, this->getCrQuantizationMatix(), output);
+}
+
+void AxDCT_algorithm::cb_quantizate(const cv::Mat& tile, cv::Mat& output){
+    quantizate(tile, this->getCbQuantizationMatix(), output);
+}
+
+void AxDCT_algorithm::quantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
+    /*
+        D matrix is merged with the Q matrix. Since D is diagonal, then: 
+        
+            D * (tile) * D' = (diag(D) * diag(D)') .* (tile)
+
+        This result should be divided elem-wise by Q.
+
+        An equivalent quantization is the following:
+        F = tile .* Y
+        where F is the DCT quantizated transformed tile and Y is the following matrix:
+
+        Y = ( diag(D) * diag(D)' ) ./ Q
+
+        Note that the Y matrix can be computed only once, offline.
+        
+    */
+    cv::Mat tileDCT;
+    tile.convertTo(tileDCT, CV_64FC1);
+    output = cv::Mat::zeros(tile.rows, tile.cols, CV_64FC1);
+     
+    for(int i=0; i<output.rows; i++){
+        for(int j=0; j<output.cols; j++){
+            output.at<double>(i,j) = round( tileDCT.at<double>(i,j) * Q.at<double>(i,j) );
+        }
+    }
+}
+
+void AxDCT_algorithm::y_dequantizate(const cv::Mat& tile, cv::Mat& output) {
+    dequantizate(tile, this->getYDequantizationMatix(), output);
+}
+
+void AxDCT_algorithm::cr_dequantizate(const cv::Mat& tile, cv::Mat& output){
+    dequantizate(tile, this->getCrDequantizationMatix(), output);
+}
+
+void AxDCT_algorithm::cb_dequantizate(const cv::Mat& tile, cv::Mat& output){
+    dequantizate(tile, this->getCrDequantizationMatix(), output);
+}
+
+void AxDCT_algorithm::dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
+    assert(tile.type() == CV_64FC1 && "Wrong tile type");
+    assert(Q.type() == CV_64FC1 && "Wrong Q type");
+    cv::Mat deq = tile.mul(Q);
+    deq.copyTo(output);
+}

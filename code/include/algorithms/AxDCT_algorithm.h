@@ -39,16 +39,27 @@
 class AxDCT_algorithm{
     public:
         virtual void dct(const cv::Mat&, cv::Mat&);
-        virtual void y_quantizate(const cv::Mat&, cv::Mat&) = 0;
-        virtual void cr_quantizate(const cv::Mat&, cv::Mat&) = 0;
-        virtual void cb_quantizate(const cv::Mat&, cv::Mat&) = 0;
 
-        virtual void y_dequantizate(const cv::Mat&, cv::Mat&) = 0;
-        virtual void cr_dequantizate(const cv::Mat&, cv::Mat&) = 0;
-        virtual void cb_dequantizate(const cv::Mat&, cv::Mat&) = 0;
+        virtual void y_quantizate(const cv::Mat&, cv::Mat&);
+        virtual void cr_quantizate(const cv::Mat&, cv::Mat&);
+        virtual void cb_quantizate(const cv::Mat&, cv::Mat&);
+
+        virtual void y_dequantizate(const cv::Mat&, cv::Mat&);
+        virtual void cr_dequantizate(const cv::Mat&, cv::Mat&);
+        virtual void cb_dequantizate(const cv::Mat&, cv::Mat&);
 
     protected:
         virtual void dct1d(const cv::Mat&, cv::Mat&) = 0;
+        virtual void quantizate(const cv::Mat&, const cv::Mat&, cv::Mat&);
+        virtual void dequantizate(const cv::Mat&, const cv::Mat&, cv::Mat&);
+
+        virtual cv::Mat getYQuantizationMatix() = 0;
+        virtual cv::Mat getCrQuantizationMatix() = 0;
+        virtual cv::Mat getCbQuantizationMatix() = 0;
+
+        virtual cv::Mat getYDequantizationMatix() = 0;
+        virtual cv::Mat getCrDequantizationMatix() = 0;
+        virtual cv::Mat getCbDequantizationMatix() = 0;
 
 };
 

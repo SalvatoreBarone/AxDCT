@@ -10,9 +10,9 @@ add_subdirectory(algorithms)
 
 add_executable( displayImg main.cpp )
 
-target_include_directories(displayImg PRIVATE ${CMAKE_SOURCE_DIR}/include)
-target_include_directories(displayImg PRIVATE ${CMAKE_SOURCE_DIR}/include/core)
-target_include_directories(displayImg PRIVATE ${CMAKE_SOURCE_DIR}/include/algorithms)
-target_include_directories(displayImg PRIVATE ${CMAKE_SOURCE_DIR}/include/utils)
+target_include_directories(displayImg PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(displayImg PUBLIC ${CMAKE_SOURCE_DIR}/include/core)
+target_include_directories(displayImg PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
+target_include_directories(displayImg PUBLIC ${CMAKE_SOURCE_DIR}/include/utils)
 
 target_link_libraries( displayImg utils ${OpenCV_LIBS} axdctCore axdctAlgorithms)

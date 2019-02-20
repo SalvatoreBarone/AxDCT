@@ -37,24 +37,22 @@ class BC12 : public AxDCT_algorithm
     private:
         virtual void dct1d(const cv::Mat& input, cv::Mat& output);
 
+        virtual cv::Mat getYQuantizationMatix();
+        virtual cv::Mat getCrQuantizationMatix();
+        virtual cv::Mat getCbQuantizationMatix();
+
+        virtual cv::Mat getYDequantizationMatix();
+        virtual cv::Mat getCrDequantizationMatix();
+        virtual cv::Mat getCbDequantizationMatix();
+
         cv::Mat getT();
         cv::Mat getD();
         cv::Mat getQ();
         cv::Mat getCQ();
-        cv::Mat getYQuantizationMatix();
-        cv::Mat getCrQuantizationMatix();
-        cv::Mat getCbQuantizationMatix();
 
     public:
         BC12() : AxDCT_algorithm() {};
 
-        virtual void y_quantizate(const cv::Mat&, cv::Mat&);
-        virtual void cr_quantizate(const cv::Mat&, cv::Mat&);
-        virtual void cb_quantizate(const cv::Mat&, cv::Mat&);
- 
-        virtual void y_dequantizate(const cv::Mat&, cv::Mat&);
-        virtual void cr_dequantizate(const cv::Mat&, cv::Mat&);
-        virtual void cb_dequantizate(const cv::Mat&, cv::Mat&);
         
 };
 

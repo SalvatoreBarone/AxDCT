@@ -27,9 +27,6 @@
 
 #include "BAS09.h"
 
-static void quantizate(const cv::Mat&, const cv::Mat&, cv::Mat&);
-static void dequantizate(const cv::Mat&, const cv::Mat&, cv::Mat&);
-
 cv::Mat BAS09::getT(){
 
     cv::Mat T = cv::Mat::zeros(8,8,CV_16S);
@@ -314,6 +311,17 @@ cv::Mat BAS09::getCrQuantizationMatix(){
     return quantizationMatrix;
 }
 
+cv::Mat BAS09::getYDequantizationMatix(){
+    return this->getQ();
+}
+
+cv::Mat BAS09::getCrDequantizationMatix(){
+    return this->getCQ();
+}
+
+cv::Mat BAS09::getCbDequantizationMatix(){
+    return this->getCQ();
+}
 
 void BAS09::dct1d(const cv::Mat& input, cv::Mat& output){
 
@@ -338,63 +346,4 @@ void BAS09::dct1d(const cv::Mat& input, cv::Mat& output){
     output.at<int16_t>(6,0) = x0 - x1 + x2 - x3 - x4 + x5 - x6 + x7;
     output.at<int16_t>(7,0) = x0 - x1 + x2 - x3 + x4 - x5 + x6 - x7;
 
-}
-
-void BAS09::y_quantizate(const cv::Mat& tile, cv::Mat& output){
-    quantizate(tile, this->getYQuantizationMatix(), output);
-}
-
-void BAS09::cr_quantizate(const cv::Mat& tile, cv::Mat& output){
-    quantizate(tile, this->getCrQuantizationMatix(), output);
-}
-
-void BAS09::cb_quantizate(const cv::Mat& tile, cv::Mat& output){
-    quantizate(tile, this->getCbQuantizationMatix(), output);
-}
-
-void quantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
-    /*
-        D matrix is merged with the Q matrix. Since D is diagonal, then: 
-        
-            D * (tile) * D' = (diag(D) * diag(D)') .* (tile)
-
-        This result should be divided elem-wise by Q.
-
-        An equivalent quantization is the following:
-        F = tile .* Y
-        where F is the DCT quantizated transformed tile and Y is the following matrix:
-
-        Y = ( diag(D) * diag(D)' ) ./ Q
-
-        Note that the Y matrix can be computed only once, offline.
-        
-    */
-    cv::Mat tileDCT;
-    tile.convertTo(tileDCT, CV_64FC1);
-    output = cv::Mat::zeros(tile.rows, tile.cols, CV_64FC1);
-     
-    for(int i=0; i<output.rows; i++){
-        for(int j=0; j<output.cols; j++){
-            output.at<double>(i,j) = round( tileDCT.at<double>(i,j) * Q.at<double>(i,j) );
-        }
-    }
-}
-
-void BAS09::y_dequantizate(const cv::Mat& tile, cv::Mat& output) {
-    dequantizate(tile, this->getQ(), output);
-}
-
-void BAS09::cr_dequantizate(const cv::Mat& tile, cv::Mat& output){
-    dequantizate(tile, this->getCQ(), output);
-}
-
-void BAS09::cb_dequantizate(const cv::Mat& tile, cv::Mat& output){
-    dequantizate(tile, this->getCQ(), output);
-}
-
-void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
-    assert(tile.type() == CV_64FC1 && "Wrong tile type");
-    assert(Q.type() == CV_64FC1 && "Wrong Q type");
-    cv::Mat deq = tile.mul(Q);
-    deq.copyTo(output);
 }
