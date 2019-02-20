@@ -25,8 +25,8 @@
  * @brief  Implementation of main executable functions
  ******************************************************************************/
 
-#include "main.h"
-
+#include "core/dct.h"
+#include "algorithms_list.h"
 
 #define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
@@ -49,10 +49,14 @@ int main(int argc, char** argv )
     std::vector<cv::Mat> chan(3);
     cv::split(ycrcbImg, chan);
 
+    chan[0].convertTo(chan[0], CV_16S);
+    chan[1].convertTo(chan[1], CV_16S);
+    chan[2].convertTo(chan[2], CV_16S);
+
     /* Retrieve parameters for transformation */
     int blockSize = 8;
-    cv::Mat T, D, Q, CQ;
-    BC12::retrieveParameters(T, D, Q, CQ);
+    // cv::Mat T, D, Q, CQ;
+    // BC12::retrieveParameters(T, D, Q, CQ);
 
     /********* LUMA *********/
 
@@ -63,13 +67,13 @@ int main(int argc, char** argv )
         for(int j=0;j<chan[0].cols/blockSize;j++){
             
             /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], T, tiles[i][j]);
+            AxDCT(tiles[i][j], tiles[i][j]);
 
             /* Quantization step */
-            quantizate(tiles[i][j], D, Q, tiles[i][j]);
+            y_quantizate(tiles[i][j], tiles[i][j]);
 
             /* Dequantization step */
-            dequantizate(tiles[i][j], Q, tiles[i][j]);
+            y_dequantizate(tiles[i][j], tiles[i][j]);
 
             /* Do the exact IDCT */
             cv::idct(tiles[i][j], tiles[i][j]);
@@ -95,13 +99,13 @@ int main(int argc, char** argv )
         for(int j=0;j<chan[1].cols/blockSize;j++){
             
             /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], T, tiles[i][j]);
+            AxDCT(tiles[i][j], tiles[i][j]);
 
             /* Quantization step */
-            quantizate(tiles[i][j], D, CQ, tiles[i][j]);
+            cr_quantizate(tiles[i][j], tiles[i][j]);
 
             /* Dequantization step */
-            dequantizate(tiles[i][j], CQ, tiles[i][j]);
+            cr_dequantizate(tiles[i][j], tiles[i][j]);
 
             /* Do the exact IDCT */
             cv::idct(tiles[i][j], tiles[i][j]);
@@ -127,13 +131,13 @@ int main(int argc, char** argv )
         for(int j=0;j<chan[2].cols/blockSize;j++){
             
             /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], T, tiles[i][j]);
+            AxDCT(tiles[i][j], tiles[i][j]);
 
             /* Quantization step */
-            quantizate(tiles[i][j], D, CQ, tiles[i][j]);
+            cb_quantizate(tiles[i][j], tiles[i][j]);
 
             /* Dequantization step */
-            dequantizate(tiles[i][j], CQ, tiles[i][j]);
+            cb_dequantizate(tiles[i][j], tiles[i][j]);
 
             /* Do the exact IDCT */
             cv::idct(tiles[i][j], tiles[i][j]);
@@ -162,129 +166,10 @@ int main(int argc, char** argv )
     return 0;
 }
 
-template<typename T> 
-void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type){
-    assert((A.cols == B.rows) && "Bad product multiplication");
-    assert( ((type == CV_16S)||(type == CV_8U)||(type == CV_64FC1)) && "Type currently not supported" );
-    assert(
-        (( ( std::is_same<T, unsigned char>::value ) && ( type == CV_8U    ) ) ||
-         ( ( std::is_same<T, short int    >::value ) && ( type == CV_16S   ) ) ||
-         ( ( std::is_same<T, double       >::value ) && ( type == CV_64FC1 ) ) ) &&
-         "Template type and requested destination type are incompatible"
-    );
 
-    /* Init matrix for calc */
-    cv::Mat first(A.rows, A.cols, type);
-    cv::Mat second(B.rows, B.cols, type);
 
-    /* Type conversion if needed */
-    if(A.type() != type) A.convertTo(first, type);
-    else  A.copyTo(first);
 
-    if(B.type() != type) B.convertTo(second, type);
-    else B.copyTo(second);
 
-    /* Init output matrix if it is NULL or of wrong size */
-    if( !( RES.rows == A.rows && RES.cols == B.cols && RES.type() == type ) ) RES = cv::Mat::zeros(A.rows, B.cols, type);
 
-    cv::Mat ret = cv::Mat::zeros(A.rows, B.cols, type);
 
-    for(int i=0; i<A.rows; i++){
-        for(int j=0; j<B.cols; j++){
-            for(int k=0; k<A.cols; k++){
-                // The operation is: RES[i][j] += A[i][k] * B[k][j];
-                ret.at<T>(i,j) = ret.at<T>(i,j) + first.at<T>(i,k) * second.at<T>(k,j);
-            }
-        }
-    }  
-    ret.copyTo(RES);  
-}
 
-cv::Mat **splitInTiles(const cv::Mat &input, int blockSize){
-    if( ((input.rows%blockSize) != 0) || ((input.cols%blockSize) != 0) ) return NULL;
-
-    int r=input.rows/blockSize;
-    int c=input.cols/blockSize;
-
-    cv::Mat **ret = new cv::Mat*[r];
-
-    for(int i=0; i<r; i++){
-        ret[i] = new cv::Mat[c];
-    }
-
-    for(int i=0; i<r; i++){
-        for(int j=0; j<c; j++){
-            (input(cv::Rect(i*blockSize,j*blockSize,blockSize,blockSize))).copyTo(ret[i][j]);
-        }
-    }
-
-    return ret;
-}
-
-cv::Mat mergeTiles(cv::Mat **tiles, int imgWidth, int imgLength, int blockSize, bool deallocTiles){
-
-    assert((imgWidth % blockSize == 0) && "Width must be multiple of block size");
-    assert((imgLength % blockSize == 0) && "Length must be multiple of block size");
-
-    cv::Mat ret(imgWidth, imgLength, CV_64FC1);
-
-    for(int i=0; i<imgWidth/blockSize; i++){
-        for(int j=0; j<imgLength/blockSize; j++){
-            tiles[i][j].copyTo(ret(cv::Rect(i*blockSize,j*blockSize,blockSize,blockSize)));
-            if(deallocTiles) tiles[i][j].deallocate();
-        }
-    }
-
-    return ret;
-}
-
-void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output){
-
-    cv::Mat T_t;
-    cv::transpose(T, T_t);
-    matrix_mult<int16_t>(T, tile, output, CV_16S);
-    matrix_mult<int16_t>(output, T_t, output, CV_16S);
-}
-
-void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output){
-    /*
-        D matrix is merged with the Q matrix. Since D is diagonal, then: 
-        
-            D * (tile) * D' = (diag(D) * diag(D)') .* (tile)
-
-        This result should be divided elem-wise by Q.
-
-        An equivalent quantization is the following:
-        F = tile .* Y
-        where F is the DCT quantizated transformed tile and Y is the following matrix:
-
-        Y = ( diag(D) * diag(D)' ) ./ Q
-
-        Note that the Y matrix can be computed only once, offline.
-        
-    */
-    cv::Mat tileDCT, D_t, DDt;
-    tile.convertTo(tileDCT, CV_64FC1);
-    
-    transpose(D.diag(), D_t);
-    matrix_mult<double>(D.diag(), D_t, DDt, CV_64FC1);
-    D_t.deallocate();   //cleanup
-
-    output = tileDCT.mul(DDt);
-    DDt.deallocate(); //cleanup
-    output /= Q;
-
-    /* round */ //TODO: check if this can be done in a non pixel-by-pixel way
-    for(int i=0; i<output.rows; i++){
-        for(int j=0; j<output.cols; j++){
-            output.at<double>(i,j) = round(output.at<double>(i,j));
-        }
-    }
-}
-
-void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
-    assert(tile.type() == CV_64FC1 && "Wrong tile type");
-    assert(Q.type() == CV_64FC1 && "Wrong Q type");
-    cv::Mat deq = tile.mul(Q);
-    deq.copyTo(output);
-}

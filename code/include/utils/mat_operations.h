@@ -19,13 +19,14 @@
 //
 
 /******************************************************************************
- * @file   main.h
+ * @file   mat_operations.h
  * @author Andrea Aletto
- * @date   4 feb 2019
- * @brief  Declaration of main executable functions
+ * @date   16 feb 2019
+ * @brief  Declaration of utils functions for image structures handling
  ******************************************************************************/
-#ifndef _MAIN_H
-#define _MAIN_H
+
+#ifndef _MAT_OPERATIONS_H
+#define _MAT_OPERATIONS_H
 
 #include <iostream>
 #include <stdio.h>
@@ -33,15 +34,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <inexact_adders.h>
-#include "axdct_algorithms.h"
 
+template<typename T>
+void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type = CV_64FC1);
 // template<typename T>
-// void matrix_mult(const cv::Mat &A, const cv::Mat &B, cv::Mat &RES, int type = CV_64FC1);
+// void matrix_mult(cv::Mat const&, cv::Mat const&, cv::Mat&, int);
+
 cv::Mat **splitInTiles(const cv::Mat &input, int blockSize);
+
 cv::Mat mergeTiles( cv::Mat **tiles, int imgWidth, int imgLength, int blockSize = 8, bool deallocTiles = true);
-void AxDCT(const cv::Mat& tile, const cv::Mat& T, cv::Mat& output);
-void quantizate(const cv::Mat& tile, const cv::Mat& D, const cv::Mat& Q, cv::Mat& output);
-void dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output);
 
 
-#endif
+extern template void matrix_mult<unsigned char>(cv::Mat const& A, cv::Mat const& B, cv::Mat& RES, int type);
+extern template void matrix_mult<int16_t>(cv::Mat const& A, cv::Mat const& B, cv::Mat& RES, int type);
+extern template void matrix_mult<double>(cv::Mat const& A, cv::Mat const& B, cv::Mat& RES, int type);
+
+#endif /* _MAT_OPERATIONS_H */

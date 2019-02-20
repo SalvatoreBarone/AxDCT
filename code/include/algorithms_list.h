@@ -19,40 +19,13 @@
 //
 
 /******************************************************************************
- * @file   BAS09.h
+ * @file   axdct_algorithms.h
  * @author Andrea Aletto
- * @date   11 feb 2019
- * @brief  Declaration of BAS09 algorithm class
+ * @date   4 feb 2019
+ * @brief  Include list of all AxDCT algorithms
  ******************************************************************************/
 
-#ifndef _BAS09_H
-#define _BAS09_H
-
-#include <opencv2/opencv.hpp>
-#include "AxDCT_algorithm.h"
-
-class BAS09 : public AxDCT_algorithm
-{
-
-    private:
-        virtual void dct1d(const cv::Mat& input, cv::Mat& output);
-
-        virtual cv::Mat getYQuantizationMatix();
-        virtual cv::Mat getCrQuantizationMatix();
-        virtual cv::Mat getCbQuantizationMatix();
-
-        virtual cv::Mat getYDequantizationMatix();
-        virtual cv::Mat getCrDequantizationMatix();
-        virtual cv::Mat getCbDequantizationMatix();
-
-        cv::Mat getT();
-        cv::Mat getD();
-        cv::Mat getQ();
-        cv::Mat getCQ();
-
-    public:
-        BAS09() : AxDCT_algorithm() {};
-
-};
-
-#endif /* _BAS09_H */
+#include "algorithms/AxDCT_algorithm.h"
+#include "algorithms/BC12.h"
+#include "algorithms/BAS09.h"
+#include "algorithms/BAS08.h"

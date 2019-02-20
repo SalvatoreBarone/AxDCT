@@ -19,40 +19,32 @@
 //
 
 /******************************************************************************
- * @file   BAS09.h
+ * @file   dct.h
  * @author Andrea Aletto
- * @date   11 feb 2019
- * @brief  Declaration of BAS09 algorithm class
+ * @date   16 feb 2019
+ * @brief  Declaration of dct functions in approximate context
  ******************************************************************************/
 
-#ifndef _BAS09_H
-#define _BAS09_H
+#ifndef _DCT_H
+#define _DCT_H
 
+#include <iostream>
+#include <stdio.h>
 #include <opencv2/opencv.hpp>
-#include "AxDCT_algorithm.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <inexact_adders.h>
+#include "../utils/mat_operations.h"
+#include "../algorithms_list.h"
+#include "../user_defines.h"
 
-class BAS09 : public AxDCT_algorithm
-{
+void AxDCT(const cv::Mat& tile, cv::Mat& output);
+void y_quantizate(const cv::Mat& tile, cv::Mat& output);
+void cb_quantizate(const cv::Mat& tile, cv::Mat& output);
+void cr_quantizate(const cv::Mat& tile, cv::Mat& output);
 
-    private:
-        virtual void dct1d(const cv::Mat& input, cv::Mat& output);
+void  y_dequantizate(const cv::Mat& tile, cv::Mat& output);
+void cb_dequantizate(const cv::Mat& tile, cv::Mat& output);
+void cr_dequantizate(const cv::Mat& tile, cv::Mat& output);
 
-        virtual cv::Mat getYQuantizationMatix();
-        virtual cv::Mat getCrQuantizationMatix();
-        virtual cv::Mat getCbQuantizationMatix();
-
-        virtual cv::Mat getYDequantizationMatix();
-        virtual cv::Mat getCrDequantizationMatix();
-        virtual cv::Mat getCbDequantizationMatix();
-
-        cv::Mat getT();
-        cv::Mat getD();
-        cv::Mat getQ();
-        cv::Mat getCQ();
-
-    public:
-        BAS09() : AxDCT_algorithm() {};
-
-};
-
-#endif /* _BAS09_H */
+#endif /* _DCT_H */

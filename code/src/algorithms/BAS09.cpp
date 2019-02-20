@@ -27,15 +27,6 @@
 
 #include "BAS09.h"
 
-void BAS09::retrieveParameters(cv::Mat& T, cv::Mat& D, cv::Mat& Q, cv::Mat& CQ){
-    
-    T = BAS09::getT();
-    D = BAS09::getD();
-    Q = BAS09::getQ();
-    CQ = BAS09::getCQ();
-    
-}
-
 cv::Mat BAS09::getT(){
 
     cv::Mat T = cv::Mat::zeros(8,8,CV_16S);
@@ -287,4 +278,72 @@ cv::Mat BAS09::getCQ(){
     CQ.at<double>(7, 7) = 99;
 
     return CQ;
+}
+
+cv::Mat BAS09::getYQuantizationMatix(){
+    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
+    
+    transpose(this->getD().diag(), D_t);
+    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
+
+    quantizationMatrix /= this->getQ();
+    return quantizationMatrix;
+
+}
+
+cv::Mat BAS09::getCbQuantizationMatix(){
+    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
+    
+    transpose(this->getD().diag(), D_t);
+    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
+
+    quantizationMatrix /= this->getCQ();
+    return quantizationMatrix;
+}
+
+cv::Mat BAS09::getCrQuantizationMatix(){
+    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
+    
+    transpose(this->getD().diag(), D_t);
+    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
+
+    quantizationMatrix /= this->getCQ();
+    return quantizationMatrix;
+}
+
+cv::Mat BAS09::getYDequantizationMatix(){
+    return this->getQ();
+}
+
+cv::Mat BAS09::getCrDequantizationMatix(){
+    return this->getCQ();
+}
+
+cv::Mat BAS09::getCbDequantizationMatix(){
+    return this->getCQ();
+}
+
+void BAS09::dct1d(const cv::Mat& input, cv::Mat& output){
+
+    assert(( (input.rows == 8) && (input.cols==1) ) && "Column vector of size 8x1 is needed for 1D-DCT.");
+    assert( (input.type() == CV_16S) && "Unable to compute AxDCT-1D: element of type CV_16S required.");
+
+    int16_t x0 = input.at<int16_t>(0,0);
+    int16_t x1 = input.at<int16_t>(1,0);
+    int16_t x2 = input.at<int16_t>(2,0);
+    int16_t x3 = input.at<int16_t>(3,0);
+    int16_t x4 = input.at<int16_t>(4,0);
+    int16_t x5 = input.at<int16_t>(5,0);
+    int16_t x6 = input.at<int16_t>(6,0);
+    int16_t x7 = input.at<int16_t>(7,0);
+
+    output.at<int16_t>(0,0) = x0 + x1 + x2 + x3 + x4 + x5 + x6 + x7;
+    output.at<int16_t>(1,0) = x0 + x1 + x2 + x3 - x4 - x5 - x6 - x7;
+    output.at<int16_t>(2,0) = x0 + x1 - x2 - x3 - x4 - x5 + x6 + x7;
+    output.at<int16_t>(3,0) = x0 - x1 - x2 - x3 + x4 + x5 + x6 - x7;
+    output.at<int16_t>(4,0) = x0 - x1 - x2 + x3 + x4 - x5 - x6 + x7;
+    output.at<int16_t>(5,0) = x0 - x1 + x2 + x3 - x4 - x5 + x6 - x7;
+    output.at<int16_t>(6,0) = x0 - x1 + x2 - x3 - x4 + x5 - x6 + x7;
+    output.at<int16_t>(7,0) = x0 - x1 + x2 - x3 + x4 - x5 + x6 - x7;
+
 }

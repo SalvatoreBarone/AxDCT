@@ -1,0 +1,35 @@
+dist: xenial
+sudo: required
+language: cpp
+
+before_install:
+- sudo apt-get -qq update
+- sudo apt-get install -y cmake ninja-build build-essential 
+- sudo apt-get install -y libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+- sudo apt-get install -y python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+#- sudo apt-get install -y g++-7
+#- sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
+- git clone https://github.com/opencv/opencv.git
+- cd opencv
+- mkdir build && cd build
+- cmake -D CMAKE_BUILD_TYPE=RELEASE -D BUILD_EXAMPLES=OFF -D BUILD_opencv_apps=OFF -D BUILD_DOCS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_TESTS=OFF -D CMAKE_INSTALL_PREFIX=/usr/local .. -G Ninja
+- ninja && sudo ninja install
+- sudo sh -c 'echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf'
+- sudo ldconfig
+- echo "OpenCV installed."
+- cd ../..
+- git clone https://github.com/andreaaletto/AxC-Adders.git adders
+- cd adders
+- mkdir build && cd build
+- cmake .. -G Ninja
+- ninja && sudo ninja install
+- cd ../..
+
+install:
+- cd code
+- mkdir build && cd build
+- cmake .. -G Ninja
+- ninja
+
+script:
+- ls bin/displayImg

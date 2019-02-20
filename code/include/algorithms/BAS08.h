@@ -19,19 +19,19 @@
 //
 
 /******************************************************************************
- * @file   BAS09.h
+ * @file   BAS08.h
  * @author Andrea Aletto
  * @date   11 feb 2019
- * @brief  Declaration of BAS09 algorithm class
+ * @brief  Declaration of BAS08 algorithm class
  ******************************************************************************/
 
-#ifndef _BAS09_H
-#define _BAS09_H
+#ifndef _BAS08_H
+#define _BAS08_H
 
 #include <opencv2/opencv.hpp>
 #include "AxDCT_algorithm.h"
 
-class BAS09 : public AxDCT_algorithm
+class BAS08 : public AxDCT_algorithm
 {
 
     private:
@@ -44,15 +44,14 @@ class BAS09 : public AxDCT_algorithm
         virtual cv::Mat getYDequantizationMatix();
         virtual cv::Mat getCrDequantizationMatix();
         virtual cv::Mat getCbDequantizationMatix();
-
-        cv::Mat getT();
+        
         cv::Mat getD();
         cv::Mat getQ();
         cv::Mat getCQ();
 
     public:
-        BAS09() : AxDCT_algorithm() {};
+        BAS08() : AxDCT_algorithm() {};
 
 };
 
-#endif /* _BAS09_H */
+#endif /* _BAS08_H */

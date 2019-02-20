@@ -29,18 +29,31 @@
 #define _BC12_H
 
 #include <opencv2/opencv.hpp>
+#include "AxDCT_algorithm.h"
 
-    class BC12
-    {
-        private:
-            BC12(){};
+class BC12 : public AxDCT_algorithm
+{
 
-        public:
-            static void retrieveParameters(cv::Mat& T, cv::Mat& D, cv::Mat& Q, cv::Mat& CQ);
-            static cv::Mat getT();
-            static cv::Mat getD();
-            static cv::Mat getQ();
-            static cv::Mat getCQ();
-    };
+    private:
+        virtual void dct1d(const cv::Mat& input, cv::Mat& output);
+
+        virtual cv::Mat getYQuantizationMatix();
+        virtual cv::Mat getCrQuantizationMatix();
+        virtual cv::Mat getCbQuantizationMatix();
+
+        virtual cv::Mat getYDequantizationMatix();
+        virtual cv::Mat getCrDequantizationMatix();
+        virtual cv::Mat getCbDequantizationMatix();
+
+        cv::Mat getT();
+        cv::Mat getD();
+        cv::Mat getQ();
+        cv::Mat getCQ();
+
+    public:
+        BC12() : AxDCT_algorithm() {};
+
+        
+};
 
 #endif /* _BC12_H */
