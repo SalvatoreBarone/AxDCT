@@ -29,43 +29,43 @@
 
 void AxDCT(const cv::Mat& tile, cv::Mat& output){
 
-    AxDCT_algorithm& alg = *(new __USER_ALGORITHM);
+    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
     alg.dct(tile, output);
     delete &alg;
 
 }
 
 void y_quantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_ALGORITHM);
+    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
     alg.y_quantizate(tile, output);
     delete &alg;
 }
 
 void cr_quantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_ALGORITHM);
+    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
     alg.cr_quantizate(tile, output);
     delete &alg;
 }
 
 void cb_quantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_ALGORITHM);
+    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
     alg.cb_quantizate(tile, output);
     delete &alg;
 }
 
 void y_dequantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_ALGORITHM);
+    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
     alg.y_dequantizate(tile, output);
     delete &alg;
 }
 
 void cb_dequantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_ALGORITHM);
+    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
     alg.cb_dequantizate(tile, output);
     delete &alg;
 }
 void cr_dequantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_ALGORITHM);
+    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
     alg.cr_dequantizate(tile, output);
     delete &alg;
 }
