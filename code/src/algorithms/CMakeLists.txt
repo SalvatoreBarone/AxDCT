@@ -6,6 +6,16 @@ add_library(axdctAlgorithms STATIC
     BC12.cpp
     BAS09.cpp
     BAS08.cpp
+    BAS11.cpp
+
+    ${CMAKE_SOURCE_DIR}/include/user_defines.h
+    ${CMAKE_SOURCE_DIR}/include/algorithms_list.h
+    ${CMAKE_SOURCE_DIR}/include/algorithms/AxDCT_algorithm.h
+    ${CMAKE_SOURCE_DIR}/include/algorithms/BC12.h
+    ${CMAKE_SOURCE_DIR}/include/algorithms/BAS09.h
+    ${CMAKE_SOURCE_DIR}/include/algorithms/BAS08.h
+    ${CMAKE_SOURCE_DIR}/include/algorithms/BAS11.h
+    
 )
 
-target_include_directories(axdctAlgorithms PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
+target_include_directories(axdctAlgorithms PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms ${CMAKE_SOURCE_DIR}/include)

@@ -19,19 +19,43 @@
 //
 
 /******************************************************************************
- * @file   main.h
+ * @file   BAS11.h
  * @author Andrea Aletto
- * @date   4 feb 2019
- * @brief  Declaration of main executable functions
+ * @date   21 feb 2019
+ * @brief  Declaration of BAS11 algorithm class
  ******************************************************************************/
-#ifndef _AXDCT_USER_DEFINES_H
-#define _AXDCT_USER_DEFINES_H
 
-#include "algorithms_list.h"
+#ifndef _BAS11_H
+#define _BAS11_H
 
-#define __USER_ALGORITHM BAS11
+#include <opencv2/opencv.hpp>
+#include "AxDCT_algorithm.h"
 
-#define __BAS11_a_PARAM 0.5
+class BAS11 : public AxDCT_algorithm
+{
 
+    private:
+        virtual void dct1d(const cv::Mat& input, cv::Mat& output);
 
-#endif /* _AXDCT_USER_DEFINES_H */
+        virtual cv::Mat getYQuantizationMatix();
+        virtual cv::Mat getCrQuantizationMatix();
+        virtual cv::Mat getCbQuantizationMatix();
+
+        virtual cv::Mat getYDequantizationMatix();
+        virtual cv::Mat getCrDequantizationMatix();
+        virtual cv::Mat getCbDequantizationMatix();
+        
+        cv::Mat getD();
+        cv::Mat getQ();
+        cv::Mat getCQ();
+
+        double a;
+
+    public:
+        BAS11();
+        double getA() { return a; }
+        void setA(double a) { this->a = a; }
+
+};
+
+#endif /* _BAS11_H */

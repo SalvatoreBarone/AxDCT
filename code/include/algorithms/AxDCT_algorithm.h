@@ -38,6 +38,8 @@
 
 class AxDCT_algorithm{
     public:
+        AxDCT_algorithm(){}
+
         virtual void dct(const cv::Mat&, cv::Mat&);
 
         virtual void y_quantizate(const cv::Mat&, cv::Mat&);
