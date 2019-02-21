@@ -39,6 +39,7 @@
 class AxDCT_algorithm{
     public:
         AxDCT_algorithm(){}
+        virtual ~AxDCT_algorithm(){}
 
         virtual void dct(const cv::Mat&, cv::Mat&);
 

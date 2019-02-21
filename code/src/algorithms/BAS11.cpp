@@ -36,8 +36,7 @@ BAS11::BAS11() : AxDCT_algorithm() {
             (   (__BAS11_a_PARAM == 0.0)       || \
                 (__BAS11_a_PARAM == 0.5)       || \
                 (__BAS11_a_PARAM == 1.0)       || \
-                (__BAS11_a_PARAM == 2.0)        ) && 
-                "__BAS11_a_PARAM value not admitted. Acceptable values are 0, 0.5, 1, 2" );
+                (__BAS11_a_PARAM == 2.0)        ) && "__BAS11_a_PARAM value not admitted. Acceptable values are 0, 0.5, 1, 2" );
         a = __BAS11_a_PARAM;
     #endif
 }
