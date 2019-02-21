@@ -21,7 +21,7 @@ before_install:
 - git clone https://github.com/andreaaletto/AxC-Adders.git adders
 - cd adders
 - mkdir build && cd build
-- cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Debug
+- cmake .. -G Ninja
 - ninja && sudo ninja install
 - cd ../..
 
