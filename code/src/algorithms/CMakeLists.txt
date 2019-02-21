@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.3)
 add_library(axdctAlgorithms STATIC 
     AxDCT_algorithm.cpp
     BC12.cpp
+    CB11.cpp
     BAS09.cpp
     BAS08.cpp
     BAS11.cpp
@@ -14,6 +15,7 @@ add_library(axdctAlgorithms STATIC
     ${CMAKE_SOURCE_DIR}/include/algorithms_list.h
     ${CMAKE_SOURCE_DIR}/include/algorithms/AxDCT_algorithm.h
     ${CMAKE_SOURCE_DIR}/include/algorithms/BC12.h
+    ${CMAKE_SOURCE_DIR}/include/algorithms/CB11.h
     ${CMAKE_SOURCE_DIR}/include/algorithms/BAS09.h
     ${CMAKE_SOURCE_DIR}/include/algorithms/BAS08.h
     ${CMAKE_SOURCE_DIR}/include/algorithms/BAS11.h
