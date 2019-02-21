@@ -38,7 +38,6 @@ BAS11::BAS11() : AxDCT_algorithm() {
                 (__BAS11_a_PARAM == 1.0)       || \
                 (__BAS11_a_PARAM == 2.0)        ) && 
                 "`__BAS11_a_PARAM` value not admitted. Acceptable values are `0`, `0.5`, `1`, `2`" );
-        // std::cout<<"\n__BAS11_a_PARAM is "<<__BAS11_a_PARAM;
         a = __BAS11_a_PARAM;
     #endif
 }
