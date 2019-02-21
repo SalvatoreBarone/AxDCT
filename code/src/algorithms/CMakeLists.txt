@@ -8,6 +8,7 @@ add_library(axdctAlgorithms STATIC
     BAS08.cpp
     BAS11.cpp
     PEA12.cpp
+    PEA14.cpp
 
     ${CMAKE_SOURCE_DIR}/include/user_defines.h
     ${CMAKE_SOURCE_DIR}/include/algorithms_list.h
@@ -17,6 +18,7 @@ add_library(axdctAlgorithms STATIC
     ${CMAKE_SOURCE_DIR}/include/algorithms/BAS08.h
     ${CMAKE_SOURCE_DIR}/include/algorithms/BAS11.h
     ${CMAKE_SOURCE_DIR}/include/algorithms/PEA12.h
+    ${CMAKE_SOURCE_DIR}/include/algorithms/PEA14.h
     
 )
 
