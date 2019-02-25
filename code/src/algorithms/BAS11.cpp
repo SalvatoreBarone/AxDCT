@@ -32,11 +32,13 @@ BAS11::BAS11() : AxDCT_algorithm() {
     #ifndef __BAS11_a_PARAM
         static_assert(false && "Error: 'a' parameter definition is required for BAS11 algorithm. Please define '__BAS11_a_PARAM' in 'user_defines.h'");
     #else
+        #if __GNUC__ >= 7
         static_assert(
             (   (__BAS11_a_PARAM == 0.0)       || \
                 (__BAS11_a_PARAM == 0.5)       || \
                 (__BAS11_a_PARAM == 1.0)       || \
                 (__BAS11_a_PARAM == 2.0)        ) && "__BAS11_a_PARAM value not admitted. Acceptable values are 0, 0.5, 1, 2" );
+        #endif
         a = __BAS11_a_PARAM;
     #endif
 }
