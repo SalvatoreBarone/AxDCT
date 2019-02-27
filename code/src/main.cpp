@@ -63,8 +63,8 @@ int main(int argc, char** argv )
     cv::split(ycrcbImg, chan);
 
     chan[0].convertTo(chan[0], CV_16S);
-    // chan[1].convertTo(chan[1], CV_16S);
-    // chan[2].convertTo(chan[2], CV_16S);
+    chan[1].convertTo(chan[1], CV_16S);
+    chan[2].convertTo(chan[2], CV_16S);
 
     /* Retrieve parameters for transformation */
     int blockSize = 8;
@@ -111,66 +111,66 @@ int main(int argc, char** argv )
     /********* Cr *********/
 
     /* Split channel in blocks 8x8 */
-    // tiles = splitInTiles(chan[1], 8);
+    tiles = splitInTiles(chan[1], 8);
 
-    // for(int i=0;i<chan[1].rows/blockSize;i++){
-    //     for(int j=0;j<chan[1].cols/blockSize;j++){
+    for(int i=0;i<chan[1].rows/blockSize;i++){
+        for(int j=0;j<chan[1].cols/blockSize;j++){
             
-    //         /* Do the Approximate DCT */
-    //         AxDCT(tiles[i][j], tiles[i][j]);
+            /* Do the Approximate DCT */
+            AxDCT(tiles[i][j], tiles[i][j]);
 
-    //         /* Quantization step */
-    //         cr_quantizate(tiles[i][j], tiles[i][j]);
+            /* Quantization step */
+            cr_quantizate(tiles[i][j], tiles[i][j]);
 
-    //         /* Dequantization step */
-    //         cr_dequantizate(tiles[i][j], tiles[i][j]);
+            /* Dequantization step */
+            cr_dequantizate(tiles[i][j], tiles[i][j]);
 
-    //         /* Do the exact IDCT */
-    //         tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
-    //         cv::idct(tiles[i][j], tiles[i][j]);
+            /* Do the exact IDCT */
+            tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
+            cv::idct(tiles[i][j], tiles[i][j]);
 
-    //         /* Convert back to uint8 */
-    //         tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            /* Convert back to uint8 */
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
             
-    //     }
-    // }
+        }
+    }
 
-    // /* Merge blocks 8x8 into one matrix */
-    // (mergeTiles(tiles, chan[1].rows, chan[1].cols)).copyTo(chan[1]);
-    // chan[1].convertTo(chan[1], CV_8U);
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[1].rows, chan[1].cols)).copyTo(chan[1]);
+    chan[1].convertTo(chan[1], CV_8U);
 
-    // /**********************/
+    /**********************/
 
-    // /********* Cb *********/
+    /********* Cb *********/
 
-    // /* Split channel in blocks 8x8 */
-    // tiles = splitInTiles(chan[2], 8);
+    /* Split channel in blocks 8x8 */
+    tiles = splitInTiles(chan[2], 8);
 
-    // for(int i=0;i<chan[2].rows/blockSize;i++){
-    //     for(int j=0;j<chan[2].cols/blockSize;j++){
+    for(int i=0;i<chan[2].rows/blockSize;i++){
+        for(int j=0;j<chan[2].cols/blockSize;j++){
             
-    //         /* Do the Approximate DCT */
-    //         AxDCT(tiles[i][j], tiles[i][j]);
+            /* Do the Approximate DCT */
+            AxDCT(tiles[i][j], tiles[i][j]);
 
-    //         /* Quantization step */
-    //         cb_quantizate(tiles[i][j], tiles[i][j]);
+            /* Quantization step */
+            cb_quantizate(tiles[i][j], tiles[i][j]);
 
-    //         /* Dequantization step */
-    //         cb_dequantizate(tiles[i][j], tiles[i][j]);
+            /* Dequantization step */
+            cb_dequantizate(tiles[i][j], tiles[i][j]);
 
-    //         /* Do the exact IDCT */
-    //         tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
-    //         cv::idct(tiles[i][j], tiles[i][j]);
+            /* Do the exact IDCT */
+            tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
+            cv::idct(tiles[i][j], tiles[i][j]);
 
-    //         /* Convert back to uint8 */
-    //         tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            /* Convert back to uint8 */
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
             
-    //     }
-    // }
+        }
+    }
 
-    // /* Merge blocks 8x8 into one matrix */
-    // (mergeTiles(tiles, chan[2].rows, chan[2].cols)).copyTo(chan[2]);
-    // chan[2].convertTo(chan[2], CV_8U);
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[2].rows, chan[2].cols)).copyTo(chan[2]);
+    chan[2].convertTo(chan[2], CV_8U);
 
     /**********************/
     

@@ -103,8 +103,16 @@ void AxDCT_algorithm::quantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat&
         for(int j=0; j<output.cols; j++){
             int q_val = (int) (Q.at<int16_t>(i,j)); 
             int x_val = (int) (tileDCT.at<int16_t>(i,j));
+
+            int prod = (x_val * q_val);
+            if( prod & 0b0000000100000000){
+                prod = prod >> 8;
+                prod++;
+            } else {
+                prod = prod >> 8;
+            }
             
-            output.at<int16_t>(i,j) = (int16_t)((x_val * q_val) >> 8);
+            output.at<int16_t>(i,j) = (int16_t)prod;
         }
     }
 }
@@ -124,14 +132,7 @@ void AxDCT_algorithm::cb_dequantizate(const cv::Mat& tile, cv::Mat& output){
 void AxDCT_algorithm::dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
     assert((tile.type() == CV_16S) && "Wrong tile type");
     assert((Q.type() == CV_16S) && "Wrong Q type");
-    cv::Mat q_mat = Q;
-    for(int i=0;i<8;i++){
-        for(int j=0;j<8;j++){
-            q_mat.at<int16_t>(i,j) = ((q_mat.at<int16_t>(i,j) >> 8) & 0x0000FFFF);
-        }
-    }
-
-    cv::Mat deq = tile.mul(q_mat);
+    cv::Mat deq = tile.mul(Q);
 
     deq.copyTo(output);
 }
