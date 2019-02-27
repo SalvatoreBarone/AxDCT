@@ -101,10 +101,10 @@ void AxDCT_algorithm::quantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat&
      
     for(int i=0; i<output.rows; i++){
         for(int j=0; j<output.cols; j++){
-            int q_val = (int) (Q.at<int16_t>(i,j)); 
-            int x_val = (int) (tileDCT.at<int16_t>(i,j));
+            int16_t q_val = (int16_t) (Q.at<int16_t>(i,j)); 
+            int16_t x_val = (int16_t) (tileDCT.at<int16_t>(i,j));
 
-            int prod = (x_val * q_val);
+            int16_t prod = (x_val * q_val);
             if( prod & 0b0000000100000000){
                 prod = prod >> 8;
                 prod++;
