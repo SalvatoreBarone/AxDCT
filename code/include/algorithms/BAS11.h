@@ -19,22 +19,43 @@
 //
 
 /******************************************************************************
- * @file   axdct_algorithms.h
+ * @file   BAS11.h
  * @author Andrea Aletto
- * @date   4 feb 2019
- * @brief  Include list of all AxDCT algorithms
+ * @date   21 feb 2019
+ * @brief  Declaration of BAS11 algorithm class
  ******************************************************************************/
 
-#ifndef __ALG_LIST_H
-#define __ALG_LIST_H 
+#ifndef _BAS11_H
+#define _BAS11_H
 
-#include "algorithms/AxDCT_algorithm.h"
-#include "algorithms/BC12.h"
-#include "algorithms/CB11.h"
-#include "algorithms/BAS09.h"
-#include "algorithms/BAS08.h"
-#include "algorithms/BAS11.h"
-#include "algorithms/PEA12.h"
-#include "algorithms/PEA14.h"
+#include <opencv2/opencv.hpp>
+#include "AxDCT_algorithm.h"
 
-#endif /* __ALG_LIST_H */
+class BAS11 : public AxDCT_algorithm
+{
+
+    private:
+        virtual void dct1d(const cv::Mat& input, cv::Mat& output);
+
+        virtual cv::Mat getYQuantizationMatix();
+        virtual cv::Mat getCrQuantizationMatix();
+        virtual cv::Mat getCbQuantizationMatix();
+
+        virtual cv::Mat getYDequantizationMatix();
+        virtual cv::Mat getCrDequantizationMatix();
+        virtual cv::Mat getCbDequantizationMatix();
+        
+        cv::Mat getD();
+        cv::Mat getQ();
+        cv::Mat getCQ();
+
+        double a;
+
+    public:
+        BAS11();
+        double getA() { return a; }
+        void setA(double a) { this->a = a; }
+
+};
+
+#endif /* _BAS11_H */

@@ -19,110 +19,31 @@
 //
 
 /******************************************************************************
- * @file   BAS09.cpp
+ * @file   CB11.cpp
  * @author Andrea Aletto
- * @date   11 feb 2019
- * @brief  Implementation of BAS09 algorithm class
+ * @date   21 feb 2019
+ * @brief  Implementation of CB11 algorithm class
  ******************************************************************************/
 
-#include "BAS09.h"
+#include "CB11.h"
 
-cv::Mat BAS09::getT(){
-
-    cv::Mat T = cv::Mat::zeros(8,8,CV_16S);
-
-    T.at<int16_t>(0, 0) = 1; 
-    T.at<int16_t>(1, 0) = 1;
-    T.at<int16_t>(2, 0) = 1;
-    T.at<int16_t>(3, 0) = 1;
-    T.at<int16_t>(4, 0) = 1;
-    T.at<int16_t>(5, 0) = 1;
-    T.at<int16_t>(6, 0) = 1;
-    T.at<int16_t>(7, 0) = 1;
-
-    T.at<int16_t>(0, 1) = 1; 
-    T.at<int16_t>(1, 1) = 1;
-    T.at<int16_t>(2, 1) = 1;
-    T.at<int16_t>(3, 1) = -1;
-    T.at<int16_t>(4, 1) = -1;
-    T.at<int16_t>(5, 1) = -1;
-    T.at<int16_t>(6, 1) = -1;
-    T.at<int16_t>(7, 1) = -1;
-
-    T.at<int16_t>(0, 2) = 1; 
-    T.at<int16_t>(1, 2) = 1;
-    T.at<int16_t>(2, 2) = -1;
-    T.at<int16_t>(3, 2) = -1;
-    T.at<int16_t>(4, 2) = -1;
-    T.at<int16_t>(5, 2) = 1;
-    T.at<int16_t>(6, 2) = 1;
-    T.at<int16_t>(7, 2) = 1;
-
-    T.at<int16_t>(0, 3) = 1; 
-    T.at<int16_t>(1, 3) = 1;
-    T.at<int16_t>(2, 3) = -1;
-    T.at<int16_t>(3, 3) = -1;
-    T.at<int16_t>(4, 3) = 1;
-    T.at<int16_t>(5, 3) = 1;
-    T.at<int16_t>(6, 3) = -1;
-    T.at<int16_t>(7, 3) = -1;
-
-    T.at<int16_t>(0, 4) = 1; 
-    T.at<int16_t>(1, 4) = -1;
-    T.at<int16_t>(2, 4) = -1;
-    T.at<int16_t>(3, 4) = 1;
-    T.at<int16_t>(4, 4) = 1;
-    T.at<int16_t>(5, 4) = -1;
-    T.at<int16_t>(6, 4) = -1;
-    T.at<int16_t>(7, 4) = 1;
-
-    T.at<int16_t>(0, 5) = 1; 
-    T.at<int16_t>(1, 5) = -1;
-    T.at<int16_t>(2, 5) = -1;
-    T.at<int16_t>(3, 5) = 1;
-    T.at<int16_t>(4, 5) = -1;
-    T.at<int16_t>(5, 5) = -1;
-    T.at<int16_t>(6, 5) = 1;
-    T.at<int16_t>(7, 5) = -1;
-
-    T.at<int16_t>(0, 6) = 1; 
-    T.at<int16_t>(1, 6) = -1;
-    T.at<int16_t>(2, 6) = 1;
-    T.at<int16_t>(3, 6) = 1;
-    T.at<int16_t>(4, 6) = -1;
-    T.at<int16_t>(5, 6) = 1;
-    T.at<int16_t>(6, 6) = -1;
-    T.at<int16_t>(7, 6) = 1;
-
-    T.at<int16_t>(0, 7) = 1; 
-    T.at<int16_t>(1, 7) = -1;
-    T.at<int16_t>(2, 7) = 1;
-    T.at<int16_t>(3, 7) = -1;
-    T.at<int16_t>(4, 7) = 1;
-    T.at<int16_t>(5, 7) = -1;
-    T.at<int16_t>(6, 7) = 1;
-    T.at<int16_t>(7, 7) = -1;
-
-    return T;
-}
-
-cv::Mat BAS09::getD(){
+cv::Mat CB11::getD(){
 
     cv::Mat D = cv::Mat::zeros(8,8,CV_64FC1);
 
     D.at<double>(0, 0) = 1/sqrt(8);
-    D.at<double>(1, 1) = 0.5      ;
-    D.at<double>(2, 2) = 1/sqrt(8);
-    D.at<double>(3, 3) = 1/sqrt(2);
+    D.at<double>(1, 1) = 1/sqrt(6);
+    D.at<double>(2, 2) = 0.5;
+    D.at<double>(3, 3) = 1/sqrt(6);
     D.at<double>(4, 4) = 1/sqrt(8);
-    D.at<double>(5, 5) = 0.5      ;
-    D.at<double>(6, 6) = 1/sqrt(8);
-    D.at<double>(7, 7) = 1/sqrt(2);   
+    D.at<double>(5, 5) = 1/sqrt(6);
+    D.at<double>(6, 6) = 0.5;
+    D.at<double>(7, 7) = 1/sqrt(6);   
 
     return D;
 }
 
-cv::Mat BAS09::getQ(){
+cv::Mat CB11::getQ(){
 
     cv::Mat Q = cv::Mat::zeros(8,8,CV_64FC1);
 
@@ -201,7 +122,7 @@ cv::Mat BAS09::getQ(){
     return Q;
 }
 
-cv::Mat BAS09::getCQ(){
+cv::Mat CB11::getCQ(){
 
     cv::Mat CQ = cv::Mat::zeros(8,8,CV_64FC1);
 
@@ -280,7 +201,7 @@ cv::Mat BAS09::getCQ(){
     return CQ;
 }
 
-cv::Mat BAS09::getYQuantizationMatix(){
+cv::Mat CB11::getYQuantizationMatix(){
     cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
     
     transpose(this->getD().diag(), D_t);
@@ -291,7 +212,7 @@ cv::Mat BAS09::getYQuantizationMatix(){
 
 }
 
-cv::Mat BAS09::getCbQuantizationMatix(){
+cv::Mat CB11::getCbQuantizationMatix(){
     cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
     
     transpose(this->getD().diag(), D_t);
@@ -301,7 +222,7 @@ cv::Mat BAS09::getCbQuantizationMatix(){
     return quantizationMatrix;
 }
 
-cv::Mat BAS09::getCrQuantizationMatix(){
+cv::Mat CB11::getCrQuantizationMatix(){
     cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
     
     transpose(this->getD().diag(), D_t);
@@ -311,19 +232,19 @@ cv::Mat BAS09::getCrQuantizationMatix(){
     return quantizationMatrix;
 }
 
-cv::Mat BAS09::getYDequantizationMatix(){
+cv::Mat CB11::getYDequantizationMatix(){
     return this->getQ();
 }
 
-cv::Mat BAS09::getCrDequantizationMatix(){
+cv::Mat CB11::getCrDequantizationMatix(){
     return this->getCQ();
 }
 
-cv::Mat BAS09::getCbDequantizationMatix(){
+cv::Mat CB11::getCbDequantizationMatix(){
     return this->getCQ();
 }
 
-void BAS09::dct1d(const cv::Mat& input, cv::Mat& output){
+void CB11::dct1d(const cv::Mat& input, cv::Mat& output){
 
     assert(( (input.rows == 8) && (input.cols==1) ) && "Column vector of size 8x1 is needed for 1D-DCT.");
     assert( (input.type() == CV_16S) && "Unable to compute AxDCT-1D: element of type CV_16S required.");
@@ -337,31 +258,31 @@ void BAS09::dct1d(const cv::Mat& input, cv::Mat& output){
     int16_t x6a = input.at<int16_t>(6,0);
     int16_t x7a = input.at<int16_t>(7,0);
 
-    int16_t x0b = x0a + x7a;
-    int16_t x1b = x1a + x6a;
-    int16_t x2b = x2a + x5a;
-    int16_t x3b = x3a + x4a;
-    int16_t x4b = x3a - x4a;
-    int16_t x5b = x2a - x5a;
-    int16_t x6b = x1a - x6a;
-    int16_t x7b = x0a - x7a;
+    int16_t x0b = x0a + x7a; 
+    int16_t x1b = x1a + x6a; 
+    int16_t x2b = x2a + x5a; 
+    int16_t x3b = x3a + x4a; 
+    int16_t x4b = x0a - x7a; 
+    int16_t x5b = x1a - x6a; 
+    int16_t x6b = x2a - x5a; 
+    int16_t x7b = x3a - x4a; 
 
-    int16_t x0c =  x0b + x3b;
-    int16_t x1c =  x6b + x7b;
-    int16_t x2c =  x1b + x2b;
-    int16_t x3c = -x5b;
-    int16_t x4c = x1b - x2b;
-    int16_t x5c = x7b - x6b;
-    int16_t x6c = x0b - x3b;
-    int16_t x7c = -x4b;
+    int16_t x0c = x0b + x3b;
+    int16_t x1c = x1b + x2b;
+    int16_t x2c = x1b - x2b;
+    int16_t x3c = x0b - x3b;
+    int16_t x4c = x4b;
+    int16_t x5c = x5b;
+    int16_t x6c = x6b;
+    int16_t x7c = x7b;
 
-    output.at<int16_t>(0,0) = x0c + x2c;
-    output.at<int16_t>(1,0) = x1c;
-    output.at<int16_t>(2,0) = x4c + x6c;
-    output.at<int16_t>(3,0) = x3c;
-    output.at<int16_t>(4,0) = x0c - x2c;
-    output.at<int16_t>(5,0) = x5c;
-    output.at<int16_t>(6,0) = x6c - x4c;
-    output.at<int16_t>(7,0) = x7c;
+    output.at<int16_t>(0,0) = x0c + x1c;
+    output.at<int16_t>(1,0) = x4c + x5c + x6c;
+    output.at<int16_t>(2,0) = x3c;
+    output.at<int16_t>(3,0) = x4c - x6c - x7c;
+    output.at<int16_t>(4,0) = x0c - x1c;
+    output.at<int16_t>(5,0) = x4c - x5c + x7c;
+    output.at<int16_t>(6,0) = -x2c;
+    output.at<int16_t>(7,0) = x6c - x5c - x7c;
 
 }
