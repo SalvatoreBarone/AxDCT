@@ -96,12 +96,15 @@ void AxDCT_algorithm::quantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat&
         
     */
     cv::Mat tileDCT;
-    tile.convertTo(tileDCT, CV_64FC1);
-    output = cv::Mat::zeros(tile.rows, tile.cols, CV_64FC1);
+    tile.convertTo(tileDCT, CV_16S);
+    output = cv::Mat::zeros(tile.rows, tile.cols, CV_16S);
      
     for(int i=0; i<output.rows; i++){
         for(int j=0; j<output.cols; j++){
-            output.at<double>(i,j) = round( tileDCT.at<double>(i,j) * Q.at<double>(i,j) );
+            int q_val = (int) (Q.at<int16_t>(i,j)); 
+            int x_val = (int) (tileDCT.at<int16_t>(i,j));
+            
+            output.at<int16_t>(i,j) = (int16_t)((x_val * q_val) >> 8);
         }
     }
 }
@@ -119,8 +122,16 @@ void AxDCT_algorithm::cb_dequantizate(const cv::Mat& tile, cv::Mat& output){
 }
 
 void AxDCT_algorithm::dequantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
-    assert(tile.type() == CV_64FC1 && "Wrong tile type");
-    assert(Q.type() == CV_64FC1 && "Wrong Q type");
-    cv::Mat deq = tile.mul(Q);
+    assert((tile.type() == CV_16S) && "Wrong tile type");
+    assert((Q.type() == CV_16S) && "Wrong Q type");
+    cv::Mat q_mat = Q;
+    for(int i=0;i<8;i++){
+        for(int j=0;j<8;j++){
+            q_mat.at<int16_t>(i,j) = ((q_mat.at<int16_t>(i,j) >> 8) & 0x0000FFFF);
+        }
+    }
+
+    cv::Mat deq = tile.mul(q_mat);
+
     deq.copyTo(output);
 }

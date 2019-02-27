@@ -27,12 +27,25 @@
 
 #include "core/dct.h"
 #include "algorithms_list.h"
+#include <cnl/fixed_point.h>
+using cnl::fixed_point;
 
-#define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
+#define CHECKPOINT (std::cerr<<"\n\n\n"<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
+void test_fixed(){
+    auto x = fixed_point<int16_t, -8>{1/sqrt(8)};
+    std::cout<<"********************************\n\n\n";
 
+    std::cout <<"\nto rep: " <<to_rep(x);
+    std::cout <<"\nnormale: " <<x;
+
+    std::cout<<"\n\n\n********************************";
+}
 int main(int argc, char** argv )
 {
+
+    // test_fixed();
+    // return 0;
     assert( argc == 2 && "usage: displayImg <Image_Path>\n");
 
     // Load img
@@ -50,8 +63,8 @@ int main(int argc, char** argv )
     cv::split(ycrcbImg, chan);
 
     chan[0].convertTo(chan[0], CV_16S);
-    chan[1].convertTo(chan[1], CV_16S);
-    chan[2].convertTo(chan[2], CV_16S);
+    // chan[1].convertTo(chan[1], CV_16S);
+    // chan[2].convertTo(chan[2], CV_16S);
 
     /* Retrieve parameters for transformation */
     int blockSize = 8;
@@ -68,15 +81,20 @@ int main(int argc, char** argv )
             
             /* Do the Approximate DCT */
             AxDCT(tiles[i][j], tiles[i][j]);
+            if( i==0 && j==0) PRINT_MAT(tiles[i][j], "AxDCT");
 
             /* Quantization step */
             y_quantizate(tiles[i][j], tiles[i][j]);
+            if( i==0 && j==0) PRINT_MAT(tiles[i][j], "y_quantizate");
 
             /* Dequantization step */
             y_dequantizate(tiles[i][j], tiles[i][j]);
+            if( i==0 && j==0) PRINT_MAT(tiles[i][j], "y_DEquantizate");
 
             /* Do the exact IDCT */
+            tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
             cv::idct(tiles[i][j], tiles[i][j]);
+            if( i==0 && j==0) PRINT_MAT(tiles[i][j], "idct");
 
             /* Convert back to uint8 */
             tiles[i][j].convertTo(tiles[i][j], CV_8U);
@@ -93,64 +111,66 @@ int main(int argc, char** argv )
     /********* Cr *********/
 
     /* Split channel in blocks 8x8 */
-    tiles = splitInTiles(chan[1], 8);
+    // tiles = splitInTiles(chan[1], 8);
 
-    for(int i=0;i<chan[1].rows/blockSize;i++){
-        for(int j=0;j<chan[1].cols/blockSize;j++){
+    // for(int i=0;i<chan[1].rows/blockSize;i++){
+    //     for(int j=0;j<chan[1].cols/blockSize;j++){
             
-            /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], tiles[i][j]);
+    //         /* Do the Approximate DCT */
+    //         AxDCT(tiles[i][j], tiles[i][j]);
 
-            /* Quantization step */
-            cr_quantizate(tiles[i][j], tiles[i][j]);
+    //         /* Quantization step */
+    //         cr_quantizate(tiles[i][j], tiles[i][j]);
 
-            /* Dequantization step */
-            cr_dequantizate(tiles[i][j], tiles[i][j]);
+    //         /* Dequantization step */
+    //         cr_dequantizate(tiles[i][j], tiles[i][j]);
 
-            /* Do the exact IDCT */
-            cv::idct(tiles[i][j], tiles[i][j]);
+    //         /* Do the exact IDCT */
+    //         tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
+    //         cv::idct(tiles[i][j], tiles[i][j]);
 
-            /* Convert back to uint8 */
-            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+    //         /* Convert back to uint8 */
+    //         tiles[i][j].convertTo(tiles[i][j], CV_8U);
             
-        }
-    }
+    //     }
+    // }
 
-    /* Merge blocks 8x8 into one matrix */
-    (mergeTiles(tiles, chan[1].rows, chan[1].cols)).copyTo(chan[1]);
-    chan[1].convertTo(chan[1], CV_8U);
+    // /* Merge blocks 8x8 into one matrix */
+    // (mergeTiles(tiles, chan[1].rows, chan[1].cols)).copyTo(chan[1]);
+    // chan[1].convertTo(chan[1], CV_8U);
 
-    /**********************/
+    // /**********************/
 
-    /********* Cb *********/
+    // /********* Cb *********/
 
-    /* Split channel in blocks 8x8 */
-    tiles = splitInTiles(chan[2], 8);
+    // /* Split channel in blocks 8x8 */
+    // tiles = splitInTiles(chan[2], 8);
 
-    for(int i=0;i<chan[2].rows/blockSize;i++){
-        for(int j=0;j<chan[2].cols/blockSize;j++){
+    // for(int i=0;i<chan[2].rows/blockSize;i++){
+    //     for(int j=0;j<chan[2].cols/blockSize;j++){
             
-            /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], tiles[i][j]);
+    //         /* Do the Approximate DCT */
+    //         AxDCT(tiles[i][j], tiles[i][j]);
 
-            /* Quantization step */
-            cb_quantizate(tiles[i][j], tiles[i][j]);
+    //         /* Quantization step */
+    //         cb_quantizate(tiles[i][j], tiles[i][j]);
 
-            /* Dequantization step */
-            cb_dequantizate(tiles[i][j], tiles[i][j]);
+    //         /* Dequantization step */
+    //         cb_dequantizate(tiles[i][j], tiles[i][j]);
 
-            /* Do the exact IDCT */
-            cv::idct(tiles[i][j], tiles[i][j]);
+    //         /* Do the exact IDCT */
+    //         tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
+    //         cv::idct(tiles[i][j], tiles[i][j]);
 
-            /* Convert back to uint8 */
-            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+    //         /* Convert back to uint8 */
+    //         tiles[i][j].convertTo(tiles[i][j], CV_8U);
             
-        }
-    }
+    //     }
+    // }
 
-    /* Merge blocks 8x8 into one matrix */
-    (mergeTiles(tiles, chan[2].rows, chan[2].cols)).copyTo(chan[2]);
-    chan[2].convertTo(chan[2], CV_8U);
+    // /* Merge blocks 8x8 into one matrix */
+    // (mergeTiles(tiles, chan[2].rows, chan[2].cols)).copyTo(chan[2]);
+    // chan[2].convertTo(chan[2], CV_8U);
 
     /**********************/
     

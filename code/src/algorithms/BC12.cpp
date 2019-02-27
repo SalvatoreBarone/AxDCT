@@ -26,6 +26,8 @@
  ******************************************************************************/
 
 #include "BC12.h"
+#include <cnl/fixed_point.h>
+using cnl::fixed_point;
 
 cv::Mat BC12::getT(){
 
@@ -76,204 +78,207 @@ cv::Mat BC12::getT(){
 
 cv::Mat BC12::getD(){
 
-    cv::Mat D = cv::Mat::zeros(8,8,CV_64FC1);
+    cv::Mat D = cv::Mat::zeros(8,8,CV_16S);
 
-    D.at<double>(0, 0) = 1/sqrt(8);
-    D.at<double>(1, 1) = 1/sqrt(2);
-    D.at<double>(2, 2) = 0.5      ;
-    D.at<double>(3, 3) = 1/sqrt(2);
-    D.at<double>(4, 4) = 1/sqrt(8);
-    D.at<double>(5, 5) = 1/sqrt(2);
-    D.at<double>(6, 6) = 0.5      ;
-    D.at<double>(7, 7) = 1/sqrt(2);   
+    D.at<int16_t>(0, 0) = to_rep( fixed_point<int16_t, -8> {1/sqrt(8)});
+    D.at<int16_t>(1, 1) = to_rep( fixed_point<int16_t, -8> {1/sqrt(2)});
+    D.at<int16_t>(2, 2) = to_rep( fixed_point<int16_t, -8> {0.5      });
+    D.at<int16_t>(3, 3) = to_rep( fixed_point<int16_t, -8> {1/sqrt(2)});
+    D.at<int16_t>(4, 4) = to_rep( fixed_point<int16_t, -8> {1/sqrt(8)});
+    D.at<int16_t>(5, 5) = to_rep( fixed_point<int16_t, -8> {1/sqrt(2)});
+    D.at<int16_t>(6, 6) = to_rep( fixed_point<int16_t, -8> {0.5      });
+    D.at<int16_t>(7, 7) = to_rep( fixed_point<int16_t, -8> {1/sqrt(2)});
 
     return D;
 }
 
 cv::Mat BC12::getQ(){
 
-    cv::Mat Q = cv::Mat::zeros(8,8,CV_64FC1);
+    cv::Mat Q = cv::Mat::zeros(8,8,CV_16S);
 
-    Q.at<double>(0, 0) = 16;
-    Q.at<double>(1, 0) = 12;
-    Q.at<double>(2, 0) = 14;
-    Q.at<double>(3, 0) = 14;
-    Q.at<double>(4, 0) = 18;
-    Q.at<double>(5, 0) = 24;
-    Q.at<double>(6, 0) = 49;
-    Q.at<double>(7, 0) = 72;
+    Q.at<int16_t>(0, 0) = to_rep( fixed_point<int16_t, -8>{16} );
+    Q.at<int16_t>(1, 0) = to_rep( fixed_point<int16_t, -8>{12} );
+    Q.at<int16_t>(2, 0) = to_rep( fixed_point<int16_t, -8>{14} );
+    Q.at<int16_t>(3, 0) = to_rep( fixed_point<int16_t, -8>{14} );
+    Q.at<int16_t>(4, 0) = to_rep( fixed_point<int16_t, -8>{18} );
+    Q.at<int16_t>(5, 0) = to_rep( fixed_point<int16_t, -8>{24} );
+    Q.at<int16_t>(6, 0) = to_rep( fixed_point<int16_t, -8>{49} );
+    Q.at<int16_t>(7, 0) = to_rep( fixed_point<int16_t, -8>{72} );
 
-    Q.at<double>(0, 1) = 11;
-    Q.at<double>(1, 1) = 12;
-    Q.at<double>(2, 1) = 13;
-    Q.at<double>(3, 1) = 17;
-    Q.at<double>(4, 1) = 22;
-    Q.at<double>(5, 1) = 35;
-    Q.at<double>(6, 1) = 64;
-    Q.at<double>(7, 1) = 92;
+    Q.at<int16_t>(0, 1) = to_rep( fixed_point<int16_t, -8>{11} );
+    Q.at<int16_t>(1, 1) = to_rep( fixed_point<int16_t, -8>{12} );
+    Q.at<int16_t>(2, 1) = to_rep( fixed_point<int16_t, -8>{13} );
+    Q.at<int16_t>(3, 1) = to_rep( fixed_point<int16_t, -8>{17} );
+    Q.at<int16_t>(4, 1) = to_rep( fixed_point<int16_t, -8>{22} );
+    Q.at<int16_t>(5, 1) = to_rep( fixed_point<int16_t, -8>{35} );
+    Q.at<int16_t>(6, 1) = to_rep( fixed_point<int16_t, -8>{64} );
+    Q.at<int16_t>(7, 1) = to_rep( fixed_point<int16_t, -8>{92} );
 
-    Q.at<double>(0, 2) = 10;
-    Q.at<double>(1, 2) = 14;
-    Q.at<double>(2, 2) = 16;
-    Q.at<double>(3, 2) = 22;
-    Q.at<double>(4, 2) = 37;
-    Q.at<double>(5, 2) = 55;
-    Q.at<double>(6, 2) = 78;
-    Q.at<double>(7, 2) = 95;
+    Q.at<int16_t>(0, 2) = to_rep( fixed_point<int16_t, -8>{10} );
+    Q.at<int16_t>(1, 2) = to_rep( fixed_point<int16_t, -8>{14} );
+    Q.at<int16_t>(2, 2) = to_rep( fixed_point<int16_t, -8>{16} );
+    Q.at<int16_t>(3, 2) = to_rep( fixed_point<int16_t, -8>{22} );
+    Q.at<int16_t>(4, 2) = to_rep( fixed_point<int16_t, -8>{37} );
+    Q.at<int16_t>(5, 2) = to_rep( fixed_point<int16_t, -8>{55} );
+    Q.at<int16_t>(6, 2) = to_rep( fixed_point<int16_t, -8>{78} );
+    Q.at<int16_t>(7, 2) = to_rep( fixed_point<int16_t, -8>{95} );
 
-    Q.at<double>(0, 3) = 16;
-    Q.at<double>(1, 3) = 19;
-    Q.at<double>(2, 3) = 24;
-    Q.at<double>(3, 3) = 29;
-    Q.at<double>(4, 3) = 56;
-    Q.at<double>(5, 3) = 64;
-    Q.at<double>(6, 3) = 87;
-    Q.at<double>(7, 3) = 98;
+    Q.at<int16_t>(0, 3) = to_rep( fixed_point<int16_t, -8>{16} );
+    Q.at<int16_t>(1, 3) = to_rep( fixed_point<int16_t, -8>{19} );
+    Q.at<int16_t>(2, 3) = to_rep( fixed_point<int16_t, -8>{24} );
+    Q.at<int16_t>(3, 3) = to_rep( fixed_point<int16_t, -8>{29} );
+    Q.at<int16_t>(4, 3) = to_rep( fixed_point<int16_t, -8>{56} );
+    Q.at<int16_t>(5, 3) = to_rep( fixed_point<int16_t, -8>{64} );
+    Q.at<int16_t>(6, 3) = to_rep( fixed_point<int16_t, -8>{87} );
+    Q.at<int16_t>(7, 3) = to_rep( fixed_point<int16_t, -8>{98} );
 
-    Q.at<double>(0, 4) = 24;
-    Q.at<double>(1, 4) = 26;
-    Q.at<double>(2, 4) = 40;
-    Q.at<double>(3, 4) = 51;
-    Q.at<double>(4, 4) = 68;
-    Q.at<double>(5, 4) = 81;
-    Q.at<double>(6, 4) = 103;
-    Q.at<double>(7, 4) = 112;
+    Q.at<int16_t>(0, 4) = to_rep( fixed_point<int16_t, -8>{24}  );
+    Q.at<int16_t>(1, 4) = to_rep( fixed_point<int16_t, -8>{26}  );
+    Q.at<int16_t>(2, 4) = to_rep( fixed_point<int16_t, -8>{40}  );
+    Q.at<int16_t>(3, 4) = to_rep( fixed_point<int16_t, -8>{51}  );
+    Q.at<int16_t>(4, 4) = to_rep( fixed_point<int16_t, -8>{68}  );
+    Q.at<int16_t>(5, 4) = to_rep( fixed_point<int16_t, -8>{81}  );
+    Q.at<int16_t>(6, 4) = to_rep( fixed_point<int16_t, -8>{103} );
+    Q.at<int16_t>(7, 4) = to_rep( fixed_point<int16_t, -8>{112} );
 
-    Q.at<double>(0, 5) = 40;
-    Q.at<double>(1, 5) = 58;
-    Q.at<double>(2, 5) = 57;
-    Q.at<double>(3, 5) = 87;
-    Q.at<double>(4, 5) = 109;
-    Q.at<double>(5, 5) = 104;
-    Q.at<double>(6, 5) = 121;
-    Q.at<double>(7, 5) = 100;
+    Q.at<int16_t>(0, 5) = to_rep( fixed_point<int16_t, -8>{40} );
+    Q.at<int16_t>(1, 5) = to_rep( fixed_point<int16_t, -8>{58} );
+    Q.at<int16_t>(2, 5) = to_rep( fixed_point<int16_t, -8>{57} );
+    Q.at<int16_t>(3, 5) = to_rep( fixed_point<int16_t, -8>{87} );
+    Q.at<int16_t>(4, 5) = to_rep( fixed_point<int16_t, -8>{109} );
+    Q.at<int16_t>(5, 5) = to_rep( fixed_point<int16_t, -8>{104} );
+    Q.at<int16_t>(6, 5) = to_rep( fixed_point<int16_t, -8>{121} );
+    Q.at<int16_t>(7, 5) = to_rep( fixed_point<int16_t, -8>{100} );
 
-    Q.at<double>(0, 6) = 51;
-    Q.at<double>(1, 6) = 60;
-    Q.at<double>(2, 6) = 69;
-    Q.at<double>(3, 6) = 80;
-    Q.at<double>(4, 6) = 103;
-    Q.at<double>(5, 6) = 113;
-    Q.at<double>(6, 6) = 120;
-    Q.at<double>(7, 6) = 103;
+    Q.at<int16_t>(0, 6) = to_rep( fixed_point<int16_t, -8>{51} );
+    Q.at<int16_t>(1, 6) = to_rep( fixed_point<int16_t, -8>{60} );
+    Q.at<int16_t>(2, 6) = to_rep( fixed_point<int16_t, -8>{69} );
+    Q.at<int16_t>(3, 6) = to_rep( fixed_point<int16_t, -8>{80} );
+    Q.at<int16_t>(4, 6) = to_rep( fixed_point<int16_t, -8>{103} );
+    Q.at<int16_t>(5, 6) = to_rep( fixed_point<int16_t, -8>{113} );
+    Q.at<int16_t>(6, 6) = to_rep( fixed_point<int16_t, -8>{120} );
+    Q.at<int16_t>(7, 6) = to_rep( fixed_point<int16_t, -8>{103} );
 
-    Q.at<double>(0, 7) = 61;
-    Q.at<double>(1, 7) = 55;
-    Q.at<double>(2, 7) = 56;
-    Q.at<double>(3, 7) = 62;
-    Q.at<double>(4, 7) = 77;
-    Q.at<double>(5, 7) = 92;
-    Q.at<double>(6, 7) = 101;
-    Q.at<double>(7, 7) = 99;
+    Q.at<int16_t>(0, 7) = to_rep( fixed_point<int16_t, -8>{61} );
+    Q.at<int16_t>(1, 7) = to_rep( fixed_point<int16_t, -8>{55} );
+    Q.at<int16_t>(2, 7) = to_rep( fixed_point<int16_t, -8>{56} );
+    Q.at<int16_t>(3, 7) = to_rep( fixed_point<int16_t, -8>{62} );
+    Q.at<int16_t>(4, 7) = to_rep( fixed_point<int16_t, -8>{77} );
+    Q.at<int16_t>(5, 7) = to_rep( fixed_point<int16_t, -8>{92} );
+    Q.at<int16_t>(6, 7) = to_rep( fixed_point<int16_t, -8>{101} );
+    Q.at<int16_t>(7, 7) = to_rep( fixed_point<int16_t, -8>{99} );
 
     return Q;
 }
 
 cv::Mat BC12::getCQ(){
 
-    cv::Mat CQ = cv::Mat::zeros(8,8,CV_64FC1);
+    cv::Mat CQ = cv::Mat::zeros(8,8,CV_16S);
 
-    CQ.at<double>(0, 0) = 17;
-    CQ.at<double>(1, 0) = 18;
-    CQ.at<double>(2, 0) = 24;
-    CQ.at<double>(3, 0) = 47;
-    CQ.at<double>(4, 0) = 99;
-    CQ.at<double>(5, 0) = 99;
-    CQ.at<double>(6, 0) = 99;
-    CQ.at<double>(7, 0) = 99;
+    CQ.at<int16_t>(0, 0) = to_rep( fixed_point<int16_t, -8>{17});
+    CQ.at<int16_t>(1, 0) = to_rep( fixed_point<int16_t, -8>{18});
+    CQ.at<int16_t>(2, 0) = to_rep( fixed_point<int16_t, -8>{24});
+    CQ.at<int16_t>(3, 0) = to_rep( fixed_point<int16_t, -8>{47});
+    CQ.at<int16_t>(4, 0) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(5, 0) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(6, 0) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(7, 0) = to_rep( fixed_point<int16_t, -8>{99});
 
-    CQ.at<double>(0, 1) = 18;
-    CQ.at<double>(1, 1) = 21;
-    CQ.at<double>(2, 1) = 26;
-    CQ.at<double>(3, 1) = 66;
-    CQ.at<double>(4, 1) = 99;
-    CQ.at<double>(5, 1) = 99;
-    CQ.at<double>(6, 1) = 99;
-    CQ.at<double>(7, 1) = 99;
+    CQ.at<int16_t>(0, 1) = to_rep( fixed_point<int16_t, -8>{18});
+    CQ.at<int16_t>(1, 1) = to_rep( fixed_point<int16_t, -8>{21});
+    CQ.at<int16_t>(2, 1) = to_rep( fixed_point<int16_t, -8>{26});
+    CQ.at<int16_t>(3, 1) = to_rep( fixed_point<int16_t, -8>{66});
+    CQ.at<int16_t>(4, 1) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(5, 1) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(6, 1) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(7, 1) = to_rep( fixed_point<int16_t, -8>{99});
 
-    CQ.at<double>(0, 2) = 24;
-    CQ.at<double>(1, 2) = 26;
-    CQ.at<double>(2, 2) = 56;
-    CQ.at<double>(3, 2) = 99;
-    CQ.at<double>(4, 2) = 99;
-    CQ.at<double>(5, 2) = 99;
-    CQ.at<double>(6, 2) = 99;
-    CQ.at<double>(7, 2) = 99;
+    CQ.at<int16_t>(0, 2) = to_rep( fixed_point<int16_t, -8>{24});
+    CQ.at<int16_t>(1, 2) = to_rep( fixed_point<int16_t, -8>{26});
+    CQ.at<int16_t>(2, 2) = to_rep( fixed_point<int16_t, -8>{56});
+    CQ.at<int16_t>(3, 2) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(4, 2) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(5, 2) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(6, 2) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(7, 2) = to_rep( fixed_point<int16_t, -8>{99});
 
-    CQ.at<double>(0, 3) = 47;
-    CQ.at<double>(1, 3) = 66;
-    CQ.at<double>(2, 3) = 99;
-    CQ.at<double>(3, 3) = 99;
-    CQ.at<double>(4, 3) = 99;
-    CQ.at<double>(5, 3) = 99;
-    CQ.at<double>(6, 3) = 99;
-    CQ.at<double>(7, 3) = 99;
+    CQ.at<int16_t>(0, 3) = to_rep( fixed_point<int16_t, -8>{47});
+    CQ.at<int16_t>(1, 3) = to_rep( fixed_point<int16_t, -8>{66});
+    CQ.at<int16_t>(2, 3) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(3, 3) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(4, 3) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(5, 3) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(6, 3) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(7, 3) = to_rep( fixed_point<int16_t, -8>{99});
 
-    CQ.at<double>(0, 4) = 99;
-    CQ.at<double>(1, 4) = 99;
-    CQ.at<double>(2, 4) = 99;
-    CQ.at<double>(3, 4) = 99;
-    CQ.at<double>(4, 4) = 99;
-    CQ.at<double>(5, 4) = 99;
-    CQ.at<double>(6, 4) = 99;
-    CQ.at<double>(7, 4) = 99;
+    CQ.at<int16_t>(0, 4) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(1, 4) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(2, 4) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(3, 4) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(4, 4) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(5, 4) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(6, 4) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(7, 4) = to_rep( fixed_point<int16_t, -8>{99});
 
-    CQ.at<double>(0, 5) = 99;
-    CQ.at<double>(1, 5) = 99;
-    CQ.at<double>(2, 5) = 99;
-    CQ.at<double>(3, 5) = 99;
-    CQ.at<double>(4, 5) = 99;
-    CQ.at<double>(5, 5) = 99;
-    CQ.at<double>(6, 5) = 99;
-    CQ.at<double>(7, 5) = 99;
+    CQ.at<int16_t>(0, 5) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(1, 5) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(2, 5) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(3, 5) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(4, 5) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(5, 5) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(6, 5) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(7, 5) = to_rep( fixed_point<int16_t, -8>{99});
 
-    CQ.at<double>(0, 6) = 99;
-    CQ.at<double>(1, 6) = 99;
-    CQ.at<double>(2, 6) = 99;
-    CQ.at<double>(3, 6) = 99;
-    CQ.at<double>(4, 6) = 99;
-    CQ.at<double>(5, 6) = 99;
-    CQ.at<double>(6, 6) = 99;
-    CQ.at<double>(7, 6) = 99;
+    CQ.at<int16_t>(0, 6) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(1, 6) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(2, 6) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(3, 6) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(4, 6) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(5, 6) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(6, 6) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(7, 6) = to_rep( fixed_point<int16_t, -8>{99});
 
-    CQ.at<double>(0, 7) = 99;
-    CQ.at<double>(1, 7) = 99;
-    CQ.at<double>(2, 7) = 99;
-    CQ.at<double>(3, 7) = 99;
-    CQ.at<double>(4, 7) = 99;
-    CQ.at<double>(5, 7) = 99;
-    CQ.at<double>(6, 7) = 99;
-    CQ.at<double>(7, 7) = 99;
+    CQ.at<int16_t>(0, 7) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(1, 7) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(2, 7) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(3, 7) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(4, 7) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(5, 7) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(6, 7) = to_rep( fixed_point<int16_t, -8>{99});
+    CQ.at<int16_t>(7, 7) = to_rep( fixed_point<int16_t, -8>{99});
 
     return CQ;
 }
 
+#define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
+
 cv::Mat BC12::getYQuantizationMatix(){
-    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
+    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_16S);
     
     transpose(this->getD().diag(), D_t);
-    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
+    matrix_mult<int16_t>(this->getD().diag(), D_t, quantizationMatrix, CV_16S);
 
     quantizationMatrix /= this->getQ();
+
     return quantizationMatrix;
 
 }
 
 cv::Mat BC12::getCbQuantizationMatix(){
-    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
+    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_16S);
     
     transpose(this->getD().diag(), D_t);
-    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
+    matrix_mult<int16_t>(this->getD().diag(), D_t, quantizationMatrix, CV_16S);
 
     quantizationMatrix /= this->getCQ();
     return quantizationMatrix;
 }
 
 cv::Mat BC12::getCrQuantizationMatix(){
-    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
+    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_16S);
     
     transpose(this->getD().diag(), D_t);
-    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
+    matrix_mult<int16_t>(this->getD().diag(), D_t, quantizationMatrix, CV_16S);
 
     quantizationMatrix /= this->getCQ();
     return quantizationMatrix;
