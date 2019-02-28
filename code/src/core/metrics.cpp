@@ -27,5 +27,38 @@
 #include "metrics.h"
 
 double compute_psnr(const cv::Mat& orig, const cv::Mat& target){
-    return 0.5;
+    
+    double error[3] = {0.0, 0.0, 0.0};
+    
+    cv::Mat origCh[3];
+    cv::Mat targetCh[3];
+
+    cv::split(orig, origCh);
+    cv::split(target, targetCh);
+
+    for(int i=0; i<3; i++){
+        cv::Mat origDouble;
+        origCh[i].convertTo(origDouble, CV_64FC1);   
+        
+        cv::Mat targetDouble;   
+        targetCh[i].convertTo(targetDouble, CV_64FC1);
+
+        for(int row=0; row<orig.rows; row++){
+            for(int col=0; col<orig.cols; col++){
+                error[i] += ( (origDouble.at<double>(row,col) - targetDouble.at<double>(row,col))*(origDouble.at<double>(row,col) - targetDouble.at<double>(row,col)) );
+            }
+        }
+
+        origDouble.deallocate();
+        targetDouble.deallocate();
+        origCh[i].deallocate();
+        targetCh[i].deallocate();
+    }
+    
+    double mse = ( error[0] + error[1] + error[2] );
+    mse /= (orig.cols * orig.rows);
+
+    double psnr = 10*log10( 255*255/mse );
+    
+    return psnr;
 }
