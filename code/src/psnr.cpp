@@ -19,19 +19,25 @@
 //
 
 /******************************************************************************
- * @file   main.h
+ * @file   psnr.cpp
  * @author Andrea Aletto
- * @date   4 feb 2019
- * @brief  Declaration of main executable functions
+ * @date   28 feb 2019
+ * @brief  Implementation of psnr executable function
  ******************************************************************************/
-#ifndef _AXDCT_USER_DEFINES_H
-#define _AXDCT_USER_DEFINES_H
 
+#include "core/dct.h"
 #include "algorithms_list.h"
 
-#define __USER_DEFAULT_ALGORITHM BC12
+int main(int argc, char** argv){
 
-#define __BAS11_a_PARAM 0.5
+    assert(argc == 3 && "usage: psnr <image_path> <algorithm>\n");
+
+    //TODO: check if algorithm exists
+    //TODO: check if img exists
+
+    std::vector<double> vals();
 
 
-#endif /* _AXDCT_USER_DEFINES_H */
+
+    return EXIT_SUCCESS;
+}

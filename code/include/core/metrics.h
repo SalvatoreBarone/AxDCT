@@ -19,19 +19,25 @@
 //
 
 /******************************************************************************
- * @file   main.h
+ * @file   metrics.h
  * @author Andrea Aletto
- * @date   4 feb 2019
- * @brief  Declaration of main executable functions
+ * @date   28 feb 2019
+ * @brief  Declaration of evaluating metrics for transformed images
  ******************************************************************************/
-#ifndef _AXDCT_USER_DEFINES_H
-#define _AXDCT_USER_DEFINES_H
 
-#include "algorithms_list.h"
+#ifndef _METRICS_H_
+#define _METRICS_H_
 
-#define __USER_DEFAULT_ALGORITHM BC12
+#include <iostream>
+#include <stdio.h>
+#include <opencv2/opencv.hpp>
+#include <stdio.h>
+#include <stdlib.h>
+#include <inexact_adders.h>
+#include "../utils/mat_operations.h"
+#include "../algorithms_list.h"
+#include "../user_defines.h"
 
-#define __BAS11_a_PARAM 0.5
+double compute_psnr(const cv::Mat& orig, const cv::Mat& target);
 
-
-#endif /* _AXDCT_USER_DEFINES_H */
+#endif

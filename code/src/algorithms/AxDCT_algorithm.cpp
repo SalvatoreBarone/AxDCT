@@ -67,6 +67,7 @@ void AxDCT_algorithm::dct(const cv::Mat& tile, cv::Mat& output){
 }
 
 void AxDCT_algorithm::y_quantizate(const cv::Mat& tile, cv::Mat& output){
+    // std::cerr<<"\n\Calling y_quantizate\n";
     quantizate(tile, this->getYQuantizationMatix(), output);
 }
 

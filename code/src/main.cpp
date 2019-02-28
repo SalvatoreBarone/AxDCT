@@ -39,128 +39,32 @@ int main(int argc, char** argv )
     cv::Mat bgrImg = imread( argv[1], cv::IMREAD_COLOR );
     assert( bgrImg.data && "No image data");
 
-    // Declare an empty for dst image
-    cv::Mat ycrcbImg;
+    // Declare an empty image for transformation
+    cv::Mat transfImg = bgrImg;
 
-    /* Convert BGR image into YCrCb */
-    cv::cvtColor(bgrImg, ycrcbImg, cv::COLOR_BGR2YCrCb);
+    // Direct and inverse transform
+    transformImage(bgrImg,transfImg, new BC12 );
+    inverseTransformImage(transfImg, bgrImg, new BC12);
 
-    /* Split YCbCr into 3 channels */
-    std::vector<cv::Mat> chan(3);
-    cv::split(ycrcbImg, chan);
+    // Show the approximate image 
+    cv::namedWindow("Approximate Image", cv::WINDOW_AUTOSIZE );
+    imshow("Approximate Image", bgrImg);
 
-    chan[0].convertTo(chan[0], CV_16S);
-    chan[1].convertTo(chan[1], CV_16S);
-    chan[2].convertTo(chan[2], CV_16S);
 
-    /* Retrieve parameters for transformation */
-    int blockSize = 8;
-    // cv::Mat T, D, Q, CQ;
-    // BC12::retrieveParameters(T, D, Q, CQ);
+    // Load img
+    cv::Mat bgrImg2 = imread( argv[1], cv::IMREAD_COLOR );
+    assert( bgrImg2.data && "No image data");
 
-    /********* LUMA *********/
+    // Declare an empty image for transformation
+    cv::Mat transfImg2 = bgrImg2;
 
-    /* Split channel in blocks 8x8 */
-    cv::Mat **tiles = splitInTiles(chan[0], 8);
+    // Direct and inverse transform
+    transformImage(bgrImg2,transfImg2);
+    inverseTransformImage(transfImg2, bgrImg2);
 
-    for(int i=0;i<chan[0].rows/blockSize;i++){
-        for(int j=0;j<chan[0].cols/blockSize;j++){
-            
-            /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], tiles[i][j]);
-
-            /* Quantization step */
-            y_quantizate(tiles[i][j], tiles[i][j]);
-
-            /* Dequantization step */
-            y_dequantizate(tiles[i][j], tiles[i][j]);
-
-            /* Do the exact IDCT */
-            cv::idct(tiles[i][j], tiles[i][j]);
-
-            /* Convert back to uint8 */
-            tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            
-        }
-    }
-
-    /* Merge blocks 8x8 into one matrix */
-    (mergeTiles(tiles, chan[0].rows, chan[0].cols)).copyTo(chan[0]);
-    chan[0].convertTo(chan[0], CV_8U);
-
-    /**********************/
-
-    /********* Cr *********/
-
-    /* Split channel in blocks 8x8 */
-    tiles = splitInTiles(chan[1], 8);
-
-    for(int i=0;i<chan[1].rows/blockSize;i++){
-        for(int j=0;j<chan[1].cols/blockSize;j++){
-            
-            /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], tiles[i][j]);
-
-            /* Quantization step */
-            cr_quantizate(tiles[i][j], tiles[i][j]);
-
-            /* Dequantization step */
-            cr_dequantizate(tiles[i][j], tiles[i][j]);
-
-            /* Do the exact IDCT */
-            cv::idct(tiles[i][j], tiles[i][j]);
-
-            /* Convert back to uint8 */
-            tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            
-        }
-    }
-
-    /* Merge blocks 8x8 into one matrix */
-    (mergeTiles(tiles, chan[1].rows, chan[1].cols)).copyTo(chan[1]);
-    chan[1].convertTo(chan[1], CV_8U);
-
-    /**********************/
-
-    /********* Cb *********/
-
-    /* Split channel in blocks 8x8 */
-    tiles = splitInTiles(chan[2], 8);
-
-    for(int i=0;i<chan[2].rows/blockSize;i++){
-        for(int j=0;j<chan[2].cols/blockSize;j++){
-            
-            /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], tiles[i][j]);
-
-            /* Quantization step */
-            cb_quantizate(tiles[i][j], tiles[i][j]);
-
-            /* Dequantization step */
-            cb_dequantizate(tiles[i][j], tiles[i][j]);
-
-            /* Do the exact IDCT */
-            cv::idct(tiles[i][j], tiles[i][j]);
-
-            /* Convert back to uint8 */
-            tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            
-        }
-    }
-
-    /* Merge blocks 8x8 into one matrix */
-    (mergeTiles(tiles, chan[2].rows, chan[2].cols)).copyTo(chan[2]);
-    chan[2].convertTo(chan[2], CV_8U);
-
-    /**********************/
-    
-    /* Merge back channels */
-    cv::merge(chan, ycrcbImg);
-
-    /* Converto to BGR and show image */
-    cv::cvtColor(ycrcbImg, ycrcbImg, cv::COLOR_YCrCb2BGR);
-    cv::namedWindow("Modified Image", cv::WINDOW_AUTOSIZE );
-    imshow("Modified Image", ycrcbImg);
+    // Show the approximate image 
+    cv::namedWindow("Approximate Image 2", cv::WINDOW_AUTOSIZE );
+    imshow("Approximate Image 2", bgrImg2);
     
     cv::waitKey(0);
     return 0;
