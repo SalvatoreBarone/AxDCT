@@ -34,10 +34,11 @@
 
 void usage();
 AxDCT_algorithm *stringToAlgorithm(std::string);
+void showAxDCTImage(const cv::Mat&, const std::string&);
 
 int main(int argc, char** argv )
 {
-    if( argc < 2){
+    if( argc == 1){
         usage();
         return EXIT_FAILURE;
     }
@@ -46,12 +47,15 @@ int main(int argc, char** argv )
     std::string algorithm = "";
     std::string img_path = "";
 
-	while ((c = getopt(argc, argv, "x:i:h")) != -1)
-	{
+	while ((c = getopt(argc, argv, "x:i:ha")) != -1){
 		switch (c)
 		{
         case 'x':
 			algorithm = optarg;
+			break;
+
+        case 'a':
+			algorithm = "__all";
 			break;
 
         case 'i':
@@ -79,30 +83,49 @@ int main(int argc, char** argv )
     cv::Mat bgrImg = imread( img_path, cv::IMREAD_COLOR );
     assert( bgrImg.data && "No image data");
 
-    // Declare an empty image for transformation
-    cv::Mat transfImg = bgrImg;
-
-    // Direct and inverse transform
-    AxDCT_algorithm *alg = stringToAlgorithm(algorithm);
-
-    transformImage(bgrImg,transfImg, alg );
-    inverseTransformImage(transfImg, bgrImg, alg);
-
-    delete alg;
-
-    // Show the approximate image 
-    cv::namedWindow("Approximate Image", cv::WINDOW_AUTOSIZE );
-    imshow("Approximate Image", bgrImg);
+    if( algorithm == "__all") {
+        showAxDCTImage(bgrImg,"BC12");
+        showAxDCTImage(bgrImg,"CB11");
+        showAxDCTImage(bgrImg,"BAS08");
+        showAxDCTImage(bgrImg,"BAS09");
+        showAxDCTImage(bgrImg,"BAS11");
+        showAxDCTImage(bgrImg,"PEA12");
+        showAxDCTImage(bgrImg,"PEA14");
+    } else {
+        showAxDCTImage(bgrImg,algorithm);
+    }
+    
     
     cv::waitKey(0);
     return 0;
 }
 
+void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm){
+    
+    // Declare an empty image for transformation
+    cv::Mat transfImg = bgrImg;
+    cv::Mat itransfImg = bgrImg;
+
+    // Direct and inverse transform
+    AxDCT_algorithm *alg = stringToAlgorithm(algorithm);
+
+    transformImage(bgrImg,transfImg, alg );
+    inverseTransformImage(transfImg, itransfImg, alg);
+
+    delete alg;
+
+    // Show the approximate image 
+    std::string winName("Approximate Image (" + algorithm + ")" );
+    cv::namedWindow(winName.c_str(), cv::WINDOW_AUTOSIZE );
+    imshow(winName.c_str(), itransfImg);
+}
+
 void usage(){
-	std::cout << "\n\n axdct         [OPTION] [VALUE]                   \n";
-	std::cout << " -i	<VALUE>		Source image path                   \n";
-    std::cout << " -x	<VALUE>		Chosen AxDCT algorithm              \n";
-    std::cout << " -h	        	Help                        	    \n";
+	std::cout << "\n\n axdct         [OPTION] [VALUE]                                   \n";
+	std::cout << " -i	<VALUE>		Source image path                                   \n";
+    std::cout << " -x	<VALUE>		Chosen AxDCT algorithm                              \n";
+    std::cout << " -a	        	Compute AxDCT image for every supported algorithm   \n";
+    std::cout << " -h	        	Help                        	                    \n";
 	std::cout << std::endl;
 }
 
