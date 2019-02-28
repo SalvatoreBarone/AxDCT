@@ -80,22 +80,7 @@ void AxDCT_algorithm::cb_quantizate(const cv::Mat& tile, cv::Mat& output){
 }
 
 void AxDCT_algorithm::quantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat& output){
-    /*
-        D matrix is merged with the Q matrix. Since D is diagonal, then: 
-        
-            D * (tile) * D' = (diag(D) * diag(D)') .* (tile)
-
-        This result should be divided elem-wise by Q.
-
-        An equivalent quantization is the following:
-        F = tile .* Y
-        where F is the DCT quantizated transformed tile and Y is the following matrix:
-
-        Y = ( diag(D) * diag(D)' ) ./ Q
-
-        Note that the Y matrix can be computed only once, offline.
-        
-    */
+    
     cv::Mat tileDCT;
     tile.convertTo(tileDCT, CV_16S);
     output = cv::Mat::zeros(tile.rows, tile.cols, CV_16S);
@@ -105,15 +90,15 @@ void AxDCT_algorithm::quantizate(const cv::Mat& tile, const cv::Mat& Q, cv::Mat&
             int16_t q_val = (int16_t) (Q.at<int16_t>(i,j)); 
             int16_t x_val = (int16_t) (tileDCT.at<int16_t>(i,j));
 
-            int16_t prod = (x_val * q_val);
-            if( prod & 0b0000000100000000){
-                prod = prod >> 8;
+            unsigned int prod = (x_val * q_val);
+            if( prod & (1U << 17) ){
+                prod = prod >> 16;
                 prod++;
             } else {
-                prod = prod >> 8;
+                prod = prod >> 16;
             }
             
-            output.at<int16_t>(i,j) = (int16_t)prod;
+            output.at<int16_t>(i,j) = (int16_t)(prod );
         }
     }
 }
