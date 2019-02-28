@@ -38,13 +38,17 @@
 #include "../algorithms_list.h"
 #include "../user_defines.h"
 
-void AxDCT(const cv::Mat& tile, cv::Mat& output);
-void y_quantizate(const cv::Mat& tile, cv::Mat& output);
-void cb_quantizate(const cv::Mat& tile, cv::Mat& output);
-void cr_quantizate(const cv::Mat& tile, cv::Mat& output);
+void AxDCT(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg = new __USER_DEFAULT_ALGORITHM);
 
-void  y_dequantizate(const cv::Mat& tile, cv::Mat& output);
-void cb_dequantizate(const cv::Mat& tile, cv::Mat& output);
-void cr_dequantizate(const cv::Mat& tile, cv::Mat& output);
+void  y_quantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg = new __USER_DEFAULT_ALGORITHM);
+void cb_quantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg = new __USER_DEFAULT_ALGORITHM);
+void cr_quantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg = new __USER_DEFAULT_ALGORITHM);
+
+void  y_dequantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg = new __USER_DEFAULT_ALGORITHM);
+void cb_dequantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg = new __USER_DEFAULT_ALGORITHM);
+void cr_dequantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg = new __USER_DEFAULT_ALGORITHM);
+
+void transformImage(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg = new __USER_DEFAULT_ALGORITHM);
+void inverseTransformImage(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg = new __USER_DEFAULT_ALGORITHM);
 
 #endif /* _DCT_H */

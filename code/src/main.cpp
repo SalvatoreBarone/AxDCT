@@ -27,148 +27,134 @@
 
 #include "core/dct.h"
 #include "algorithms_list.h"
+#include <getopt.h>
+#include <cnl/fixed_point.h>
+using cnl::fixed_point;
 
-#define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
+#define CHECKPOINT (std::cerr<<"\n\n\n"<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
+
+void usage();
+AxDCT_algorithm *stringToAlgorithm(std::string);
+void showAxDCTImage(const cv::Mat&, const std::string&);
 
 int main(int argc, char** argv )
 {
-    assert( argc == 2 && "usage: displayImg <Image_Path>\n");
+    if( argc == 1){
+        usage();
+        return EXIT_FAILURE;
+    }
+
+    int c = 0;
+    std::string algorithm = "";
+    std::string img_path = "";
+
+	while ((c = getopt(argc, argv, "x:i:ha")) != -1){
+		switch (c)
+		{
+        case 'x':
+			algorithm = optarg;
+			break;
+
+        case 'a':
+			algorithm = "__all";
+			break;
+
+        case 'i':
+			img_path = optarg;
+			break;
+
+		case 'h':
+			usage();
+			return EXIT_SUCCESS;
+
+		default:
+			std::cout << "\n\nInvalid option: \n\n";
+			usage();
+			return EXIT_FAILURE;
+		}
+	}
+
+    if( img_path == ""){
+        std::cout << "\nImage path is mandatory.";
+        usage();
+        return EXIT_FAILURE;
+    }
 
     // Load img
-    cv::Mat bgrImg = imread( argv[1], cv::IMREAD_COLOR );
+    cv::Mat bgrImg = imread( img_path, cv::IMREAD_COLOR );
     assert( bgrImg.data && "No image data");
 
-    // Declare an empty for dst image
-    cv::Mat ycrcbImg;
-
-    /* Convert BGR image into YCrCb */
-    cv::cvtColor(bgrImg, ycrcbImg, cv::COLOR_BGR2YCrCb);
-
-    /* Split YCbCr into 3 channels */
-    std::vector<cv::Mat> chan(3);
-    cv::split(ycrcbImg, chan);
-
-    chan[0].convertTo(chan[0], CV_16S);
-    chan[1].convertTo(chan[1], CV_16S);
-    chan[2].convertTo(chan[2], CV_16S);
-
-    /* Retrieve parameters for transformation */
-    int blockSize = 8;
-    // cv::Mat T, D, Q, CQ;
-    // BC12::retrieveParameters(T, D, Q, CQ);
-
-    /********* LUMA *********/
-
-    /* Split channel in blocks 8x8 */
-    cv::Mat **tiles = splitInTiles(chan[0], 8);
-
-    for(int i=0;i<chan[0].rows/blockSize;i++){
-        for(int j=0;j<chan[0].cols/blockSize;j++){
-            
-            /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], tiles[i][j]);
-
-            /* Quantization step */
-            y_quantizate(tiles[i][j], tiles[i][j]);
-
-            /* Dequantization step */
-            y_dequantizate(tiles[i][j], tiles[i][j]);
-
-            /* Do the exact IDCT */
-            cv::idct(tiles[i][j], tiles[i][j]);
-
-            /* Convert back to uint8 */
-            tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            
-        }
+    if( algorithm == "__all") {
+        showAxDCTImage(bgrImg,"BC12");
+        showAxDCTImage(bgrImg,"CB11");
+        showAxDCTImage(bgrImg,"BAS08");
+        showAxDCTImage(bgrImg,"BAS09");
+        showAxDCTImage(bgrImg,"BAS11");
+        showAxDCTImage(bgrImg,"PEA12");
+        showAxDCTImage(bgrImg,"PEA14");
+    } else {
+        showAxDCTImage(bgrImg,algorithm);
     }
-
-    /* Merge blocks 8x8 into one matrix */
-    (mergeTiles(tiles, chan[0].rows, chan[0].cols)).copyTo(chan[0]);
-    chan[0].convertTo(chan[0], CV_8U);
-
-    /**********************/
-
-    /********* Cr *********/
-
-    /* Split channel in blocks 8x8 */
-    tiles = splitInTiles(chan[1], 8);
-
-    for(int i=0;i<chan[1].rows/blockSize;i++){
-        for(int j=0;j<chan[1].cols/blockSize;j++){
-            
-            /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], tiles[i][j]);
-
-            /* Quantization step */
-            cr_quantizate(tiles[i][j], tiles[i][j]);
-
-            /* Dequantization step */
-            cr_dequantizate(tiles[i][j], tiles[i][j]);
-
-            /* Do the exact IDCT */
-            cv::idct(tiles[i][j], tiles[i][j]);
-
-            /* Convert back to uint8 */
-            tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            
-        }
-    }
-
-    /* Merge blocks 8x8 into one matrix */
-    (mergeTiles(tiles, chan[1].rows, chan[1].cols)).copyTo(chan[1]);
-    chan[1].convertTo(chan[1], CV_8U);
-
-    /**********************/
-
-    /********* Cb *********/
-
-    /* Split channel in blocks 8x8 */
-    tiles = splitInTiles(chan[2], 8);
-
-    for(int i=0;i<chan[2].rows/blockSize;i++){
-        for(int j=0;j<chan[2].cols/blockSize;j++){
-            
-            /* Do the Approximate DCT */
-            AxDCT(tiles[i][j], tiles[i][j]);
-
-            /* Quantization step */
-            cb_quantizate(tiles[i][j], tiles[i][j]);
-
-            /* Dequantization step */
-            cb_dequantizate(tiles[i][j], tiles[i][j]);
-
-            /* Do the exact IDCT */
-            cv::idct(tiles[i][j], tiles[i][j]);
-
-            /* Convert back to uint8 */
-            tiles[i][j].convertTo(tiles[i][j], CV_8U);
-            
-        }
-    }
-
-    /* Merge blocks 8x8 into one matrix */
-    (mergeTiles(tiles, chan[2].rows, chan[2].cols)).copyTo(chan[2]);
-    chan[2].convertTo(chan[2], CV_8U);
-
-    /**********************/
     
-    /* Merge back channels */
-    cv::merge(chan, ycrcbImg);
-
-    /* Converto to BGR and show image */
-    cv::cvtColor(ycrcbImg, ycrcbImg, cv::COLOR_YCrCb2BGR);
-    cv::namedWindow("Modified Image", cv::WINDOW_AUTOSIZE );
-    imshow("Modified Image", ycrcbImg);
     
     cv::waitKey(0);
     return 0;
 }
 
+void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm){
+    
+    // Declare an empty image for transformation
+    cv::Mat transfImg = bgrImg;
+    cv::Mat itransfImg = bgrImg;
 
+    // Direct and inverse transform
+    AxDCT_algorithm *alg = stringToAlgorithm(algorithm);
 
+    transformImage(bgrImg,transfImg, alg );
+    inverseTransformImage(transfImg, itransfImg, alg);
 
+    delete alg;
+
+    // Show the approximate image 
+    std::string winName("Approximate Image (" + algorithm + ")" );
+    cv::namedWindow(winName.c_str(), cv::WINDOW_AUTOSIZE );
+    imshow(winName.c_str(), itransfImg);
+}
+
+void usage(){
+	std::cout << "\n\n axdct         [OPTION] [VALUE]                                   \n";
+	std::cout << " -i	<VALUE>		Source image path                                   \n";
+    std::cout << " -x	<VALUE>		Chosen AxDCT algorithm                              \n";
+    std::cout << " -a	        	Compute AxDCT image for every supported algorithm   \n";
+    std::cout << " -h	        	Help                        	                    \n";
+	std::cout << std::endl;
+}
+
+AxDCT_algorithm *stringToAlgorithm(std::string algorithm){
+    if( algorithm == "BC12" || algorithm == "bc12"){
+        return new BC12;
+
+    } else if( algorithm == "CB11" || algorithm == "cb11"){
+        return new CB11;
+
+    } else if( algorithm == "BAS08" || algorithm == "bas08"){
+        return new BAS08;
+
+    } else if( algorithm == "BAS09" || algorithm == "bas09"){
+        return new BAS09;
+
+    } else if( algorithm == "BAS11" || algorithm == "bas11"){
+        return new BAS11;
+
+    } else if( algorithm == "PEA12" || algorithm == "pea12"){
+        return new PEA12;
+
+    } else if( algorithm == "PEA14" || algorithm == "pea14"){
+        return new PEA14;
+
+    }
+}
 
 
 

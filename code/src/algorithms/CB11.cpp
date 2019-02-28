@@ -43,205 +43,186 @@ cv::Mat CB11::getD(){
     return D;
 }
 
-cv::Mat CB11::getQ(){
+/**
+ * The following values are been computed with the formula:
+ *      (diag(D) * diag(D)' ) ./ Q
+ * 
+ * This matrix should *multiply* the transformated luma image block 
+ */ 
+cv::Mat CB11::getLumaFullQuantMatrix(){
 
-    cv::Mat Q = cv::Mat::zeros(8,8,CV_64FC1);
+    cv::Mat luma_q_mat = cv::Mat::zeros(8,8,CV_16S);
 
-    Q.at<double>(0, 0) = 16;
-    Q.at<double>(1, 0) = 12;
-    Q.at<double>(2, 0) = 14;
-    Q.at<double>(3, 0) = 14;
-    Q.at<double>(4, 0) = 18;
-    Q.at<double>(5, 0) = 24;
-    Q.at<double>(6, 0) = 49;
-    Q.at<double>(7, 0) = 72;
+    luma_q_mat.at<int16_t>(0, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.007812500000000} );
+    luma_q_mat.at<int16_t>(1, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.012028130608117} );
+    luma_q_mat.at<int16_t>(2, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.012626906806903} );
+    luma_q_mat.at<int16_t>(3, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.010309826235529} );
+    luma_q_mat.at<int16_t>(4, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.006944444444444} );
+    luma_q_mat.at<int16_t>(5, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.006014065304059} );
+    luma_q_mat.at<int16_t>(6, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003607687659115} );
+    luma_q_mat.at<int16_t>(7, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002004688434686} );
+    luma_q_mat.at<int16_t>(0, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.013121597027037} );
+    luma_q_mat.at<int16_t>(1, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.013888888888889} );
+    luma_q_mat.at<int16_t>(2, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.015701857325533} );
+    luma_q_mat.at<int16_t>(3, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.009803921568627} );
+    luma_q_mat.at<int16_t>(4, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.006560798513518} );
+    luma_q_mat.at<int16_t>(5, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.004761904761905} );
+    luma_q_mat.at<int16_t>(6, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003189439769249} );
+    luma_q_mat.at<int16_t>(7, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001811594202899} );
+    luma_q_mat.at<int16_t>(0, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.017677669529664} );
+    luma_q_mat.at<int16_t>(1, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.014580296087995} );
+    luma_q_mat.at<int16_t>(2, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.015625000000000} );
+    luma_q_mat.at<int16_t>(3, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.009278370237815} );
+    luma_q_mat.at<int16_t>(4, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.004777748521531} );
+    luma_q_mat.at<int16_t>(5, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003711348095126} );
+    luma_q_mat.at<int16_t>(6, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003205128205128} );
+    luma_q_mat.at<int16_t>(7, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002148675212968} );
+    luma_q_mat.at<int16_t>(0, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.009021097956088} );
+    luma_q_mat.at<int16_t>(1, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.008771929824561} );
+    luma_q_mat.at<int16_t>(2, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.008505172717997} );
+    luma_q_mat.at<int16_t>(3, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.005747126436782} );
+    luma_q_mat.at<int16_t>(4, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002577456558882} );
+    luma_q_mat.at<int16_t>(5, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002604166666667} );
+    luma_q_mat.at<int16_t>(6, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002346254542896} );
+    luma_q_mat.at<int16_t>(7, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001700680272109} );
+    luma_q_mat.at<int16_t>(0, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.005208333333333} );
+    luma_q_mat.at<int16_t>(1, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.005551444896054} );
+    luma_q_mat.at<int16_t>(2, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.004419417382416} );
+    luma_q_mat.at<int16_t>(3, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002830148378381} );
+    luma_q_mat.at<int16_t>(4, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001838235294118} );
+    luma_q_mat.at<int16_t>(5, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001781945275277} );
+    luma_q_mat.at<int16_t>(6, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001716278595113} );
+    luma_q_mat.at<int16_t>(7, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001288728279441} );
+    luma_q_mat.at<int16_t>(0, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003608439182435} );
+    luma_q_mat.at<int16_t>(1, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002873563218391} );
+    luma_q_mat.at<int16_t>(2, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003581125354946} );
+    luma_q_mat.at<int16_t>(3, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001915708812261} );
+    luma_q_mat.at<int16_t>(4, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001324197865114} );
+    luma_q_mat.at<int16_t>(5, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001602564102564} );
+    luma_q_mat.at<int16_t>(6, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001686976406875} );
+    luma_q_mat.at<int16_t>(7, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001666666666667} );
+    luma_q_mat.at<int16_t>(0, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003466209711699} );
+    luma_q_mat.at<int16_t>(1, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003402069087199} );
+    luma_q_mat.at<int16_t>(2, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003623188405797} );
+    luma_q_mat.at<int16_t>(3, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002551551815399} );
+    luma_q_mat.at<int16_t>(4, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001716278595113} );
+    luma_q_mat.at<int16_t>(5, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001806408364884} );
+    luma_q_mat.at<int16_t>(6, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002083333333333} );
+    luma_q_mat.at<int16_t>(7, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001981787817786} );
+    luma_q_mat.at<int16_t>(0, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002366189627826} );
+    luma_q_mat.at<int16_t>(1, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003030303030303} );
+    luma_q_mat.at<int16_t>(2, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.003645074021999} );
+    luma_q_mat.at<int16_t>(3, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002688172043011} );
+    luma_q_mat.at<int16_t>(4, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001874513861005} );
+    luma_q_mat.at<int16_t>(5, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001811594202899} );
+    luma_q_mat.at<int16_t>(6, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.002021031140910} );
+    luma_q_mat.at<int16_t>(7, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{0.001683501683502} );
 
-    Q.at<double>(0, 1) = 11;
-    Q.at<double>(1, 1) = 12;
-    Q.at<double>(2, 1) = 13;
-    Q.at<double>(3, 1) = 17;
-    Q.at<double>(4, 1) = 22;
-    Q.at<double>(5, 1) = 35;
-    Q.at<double>(6, 1) = 64;
-    Q.at<double>(7, 1) = 92;
-
-    Q.at<double>(0, 2) = 10;
-    Q.at<double>(1, 2) = 14;
-    Q.at<double>(2, 2) = 16;
-    Q.at<double>(3, 2) = 22;
-    Q.at<double>(4, 2) = 37;
-    Q.at<double>(5, 2) = 55;
-    Q.at<double>(6, 2) = 78;
-    Q.at<double>(7, 2) = 95;
-
-    Q.at<double>(0, 3) = 16;
-    Q.at<double>(1, 3) = 19;
-    Q.at<double>(2, 3) = 24;
-    Q.at<double>(3, 3) = 29;
-    Q.at<double>(4, 3) = 56;
-    Q.at<double>(5, 3) = 64;
-    Q.at<double>(6, 3) = 87;
-    Q.at<double>(7, 3) = 98;
-
-    Q.at<double>(0, 4) = 24;
-    Q.at<double>(1, 4) = 26;
-    Q.at<double>(2, 4) = 40;
-    Q.at<double>(3, 4) = 51;
-    Q.at<double>(4, 4) = 68;
-    Q.at<double>(5, 4) = 81;
-    Q.at<double>(6, 4) = 103;
-    Q.at<double>(7, 4) = 112;
-
-    Q.at<double>(0, 5) = 40;
-    Q.at<double>(1, 5) = 58;
-    Q.at<double>(2, 5) = 57;
-    Q.at<double>(3, 5) = 87;
-    Q.at<double>(4, 5) = 109;
-    Q.at<double>(5, 5) = 104;
-    Q.at<double>(6, 5) = 121;
-    Q.at<double>(7, 5) = 100;
-
-    Q.at<double>(0, 6) = 51;
-    Q.at<double>(1, 6) = 60;
-    Q.at<double>(2, 6) = 69;
-    Q.at<double>(3, 6) = 80;
-    Q.at<double>(4, 6) = 103;
-    Q.at<double>(5, 6) = 113;
-    Q.at<double>(6, 6) = 120;
-    Q.at<double>(7, 6) = 103;
-
-    Q.at<double>(0, 7) = 61;
-    Q.at<double>(1, 7) = 55;
-    Q.at<double>(2, 7) = 56;
-    Q.at<double>(3, 7) = 62;
-    Q.at<double>(4, 7) = 77;
-    Q.at<double>(5, 7) = 92;
-    Q.at<double>(6, 7) = 101;
-    Q.at<double>(7, 7) = 99;
-
-    return Q;
+    return luma_q_mat;
+ 
 }
 
-cv::Mat CB11::getCQ(){
+/**
+ * The following values are been computed with the formula:
+ *      (diag(D) * diag(D)' ) ./ CQ
+ * 
+ * This matrix should *multiply* the transformated chroma image block 
+ */ 
+cv::Mat CB11::getChromaFullQuantMatrix(){
+    cv::Mat chroma_q_mat = cv::Mat::zeros(8,8,CV_16S);
 
-    cv::Mat CQ = cv::Mat::zeros(8,8,CV_64FC1);
+    chroma_q_mat.at<int16_t>(0, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.007352941176471 } );
+    chroma_q_mat.at<int16_t>(1, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.008018753738745 } );
+    chroma_q_mat.at<int16_t>(2, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.007365695637360 } );
+    chroma_q_mat.at<int16_t>(3, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.003071012070158 } );
+    chroma_q_mat.at<int16_t>(4, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001262626262626 } );
+    chroma_q_mat.at<int16_t>(5, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(6, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001785623184815 } );
+    chroma_q_mat.at<int16_t>(7, 0) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(0, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.008018753738745 } );
+    chroma_q_mat.at<int16_t>(1, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.007936507936508 } );
+    chroma_q_mat.at<int16_t>(2, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.007850928662767 } );
+    chroma_q_mat.at<int16_t>(3, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002525252525253 } );
+    chroma_q_mat.at<int16_t>(4, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(5, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(6, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(7, 1) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(0, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.007365695637360 } );
+    chroma_q_mat.at<int16_t>(1, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.007850928662767 } );
+    chroma_q_mat.at<int16_t>(2, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.004464285714286 } );
+    chroma_q_mat.at<int16_t>(3, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(4, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001785623184815 } );
+    chroma_q_mat.at<int16_t>(5, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(6, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002525252525253 } );
+    chroma_q_mat.at<int16_t>(7, 2) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(0, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.003071012070158 } );
+    chroma_q_mat.at<int16_t>(1, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002525252525253 } );
+    chroma_q_mat.at<int16_t>(2, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(3, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(4, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(5, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(6, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(7, 3) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(0, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001262626262626 } );
+    chroma_q_mat.at<int16_t>(1, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(2, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001785623184815 } );
+    chroma_q_mat.at<int16_t>(3, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(4, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001262626262626 } );
+    chroma_q_mat.at<int16_t>(5, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(6, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001785623184815 } );
+    chroma_q_mat.at<int16_t>(7, 4) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(0, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(1, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(2, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(3, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(4, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(5, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(6, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(7, 5) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(0, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001785623184815 } );
+    chroma_q_mat.at<int16_t>(1, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(2, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002525252525253 } );
+    chroma_q_mat.at<int16_t>(3, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(4, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001785623184815 } );
+    chroma_q_mat.at<int16_t>(5, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(6, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002525252525253 } );
+    chroma_q_mat.at<int16_t>(7, 6) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(0, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(1, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(2, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(3, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(4, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001457955225226 } );
+    chroma_q_mat.at<int16_t>(5, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
+    chroma_q_mat.at<int16_t>(6, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.002061860052848 } );
+    chroma_q_mat.at<int16_t>(7, 7) = to_rep( fixed_point<int16_t, _n_DECIMAL_>{ 0.001683501683502 } );
 
-    CQ.at<double>(0, 0) = 17;
-    CQ.at<double>(1, 0) = 18;
-    CQ.at<double>(2, 0) = 24;
-    CQ.at<double>(3, 0) = 47;
-    CQ.at<double>(4, 0) = 99;
-    CQ.at<double>(5, 0) = 99;
-    CQ.at<double>(6, 0) = 99;
-    CQ.at<double>(7, 0) = 99;
+    return chroma_q_mat;
 
-    CQ.at<double>(0, 1) = 18;
-    CQ.at<double>(1, 1) = 21;
-    CQ.at<double>(2, 1) = 26;
-    CQ.at<double>(3, 1) = 66;
-    CQ.at<double>(4, 1) = 99;
-    CQ.at<double>(5, 1) = 99;
-    CQ.at<double>(6, 1) = 99;
-    CQ.at<double>(7, 1) = 99;
 
-    CQ.at<double>(0, 2) = 24;
-    CQ.at<double>(1, 2) = 26;
-    CQ.at<double>(2, 2) = 56;
-    CQ.at<double>(3, 2) = 99;
-    CQ.at<double>(4, 2) = 99;
-    CQ.at<double>(5, 2) = 99;
-    CQ.at<double>(6, 2) = 99;
-    CQ.at<double>(7, 2) = 99;
-
-    CQ.at<double>(0, 3) = 47;
-    CQ.at<double>(1, 3) = 66;
-    CQ.at<double>(2, 3) = 99;
-    CQ.at<double>(3, 3) = 99;
-    CQ.at<double>(4, 3) = 99;
-    CQ.at<double>(5, 3) = 99;
-    CQ.at<double>(6, 3) = 99;
-    CQ.at<double>(7, 3) = 99;
-
-    CQ.at<double>(0, 4) = 99;
-    CQ.at<double>(1, 4) = 99;
-    CQ.at<double>(2, 4) = 99;
-    CQ.at<double>(3, 4) = 99;
-    CQ.at<double>(4, 4) = 99;
-    CQ.at<double>(5, 4) = 99;
-    CQ.at<double>(6, 4) = 99;
-    CQ.at<double>(7, 4) = 99;
-
-    CQ.at<double>(0, 5) = 99;
-    CQ.at<double>(1, 5) = 99;
-    CQ.at<double>(2, 5) = 99;
-    CQ.at<double>(3, 5) = 99;
-    CQ.at<double>(4, 5) = 99;
-    CQ.at<double>(5, 5) = 99;
-    CQ.at<double>(6, 5) = 99;
-    CQ.at<double>(7, 5) = 99;
-
-    CQ.at<double>(0, 6) = 99;
-    CQ.at<double>(1, 6) = 99;
-    CQ.at<double>(2, 6) = 99;
-    CQ.at<double>(3, 6) = 99;
-    CQ.at<double>(4, 6) = 99;
-    CQ.at<double>(5, 6) = 99;
-    CQ.at<double>(6, 6) = 99;
-    CQ.at<double>(7, 6) = 99;
-
-    CQ.at<double>(0, 7) = 99;
-    CQ.at<double>(1, 7) = 99;
-    CQ.at<double>(2, 7) = 99;
-    CQ.at<double>(3, 7) = 99;
-    CQ.at<double>(4, 7) = 99;
-    CQ.at<double>(5, 7) = 99;
-    CQ.at<double>(6, 7) = 99;
-    CQ.at<double>(7, 7) = 99;
-
-    return CQ;
 }
 
 cv::Mat CB11::getYQuantizationMatix(){
-    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
-    
-    transpose(this->getD().diag(), D_t);
-    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
-
-    quantizationMatrix /= this->getQ();
-    return quantizationMatrix;
-
+    return getLumaFullQuantMatrix();
 }
 
 cv::Mat CB11::getCbQuantizationMatix(){
-    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
-    
-    transpose(this->getD().diag(), D_t);
-    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
-
-    quantizationMatrix /= this->getCQ();
-    return quantizationMatrix;
+    return getChromaFullQuantMatrix();
 }
 
 cv::Mat CB11::getCrQuantizationMatix(){
-    cv::Mat D_t, quantizationMatrix = cv::Mat::zeros(8,8, CV_64FC1);
-    
-    transpose(this->getD().diag(), D_t);
-    matrix_mult<double>(this->getD().diag(), D_t, quantizationMatrix, CV_64FC1);
-
-    quantizationMatrix /= this->getCQ();
-    return quantizationMatrix;
+    return getChromaFullQuantMatrix();
 }
 
 cv::Mat CB11::getYDequantizationMatix(){
-    return this->getQ();
+    return this->getStandardQ();
 }
 
 cv::Mat CB11::getCrDequantizationMatix(){
-    return this->getCQ();
+    return this->getStandardCQ();
 }
 
 cv::Mat CB11::getCbDequantizationMatix(){
-    return this->getCQ();
+    return this->getStandardCQ();
 }
 
 void CB11::dct1d(const cv::Mat& input, cv::Mat& output){

@@ -8,11 +8,21 @@ add_subdirectory(utils)
 add_subdirectory(core)
 add_subdirectory(algorithms)
 
-add_executable( displayImg main.cpp )
+add_executable( axdct main.cpp )
 
-target_include_directories(displayImg PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_include_directories(displayImg PUBLIC ${CMAKE_SOURCE_DIR}/include/core)
-target_include_directories(displayImg PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
-target_include_directories(displayImg PUBLIC ${CMAKE_SOURCE_DIR}/include/utils)
+target_include_directories(axdct PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(axdct PUBLIC ${CMAKE_SOURCE_DIR}/include/core)
+target_include_directories(axdct PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
+target_include_directories(axdct PUBLIC ${CMAKE_SOURCE_DIR}/include/utils)
 
-target_link_libraries( displayImg utils ${OpenCV_LIBS} axdctCore axdctAlgorithms)
+target_link_libraries( axdct utils ${OpenCV_LIBS} axdctCore axdctAlgorithms)
+
+
+add_executable( psnr psnr.cpp )
+
+target_include_directories(psnr PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(psnr PUBLIC ${CMAKE_SOURCE_DIR}/include/core)
+target_include_directories(psnr PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
+target_include_directories(psnr PUBLIC ${CMAKE_SOURCE_DIR}/include/utils)
+
+target_link_libraries( psnr utils ${OpenCV_LIBS} axdctCore axdctAlgorithms)

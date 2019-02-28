@@ -27,71 +27,227 @@
 
 #include "dct.h"
 
-void AxDCT(const cv::Mat& tile, cv::Mat& output){
-
-    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
-    alg.dct(tile, output);
-    delete &alg;
-
+void AxDCT(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg){
+    alg->dct(tile, output);
 }
 
-void y_quantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
-    alg.y_quantizate(tile, output);
-    delete &alg;
+void y_quantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg){
+    alg->y_quantizate(tile, output);
 }
 
-void cr_quantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
-    alg.cr_quantizate(tile, output);
-    delete &alg;
+void cr_quantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg){
+    alg->cr_quantizate(tile, output);
 }
 
-void cb_quantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
-    alg.cb_quantizate(tile, output);
-    delete &alg;
+void cb_quantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg){
+    alg->cb_quantizate(tile, output);
 }
 
-void y_dequantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
-    alg.y_dequantizate(tile, output);
-    delete &alg;
+void y_dequantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg){
+    alg->y_dequantizate(tile, output);
 }
 
-void cb_dequantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
-    alg.cb_dequantizate(tile, output);
-    delete &alg;
+void cb_dequantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg){
+    alg->cb_dequantizate(tile, output);
 }
-void cr_dequantizate(const cv::Mat& tile, cv::Mat& output){
-    AxDCT_algorithm& alg = *(new __USER_DEFAULT_ALGORITHM);
-    alg.cr_dequantizate(tile, output);
-    delete &alg;
+
+void cr_dequantizate(const cv::Mat& tile, cv::Mat& output, AxDCT_algorithm *alg){
+    alg->cr_dequantizate(tile, output);
 }
-// static const int __ZIGZAG[64] =
-// {
-//      0,  1,  8, 16,  9,  2,  3, 10,
-//     17, 24, 32, 25, 18, 11,  4,  5,
-//     12, 19, 26, 33, 40, 48, 41, 34,
-//     27, 20, 13,  6,  7, 14, 21, 28,
-//     35, 42, 49, 56, 57, 50, 43, 36,
-//     29, 22, 15, 23, 30, 37, 44, 51,
-//     58, 59, 52, 45, 38, 31, 39, 46,
-//     53, 60, 61, 54, 47, 55, 62, 63,
-// };
 
-// void zigzag_encode(const cv::Mat& input, cv::Mat& output)
-// {
-//     cv::Mat temp(8,8,CV_64FC1);
+void transformImage(const cv::Mat& bgrImg, cv::Mat& output, AxDCT_algorithm *alg){
 
-//     for (int i=0; i<64; i++) buf [i] = data[__ZIGZAG[i]];
-//     for (int i=0; i<64; i++) data[i] = buf[i];
-// }
+    // Declare an empty for dst image
+    cv::Mat ycrcbImg;
 
-// void zigzag_decode(int *data)
-// {
-//     int buf[64], i;
-//     for (i=0; i<64; i++) buf [__ZIGZAG[i]] = data[i];
-//     for (i=0; i<64; i++) data[i] = buf[i];
-// }
+    /* Convert BGR image into YCrCb */
+    cv::cvtColor(bgrImg, ycrcbImg, cv::COLOR_BGR2YCrCb);
+
+    /* Split YCbCr into 3 channels */
+    std::vector<cv::Mat> chan(3);
+    cv::split(ycrcbImg, chan);
+
+    chan[0].convertTo(chan[0], CV_16S);
+    chan[1].convertTo(chan[1], CV_16S);
+    chan[2].convertTo(chan[2], CV_16S);
+
+    /* Parameters for transformation */
+    const int blockSize = 8;
+
+    /********* LUMA *********/
+
+    /* Split channel in blocks 8x8 */
+    cv::Mat **tiles = splitInTiles(chan[0], blockSize);
+
+    for(int i=0;i<chan[0].rows/blockSize;i++){
+        for(int j=0;j<chan[0].cols/blockSize;j++){
+            
+            /* Do the Approximate DCT */
+            AxDCT(tiles[i][j], tiles[i][j], alg);
+
+            /* Quantization step */
+            y_quantizate(tiles[i][j], tiles[i][j], alg);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[0].rows, chan[0].cols)).copyTo(chan[0]);
+
+    /**********************/
+
+    /********* Cr *********/
+
+    /* Split channel in blocks 8x8 */
+    tiles = splitInTiles(chan[1], blockSize);
+
+    for(int i=0;i<chan[1].rows/blockSize;i++){
+        for(int j=0;j<chan[1].cols/blockSize;j++){
+            
+            /* Do the Approximate DCT */
+            AxDCT(tiles[i][j], tiles[i][j], alg);
+
+            /* Quantization step */
+            cr_quantizate(tiles[i][j], tiles[i][j], alg);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[1].rows, chan[1].cols)).copyTo(chan[1]);
+
+    /**********************/
+
+    /********* Cb *********/
+
+    /* Split channel in blocks 8x8 */
+    tiles = splitInTiles(chan[2], blockSize);
+
+    for(int i=0;i<chan[2].rows/blockSize;i++){
+        for(int j=0;j<chan[2].cols/blockSize;j++){
+            
+            /* Do the Approximate DCT */
+            AxDCT(tiles[i][j], tiles[i][j], alg);
+
+            /* Quantization step */
+            cb_quantizate(tiles[i][j], tiles[i][j], alg);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[2].rows, chan[2].cols)).copyTo(chan[2]);
+
+    /**********************/
+    
+    /* Merge back channels */
+    cv::merge(chan, ycrcbImg);
+
+    ycrcbImg.copyTo(output);
+}
+
+void inverseTransformImage(const cv::Mat& transfImg, cv::Mat& output, AxDCT_algorithm *alg){
+
+    if(&output == nullptr) std::cerr << "\n[WARNING] Output image in inverseTransformImage function is not null. It will be erased.";
+
+    /* Split transfImg into 3 channels */
+    std::vector<cv::Mat> chan(3);
+    cv::split(transfImg, chan);
+    chan[0].convertTo(chan[0], CV_16S);
+    chan[1].convertTo(chan[1], CV_16S);
+    chan[2].convertTo(chan[2], CV_16S);
+
+    /* Parameters for transformation */
+    const int blockSize = 8;
+
+    /********* LUMA *********/
+
+    /* Split channel in blocks 8x8 */
+    cv::Mat **tiles = splitInTiles(chan[0], blockSize);
+
+    for(int i=0;i<chan[0].rows/blockSize;i++){
+        for(int j=0;j<chan[0].cols/blockSize;j++){
+
+            /* Dequantization step */
+            y_dequantizate(tiles[i][j], tiles[i][j], alg);
+
+            /* Do the exact IDCT */
+            tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
+            cv::idct(tiles[i][j], tiles[i][j]);
+
+            /* Convert back to uint8 */
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[0].rows, chan[0].cols)).copyTo(chan[0]);
+    chan[0].convertTo(chan[0], CV_8U);
+
+    /**********************/
+
+    /********* Cr *********/
+
+    /* Split channel in blocks 8x8 */
+    tiles = splitInTiles(chan[1], blockSize);
+
+    for(int i=0;i<chan[1].rows/blockSize;i++){
+        for(int j=0;j<chan[1].cols/blockSize;j++){
+
+            /* Dequantization step */
+            cr_dequantizate(tiles[i][j], tiles[i][j], alg);
+
+            /* Do the exact IDCT */
+            tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
+            cv::idct(tiles[i][j], tiles[i][j]);
+
+            /* Convert back to uint8 */
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[1].rows, chan[1].cols)).copyTo(chan[1]);
+    chan[1].convertTo(chan[1], CV_8U);
+
+    /**********************/
+
+    /********* Cb *********/
+
+    /* Split channel in blocks 8x8 */
+    tiles = splitInTiles(chan[2], blockSize);
+
+    for(int i=0;i<chan[2].rows/blockSize;i++){
+        for(int j=0;j<chan[2].cols/blockSize;j++){
+
+            /* Dequantization step */
+            cb_dequantizate(tiles[i][j], tiles[i][j], alg);
+
+            /* Do the exact IDCT */
+            tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
+            cv::idct(tiles[i][j], tiles[i][j]);
+
+            /* Convert back to uint8 */
+            tiles[i][j].convertTo(tiles[i][j], CV_8U);
+            
+        }
+    }
+
+    /* Merge blocks 8x8 into one matrix */
+    (mergeTiles(tiles, chan[2].rows, chan[2].cols)).copyTo(chan[2]);
+    chan[2].convertTo(chan[2], CV_8U);
+
+    /**********************/
+
+    /* Init the output matrix */
+    output = cv::Mat::zeros(transfImg.rows, transfImg.cols, CV_8U);
+    
+    /* Merge back channels */
+    cv::merge(chan, output);
+
+    /* Converto to BGR and show image */
+    cv::cvtColor(output, output, cv::COLOR_YCrCb2BGR);
+
+}

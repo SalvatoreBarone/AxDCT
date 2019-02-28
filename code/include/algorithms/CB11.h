@@ -31,6 +31,11 @@
 #include <opencv2/opencv.hpp>
 #include "AxDCT_algorithm.h"
 
+#include <cnl/fixed_point.h>
+using cnl::fixed_point;
+
+#define _n_DECIMAL_ -16
+
 class CB11 : public AxDCT_algorithm
 {
 
@@ -47,8 +52,9 @@ class CB11 : public AxDCT_algorithm
 
         cv::Mat getT();
         cv::Mat getD();
-        cv::Mat getQ();
-        cv::Mat getCQ();
+
+        cv::Mat getLumaFullQuantMatrix();
+        cv::Mat getChromaFullQuantMatrix();
 
     public:
         CB11() : AxDCT_algorithm() {};
