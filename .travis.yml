@@ -32,4 +32,5 @@ install:
 - ninja
 
 script:
-- ls bin/displayImg
+- ls bin/axdct -h
+- ls bin/psnr -h
