@@ -28,8 +28,10 @@
 #include "core/dct.h"
 #include "algorithms_list.h"
 #include <getopt.h>
+#include <cnl/fixed_point.h>
+using cnl::fixed_point;
 
-#define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
+#define CHECKPOINT (std::cerr<<"\n\n\n"<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
 
 void usage();

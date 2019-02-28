@@ -153,6 +153,9 @@ void inverseTransformImage(const cv::Mat& transfImg, cv::Mat& output, AxDCT_algo
     /* Split transfImg into 3 channels */
     std::vector<cv::Mat> chan(3);
     cv::split(transfImg, chan);
+    chan[0].convertTo(chan[0], CV_16S);
+    chan[1].convertTo(chan[1], CV_16S);
+    chan[2].convertTo(chan[2], CV_16S);
 
     /* Parameters for transformation */
     const int blockSize = 8;
@@ -169,6 +172,7 @@ void inverseTransformImage(const cv::Mat& transfImg, cv::Mat& output, AxDCT_algo
             y_dequantizate(tiles[i][j], tiles[i][j], alg);
 
             /* Do the exact IDCT */
+            tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
             cv::idct(tiles[i][j], tiles[i][j]);
 
             /* Convert back to uint8 */
@@ -195,6 +199,7 @@ void inverseTransformImage(const cv::Mat& transfImg, cv::Mat& output, AxDCT_algo
             cr_dequantizate(tiles[i][j], tiles[i][j], alg);
 
             /* Do the exact IDCT */
+            tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
             cv::idct(tiles[i][j], tiles[i][j]);
 
             /* Convert back to uint8 */
@@ -221,6 +226,7 @@ void inverseTransformImage(const cv::Mat& transfImg, cv::Mat& output, AxDCT_algo
             cb_dequantizate(tiles[i][j], tiles[i][j], alg);
 
             /* Do the exact IDCT */
+            tiles[i][j].convertTo(tiles[i][j], CV_64FC1);
             cv::idct(tiles[i][j], tiles[i][j]);
 
             /* Convert back to uint8 */

@@ -29,7 +29,7 @@
 
 #include "algorithms_list.h"
 
-#define __USER_DEFAULT_ALGORITHM BC12
+#define __USER_DEFAULT_ALGORITHM CB11
 
 #define __BAS11_a_PARAM 0.5
 

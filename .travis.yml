@@ -24,6 +24,12 @@ before_install:
 - cmake .. -G Ninja
 - ninja && sudo ninja install
 - cd ../..
+- git clone https://github.com/johnmcfarlane/cnl.git fixed
+- cd fixed
+- mkdir build && cd build
+- cmake .. -G Ninja
+- ninja && sudo ninja install
+- cd ../..
 
 install:
 - cd code
