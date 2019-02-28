@@ -86,6 +86,12 @@ int main(int argc, char** argv){
 		}
 	}
 
+    if( img_path == ""){
+        std::cout << "\nImage path is mandatory.";
+        usage();
+        return EXIT_FAILURE;
+    }
+
     std::vector<double> vals;
 
     // Load img
