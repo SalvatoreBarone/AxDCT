@@ -27,52 +27,109 @@
 
 #include "core/dct.h"
 #include "algorithms_list.h"
+#include <getopt.h>
 
 #define CHECKPOINT (std::cerr<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
 
+void usage();
+AxDCT_algorithm *stringToAlgorithm(std::string);
+
 int main(int argc, char** argv )
 {
-    assert( argc == 2 && "usage: displayImg <Image_Path>\n");
+    if( argc < 2){
+        usage();
+        return EXIT_FAILURE;
+    }
+
+    int c = 0;
+    std::string algorithm = "";
+    std::string img_path = "";
+
+	while ((c = getopt(argc, argv, "x:i:h")) != -1)
+	{
+		switch (c)
+		{
+        case 'x':
+			algorithm = optarg;
+			break;
+
+        case 'i':
+			img_path = optarg;
+			break;
+
+		case 'h':
+			usage();
+			return EXIT_SUCCESS;
+
+		default:
+			std::cout << "\n\nInvalid option: \n\n";
+			usage();
+			return EXIT_FAILURE;
+		}
+	}
+
+    if( img_path == ""){
+        std::cout << "\nImage path is mandatory.";
+        usage();
+        return EXIT_FAILURE;
+    }
 
     // Load img
-    cv::Mat bgrImg = imread( argv[1], cv::IMREAD_COLOR );
+    cv::Mat bgrImg = imread( img_path, cv::IMREAD_COLOR );
     assert( bgrImg.data && "No image data");
 
     // Declare an empty image for transformation
     cv::Mat transfImg = bgrImg;
 
     // Direct and inverse transform
-    transformImage(bgrImg,transfImg, new BC12 );
-    inverseTransformImage(transfImg, bgrImg, new BC12);
+    AxDCT_algorithm *alg = stringToAlgorithm(algorithm);
+
+    transformImage(bgrImg,transfImg, alg );
+    inverseTransformImage(transfImg, bgrImg, alg);
+
+    delete alg;
 
     // Show the approximate image 
     cv::namedWindow("Approximate Image", cv::WINDOW_AUTOSIZE );
     imshow("Approximate Image", bgrImg);
-
-
-    // Load img
-    cv::Mat bgrImg2 = imread( argv[1], cv::IMREAD_COLOR );
-    assert( bgrImg2.data && "No image data");
-
-    // Declare an empty image for transformation
-    cv::Mat transfImg2 = bgrImg2;
-
-    // Direct and inverse transform
-    transformImage(bgrImg2,transfImg2);
-    inverseTransformImage(transfImg2, bgrImg2);
-
-    // Show the approximate image 
-    cv::namedWindow("Approximate Image 2", cv::WINDOW_AUTOSIZE );
-    imshow("Approximate Image 2", bgrImg2);
     
     cv::waitKey(0);
     return 0;
 }
 
+void usage(){
+	std::cout << "\n\n axdct         [OPTION] [VALUE]                   \n";
+	std::cout << " -i	<VALUE>		Source image path                   \n";
+    std::cout << " -x	<VALUE>		Chosen AxDCT algorithm              \n";
+    std::cout << " -h	        	Help                        	    \n";
+	std::cout << std::endl;
+}
 
+AxDCT_algorithm *stringToAlgorithm(std::string algorithm){
+    if( algorithm == "BC12" || algorithm == "bc12"){
+        return new BC12;
 
+    } else if( algorithm == "CB11" || algorithm == "cb11"){
+        return new CB11;
 
+    } else if( algorithm == "BAS08" || algorithm == "bas08"){
+        return new BAS08;
+
+    } else if( algorithm == "BAS09" || algorithm == "bas09"){
+        return new BAS09;
+
+    } else if( algorithm == "BAS11" || algorithm == "bas11"){
+        return new BAS11;
+
+    } else if( algorithm == "PEA12" || algorithm == "pea12"){
+        return new PEA12;
+
+    } else if( algorithm == "PEA14" || algorithm == "pea14"){
+        return new PEA14;
+
+    }
+}
 
 
 
