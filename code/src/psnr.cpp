@@ -33,6 +33,7 @@
 void usage();
 void printSupportedAlgs();
 void print_results(std::vector<double>);
+void print_single_result(std::vector<double>, std::string);
 
 double BC12_PSNR(const cv::Mat& orig);
 double CB11_PSNR(const cv::Mat& orig);
@@ -107,30 +108,41 @@ int main(int argc, char** argv){
         vals.push_back(PEA12_PSNR(bgrImg) );
         vals.push_back(PEA14_PSNR(bgrImg) );
 
+        print_results(vals);
+
     } else if( algorithm == "BC12" || algorithm == "bc12"){
         vals.push_back(BC12_PSNR(bgrImg) );
+        print_single_result(vals, algorithm);
 
     } else if( algorithm == "CB11" || algorithm == "cb11"){
         vals.push_back(CB11_PSNR(bgrImg) );
+        print_single_result(vals, algorithm);
 
     } else if( algorithm == "BAS08" || algorithm == "bas08"){
         vals.push_back(BAS08_PSNR(bgrImg) );
+        print_single_result(vals, algorithm);
 
     } else if( algorithm == "BAS09" || algorithm == "bas09"){
         vals.push_back(BAS09_PSNR(bgrImg) );
+        print_single_result(vals, algorithm);
 
     } else if( algorithm == "BAS11" || algorithm == "bas11"){
         vals.push_back(BAS11_PSNR(bgrImg) );
+        print_single_result(vals, algorithm);
 
     } else if( algorithm == "PEA12" || algorithm == "pea12"){
         vals.push_back(PEA12_PSNR(bgrImg) );
+        print_single_result(vals, algorithm);
 
     } else if( algorithm == "PEA14" || algorithm == "pea14"){
         vals.push_back(PEA14_PSNR(bgrImg) );
+        print_single_result(vals, algorithm);
 
+    } else {
+        std::cout << "\nChosen algorithm (" + algorithm + ") is not supported yet.\n";
+        usage();
+        return EXIT_FAILURE;
     }
-
-    print_results(vals);
 
     return EXIT_SUCCESS;
 }
@@ -240,6 +252,14 @@ void print_results(std::vector<double> vals){
         std::cout << "   " << supported_algorithms.at(i) << ":\t\t" << vals.at(i) <<std::endl;
     }
 
+    std::cout << "\n**********************************\n\n";
+}
+
+void print_single_result(std::vector<double> vals, std::string algorithm){
+    for (std::string::size_type i=0; i<algorithm.length(); i++) algorithm[i]=std::toupper(algorithm[i], *(new std::locale) );
+
+    std::cout << "\n\n************** PSNR **************\n\n";
+    std::cout << "   " << algorithm << ":\t\t" << vals.at(0) <<std::endl;
     std::cout << "\n**********************************\n\n";
 }
 
