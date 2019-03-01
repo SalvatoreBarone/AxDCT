@@ -29,16 +29,16 @@
 
 cv::Mat CB11::getD(){
 
-    cv::Mat D = cv::Mat::zeros(8,8,CV_64FC1);
+    cv::Mat D = cv::Mat::zeros(8,8,CV_16S);
 
-    D.at<double>(0, 0) = 1/sqrt(8);
-    D.at<double>(1, 1) = 1/sqrt(6);
-    D.at<double>(2, 2) = 0.5;
-    D.at<double>(3, 3) = 1/sqrt(6);
-    D.at<double>(4, 4) = 1/sqrt(8);
-    D.at<double>(5, 5) = 1/sqrt(6);
-    D.at<double>(6, 6) = 0.5;
-    D.at<double>(7, 7) = 1/sqrt(6);   
+    D.at<int16_t>(0, 0) = to_rep( fixed_point<int16_t, -16> { 1/sqrt(8) });
+    D.at<int16_t>(1, 1) = to_rep( fixed_point<int16_t, -16> { 1/sqrt(6) });
+    D.at<int16_t>(2, 2) = to_rep( fixed_point<int16_t, -16> { 0.5       });
+    D.at<int16_t>(3, 3) = to_rep( fixed_point<int16_t, -16> { 1/sqrt(6) });
+    D.at<int16_t>(4, 4) = to_rep( fixed_point<int16_t, -16> { 1/sqrt(8) });
+    D.at<int16_t>(5, 5) = to_rep( fixed_point<int16_t, -16> { 1/sqrt(6) });
+    D.at<int16_t>(6, 6) = to_rep( fixed_point<int16_t, -16> { 0.5       });
+    D.at<int16_t>(7, 7) = to_rep( fixed_point<int16_t, -16> { 1/sqrt(6) });
 
     return D;
 }
