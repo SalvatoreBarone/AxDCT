@@ -39,11 +39,11 @@ double BC12_PSNR(const cv::Mat& orig);
 double CB11_PSNR(const cv::Mat& orig);
 double BAS08_PSNR(const cv::Mat& orig);
 double BAS09_PSNR(const cv::Mat& orig);
-double BAS11_PSNR(const cv::Mat& orig);
+double BAS11_PSNR(const cv::Mat& orig, double a_param);
 double PEA12_PSNR(const cv::Mat& orig);
 double PEA14_PSNR(const cv::Mat& orig);
 
-static std::vector<std::string> supported_algorithms = {"BC12", "CB11", "BAS08", "BAS09", "BAS11", "PEA12", "PEA14" };
+static std::vector<std::string> supported_algorithms = {"BC12\t\t", "CB11\t\t", "BAS08\t", "BAS09\t", "BAS11 (a=0.0)", "BAS11 (a=0.5)", "BAS11 (a=1.0)", "BAS11 (a=2.0)", "PEA12\t", "PEA14\t" };
 
 int main(int argc, char** argv){
 
@@ -54,9 +54,10 @@ int main(int argc, char** argv){
 
     int c = 0;
     std::string algorithm = "";
+    double a_param = -1;
     std::string img_path = "";
 
-	while ((c = getopt(argc, argv, "x:i:hla")) != -1)
+	while ((c = getopt(argc, argv, "p:x:i:hla")) != -1)
 	{
 		switch (c)
 		{
@@ -71,6 +72,10 @@ int main(int argc, char** argv){
         case 'x':
 			algorithm = optarg;
 			break;
+
+        case 'p':
+            a_param = atof(optarg);
+            break;
 
         case 'i':
 			img_path = optarg;
@@ -93,6 +98,12 @@ int main(int argc, char** argv){
         return EXIT_FAILURE;
     }
 
+    if( algorithm == "BAS11" && a_param == -1){
+        std::cout << "\nBAS11 requires the specification of 'a' parameter. Please use -p option, too.";
+        usage();
+        return EXIT_FAILURE;
+    }
+
     std::vector<double> vals;
 
     // Load img
@@ -104,7 +115,10 @@ int main(int argc, char** argv){
         vals.push_back(CB11_PSNR(bgrImg) );
         vals.push_back(BAS08_PSNR(bgrImg) );
         vals.push_back(BAS09_PSNR(bgrImg) );
-        vals.push_back(BAS11_PSNR(bgrImg) );
+        vals.push_back(BAS11_PSNR(bgrImg, 0.0) );
+        vals.push_back(BAS11_PSNR(bgrImg, 0.5) );
+        vals.push_back(BAS11_PSNR(bgrImg, 1.0) );
+        vals.push_back(BAS11_PSNR(bgrImg, 2.0) );
         vals.push_back(PEA12_PSNR(bgrImg) );
         vals.push_back(PEA14_PSNR(bgrImg) );
 
@@ -127,7 +141,11 @@ int main(int argc, char** argv){
         print_single_result(vals, algorithm);
 
     } else if( algorithm == "BAS11" || algorithm == "bas11"){
-        vals.push_back(BAS11_PSNR(bgrImg) );
+        vals.push_back(BAS11_PSNR(bgrImg, a_param) );
+        std::string str = std::to_string(a_param);
+        str.erase (str.find_last_not_of('0') + 1, std::string::npos);
+        if(a_param != 0.5) str.append("0");
+        algorithm.append(" - a=" + str);
         print_single_result(vals, algorithm);
 
     } else if( algorithm == "PEA12" || algorithm == "pea12"){
@@ -203,15 +221,15 @@ double BAS09_PSNR(const cv::Mat& orig){
     return compute_psnr(orig, BAS09_itransf_img);
 }
 
-double BAS11_PSNR(const cv::Mat& orig){
+double BAS11_PSNR(const cv::Mat& orig, double a_param){
 
     // Declare an empty image for transformation
     cv::Mat BAS11_transf_img = orig;
     cv::Mat BAS11_itransf_img = orig;
 
     // Direct and inverse transform
-    transformImage(orig,BAS11_transf_img, new BAS11 );
-    inverseTransformImage(BAS11_transf_img, BAS11_itransf_img, new BAS11);
+    transformImage(orig,BAS11_transf_img, new BAS11(a_param) );
+    inverseTransformImage(BAS11_transf_img, BAS11_itransf_img, new BAS11(a_param) );
 
     // Compute PSNR and return it
     return compute_psnr(orig, BAS11_itransf_img);
@@ -249,7 +267,7 @@ void print_results(std::vector<double> vals){
     std::cout << "\n\n************** PSNR **************\n\n";
 
     for(int i=0; i<vals.size(); i++){
-        std::cout << "   " << supported_algorithms.at(i) << ":\t\t" << vals.at(i) <<std::endl;
+        std::cout << "   " << supported_algorithms.at(i) << "\t" << vals.at(i) <<std::endl;
     }
 
     std::cout << "\n**********************************\n\n";
@@ -259,7 +277,7 @@ void print_single_result(std::vector<double> vals, std::string algorithm){
     for (std::string::size_type i=0; i<algorithm.length(); i++) algorithm[i]=std::toupper(algorithm[i], *(new std::locale) );
 
     std::cout << "\n\n************** PSNR **************\n\n";
-    std::cout << "   " << algorithm << ":\t\t" << vals.at(0) <<std::endl;
+    std::cout << "   " << algorithm << "\t" << vals.at(0) <<std::endl;
     std::cout << "\n**********************************\n\n";
 }
 

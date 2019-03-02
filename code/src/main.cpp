@@ -35,8 +35,8 @@ using cnl::fixed_point;
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
 
 void usage();
-AxDCT_algorithm *stringToAlgorithm(std::string);
-void showAxDCTImage(const cv::Mat&, const std::string&);
+AxDCT_algorithm *stringToAlgorithm(std::string, double a_param = -1);
+void showAxDCTImage(const cv::Mat&, const std::string&, double = -1);
 
 int main(int argc, char** argv )
 {
@@ -47,9 +47,10 @@ int main(int argc, char** argv )
 
     int c = 0;
     std::string algorithm = "";
+    double a_param = -1;
     std::string img_path = "";
 
-	while ((c = getopt(argc, argv, "x:i:ha")) != -1){
+	while ((c = getopt(argc, argv, "p:x:i:ha")) != -1){
 		switch (c)
 		{
         case 'x':
@@ -59,6 +60,10 @@ int main(int argc, char** argv )
         case 'a':
 			algorithm = "__all";
 			break;
+
+        case 'p':
+            a_param = atof(optarg);
+            break;
 
         case 'i':
 			img_path = optarg;
@@ -81,6 +86,12 @@ int main(int argc, char** argv )
         return EXIT_FAILURE;
     }
 
+    if( (algorithm == "BAS11") && (a_param == -1)){
+        std::cout << "\nBAS11 requires the specification of 'a' parameter. Please use -p option, too.";
+        usage();
+        return EXIT_FAILURE;
+    }
+
     // Load img
     cv::Mat bgrImg = imread( img_path, cv::IMREAD_COLOR );
     assert( bgrImg.data && "No image data");
@@ -90,11 +101,14 @@ int main(int argc, char** argv )
         showAxDCTImage(bgrImg,"CB11");
         showAxDCTImage(bgrImg,"BAS08");
         showAxDCTImage(bgrImg,"BAS09");
-        showAxDCTImage(bgrImg,"BAS11");
+        showAxDCTImage(bgrImg,"BAS11", 0);
+        showAxDCTImage(bgrImg,"BAS11", 0.5);
+        showAxDCTImage(bgrImg,"BAS11", 1.0);
+        showAxDCTImage(bgrImg,"BAS11", 2.0);
         showAxDCTImage(bgrImg,"PEA12");
         showAxDCTImage(bgrImg,"PEA14");
     } else {
-        showAxDCTImage(bgrImg,algorithm);
+        showAxDCTImage(bgrImg,algorithm,a_param);
     }
     
     
@@ -102,14 +116,14 @@ int main(int argc, char** argv )
     return 0;
 }
 
-void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm){
+void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, double a_param){
     
     // Declare an empty image for transformation
     cv::Mat transfImg = bgrImg;
     cv::Mat itransfImg = bgrImg;
 
     // Direct and inverse transform
-    AxDCT_algorithm *alg = stringToAlgorithm(algorithm);
+    AxDCT_algorithm *alg = stringToAlgorithm(algorithm,a_param);
 
     transformImage(bgrImg,transfImg, alg );
     inverseTransformImage(transfImg, itransfImg, alg);
@@ -117,7 +131,15 @@ void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm){
     delete alg;
 
     // Show the approximate image 
-    std::string winName("Approximate Image (" + algorithm + ")" );
+    std::string winName("Approximate Image (" + algorithm );
+    if(algorithm == "BAS11") {
+        std::string str = std::to_string(a_param);
+        str.erase (str.find_last_not_of('0') + 1, std::string::npos);
+        if(a_param != 0.5) str.append("0");
+        winName.append(" - a=" + str);
+    }
+    winName.append(")");
+
     cv::namedWindow(winName.c_str(), cv::WINDOW_AUTOSIZE );
     imshow(winName.c_str(), itransfImg);
 }
@@ -131,7 +153,7 @@ void usage(){
 	std::cout << std::endl;
 }
 
-AxDCT_algorithm *stringToAlgorithm(std::string algorithm){
+AxDCT_algorithm *stringToAlgorithm(std::string algorithm, double a_param){
     if( algorithm == "BC12" || algorithm == "bc12"){
         return new BC12;
 
@@ -145,7 +167,7 @@ AxDCT_algorithm *stringToAlgorithm(std::string algorithm){
         return new BAS09;
 
     } else if( algorithm == "BAS11" || algorithm == "bas11"){
-        return new BAS11;
+        return new BAS11(a_param);
 
     } else if( algorithm == "PEA12" || algorithm == "pea12"){
         return new PEA12;
