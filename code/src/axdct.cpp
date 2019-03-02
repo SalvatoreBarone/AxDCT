@@ -19,10 +19,10 @@
 //
 
 /******************************************************************************
- * @file   main.cpp
+ * @file   axdct.cpp
  * @author Andrea Aletto
  * @date   4 feb 2019
- * @brief  Implementation of main executable functions
+ * @brief  Implementation of axdct executable
  ******************************************************************************/
 
 #include "core/dct.h"
