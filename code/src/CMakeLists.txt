@@ -8,7 +8,7 @@ add_subdirectory(utils)
 add_subdirectory(core)
 add_subdirectory(algorithms)
 
-add_executable( axdct main.cpp )
+add_executable( axdct axdct.cpp )
 
 target_include_directories(axdct PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_include_directories(axdct PUBLIC ${CMAKE_SOURCE_DIR}/include/core)

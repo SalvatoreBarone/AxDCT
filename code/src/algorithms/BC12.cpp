@@ -78,14 +78,14 @@ cv::Mat BC12::getD(){
 
     cv::Mat D = cv::Mat::zeros(8,8,CV_16S);
 
-    D.at<int16_t>(0, 0) = to_rep( fixed_point<int16_t, -8> {1/sqrt(8)});
-    D.at<int16_t>(1, 1) = to_rep( fixed_point<int16_t, -8> {1/sqrt(2)});
-    D.at<int16_t>(2, 2) = to_rep( fixed_point<int16_t, -8> {0.5      });
-    D.at<int16_t>(3, 3) = to_rep( fixed_point<int16_t, -8> {1/sqrt(2)});
-    D.at<int16_t>(4, 4) = to_rep( fixed_point<int16_t, -8> {1/sqrt(8)});
-    D.at<int16_t>(5, 5) = to_rep( fixed_point<int16_t, -8> {1/sqrt(2)});
-    D.at<int16_t>(6, 6) = to_rep( fixed_point<int16_t, -8> {0.5      });
-    D.at<int16_t>(7, 7) = to_rep( fixed_point<int16_t, -8> {1/sqrt(2)});
+    D.at<int16_t>(0, 0) = to_rep( fixed_point<int16_t, -16> {1/sqrt(8)});
+    D.at<int16_t>(1, 1) = to_rep( fixed_point<int16_t, -16> {1/sqrt(2)});
+    D.at<int16_t>(2, 2) = to_rep( fixed_point<int16_t, -16> {0.5      });
+    D.at<int16_t>(3, 3) = to_rep( fixed_point<int16_t, -16> {1/sqrt(2)});
+    D.at<int16_t>(4, 4) = to_rep( fixed_point<int16_t, -16> {1/sqrt(8)});
+    D.at<int16_t>(5, 5) = to_rep( fixed_point<int16_t, -16> {1/sqrt(2)});
+    D.at<int16_t>(6, 6) = to_rep( fixed_point<int16_t, -16> {0.5      });
+    D.at<int16_t>(7, 7) = to_rep( fixed_point<int16_t, -16> {1/sqrt(2)});
 
     return D;
 }

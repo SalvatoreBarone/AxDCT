@@ -31,6 +31,8 @@
 #include <opencv2/opencv.hpp>
 #include "AxDCT_algorithm.h"
 
+#define _n_DECIMAL_ -16
+
 class BAS08 : public AxDCT_algorithm
 {
 
@@ -46,8 +48,9 @@ class BAS08 : public AxDCT_algorithm
         virtual cv::Mat getCbDequantizationMatix();
         
         cv::Mat getD();
-        cv::Mat getQ();
-        cv::Mat getCQ();
+
+        cv::Mat getLumaFullQuantMatrix();
+        cv::Mat getChromaFullQuantMatrix();
 
     public:
         BAS08() : AxDCT_algorithm() {};
