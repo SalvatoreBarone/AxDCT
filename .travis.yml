@@ -4,19 +4,19 @@ language: cpp
 
 cache:
   directories:
-  - $TRAVIS_BUILD_DIR/opencv_cache
+  - $TRAVIS_BUILD_DIR/opencv
 
 before_install:
 - sudo apt-get -qq update
 - sudo apt-get install -y cmake ninja-build build-essential 
 - sudo apt-get install -y libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
 - sudo apt-get install -y python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
-#- sudo apt-get install -y g++-7
-#- sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
-- git clone https://github.com/opencv/opencv.git
-- mv opencv/.git opencv_cache/
-- cd opencv_cache
-- git reset --hard origin/master
+- if [ ! -d "opencv" ] ; then
+-    git clone https://github.com/opencv/opencv.git
+- else
+-    cd "opencv"
+-    git pull
+- fi
 - mkdir -p build && cd build
 - cmake -D CMAKE_BUILD_TYPE=RELEASE -D BUILD_EXAMPLES=OFF -D BUILD_opencv_apps=OFF -D BUILD_DOCS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_TESTS=OFF -D CMAKE_INSTALL_PREFIX=/usr/local .. -G Ninja
 - ninja && sudo ninja install
