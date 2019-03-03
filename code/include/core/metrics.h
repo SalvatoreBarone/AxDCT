@@ -19,42 +19,25 @@
 //
 
 /******************************************************************************
- * @file   BAS09.h
+ * @file   metrics.h
  * @author Andrea Aletto
- * @date   11 feb 2019
- * @brief  Declaration of BAS09 algorithm class
+ * @date   28 feb 2019
+ * @brief  Declaration of evaluating metrics for transformed images
  ******************************************************************************/
 
-#ifndef _BAS09_H
-#define _BAS09_H
+#ifndef _METRICS_H_
+#define _METRICS_H_
 
+#include <iostream>
+#include <stdio.h>
 #include <opencv2/opencv.hpp>
-#include "AxDCT_algorithm.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <inexact_adders.h>
+#include "../utils/mat_operations.h"
+#include "../algorithms_list.h"
+#include "../user_defines.h"
 
-#define _n_DECIMAL_ -16
+double compute_psnr(const cv::Mat& orig, const cv::Mat& target);
 
-class BAS09 : public AxDCT_algorithm
-{
-
-    private:
-        virtual void dct1d(const cv::Mat& input, cv::Mat& output);
-
-        virtual cv::Mat getYQuantizationMatix();
-        virtual cv::Mat getCrQuantizationMatix();
-        virtual cv::Mat getCbQuantizationMatix();
-
-        virtual cv::Mat getYDequantizationMatix();
-        virtual cv::Mat getCrDequantizationMatix();
-        virtual cv::Mat getCbDequantizationMatix();
-
-        cv::Mat getT();
-        cv::Mat getD();
-        cv::Mat getLumaFullQuantMatrix();
-        cv::Mat getChromaFullQuantMatrix();
-
-    public:
-        BAS09() : AxDCT_algorithm() {};
-
-};
-
-#endif /* _BAS09_H */
+#endif

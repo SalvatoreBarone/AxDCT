@@ -36,8 +36,14 @@
 #include <inexact_adders.h>
 #include "../utils/mat_operations.h"
 
+#include <cnl/fixed_point.h>
+using cnl::fixed_point;
+
 class AxDCT_algorithm{
     public:
+        AxDCT_algorithm(){}
+        virtual ~AxDCT_algorithm(){}
+
         virtual void dct(const cv::Mat&, cv::Mat&);
 
         virtual void y_quantizate(const cv::Mat&, cv::Mat&);
@@ -47,6 +53,9 @@ class AxDCT_algorithm{
         virtual void y_dequantizate(const cv::Mat&, cv::Mat&);
         virtual void cr_dequantizate(const cv::Mat&, cv::Mat&);
         virtual void cb_dequantizate(const cv::Mat&, cv::Mat&);
+
+        virtual cv::Mat getStandardQ();
+        virtual cv::Mat getStandardCQ();
 
     protected:
         virtual void dct1d(const cv::Mat&, cv::Mat&) = 0;

@@ -19,21 +19,21 @@
 //
 
 /******************************************************************************
- * @file   BAS09.h
+ * @file   BAS11.h
  * @author Andrea Aletto
- * @date   11 feb 2019
- * @brief  Declaration of BAS09 algorithm class
+ * @date   21 feb 2019
+ * @brief  Declaration of BAS11 algorithm class
  ******************************************************************************/
 
-#ifndef _BAS09_H
-#define _BAS09_H
+#ifndef _BAS11_H
+#define _BAS11_H
 
 #include <opencv2/opencv.hpp>
 #include "AxDCT_algorithm.h"
 
 #define _n_DECIMAL_ -16
 
-class BAS09 : public AxDCT_algorithm
+class BAS11 : public AxDCT_algorithm
 {
 
     private:
@@ -46,15 +46,18 @@ class BAS09 : public AxDCT_algorithm
         virtual cv::Mat getYDequantizationMatix();
         virtual cv::Mat getCrDequantizationMatix();
         virtual cv::Mat getCbDequantizationMatix();
-
-        cv::Mat getT();
+        
         cv::Mat getD();
         cv::Mat getLumaFullQuantMatrix();
         cv::Mat getChromaFullQuantMatrix();
 
+        double a;
+
     public:
-        BAS09() : AxDCT_algorithm() {};
+        BAS11(double a);
+        double getA() { return a; }
+        void setA(double a) { this->a = a; }
 
 };
 
-#endif /* _BAS09_H */
+#endif /* _BAS11_H */

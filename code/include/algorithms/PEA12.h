@@ -19,21 +19,21 @@
 //
 
 /******************************************************************************
- * @file   BAS09.h
+ * @file   PEA12.h
  * @author Andrea Aletto
- * @date   11 feb 2019
- * @brief  Declaration of BAS09 algorithm class
+ * @date   21 feb 2019
+ * @brief  Declaration of PEA12 algorithm class
  ******************************************************************************/
 
-#ifndef _BAS09_H
-#define _BAS09_H
+#ifndef _PEA12_H
+#define _PEA12_H
 
 #include <opencv2/opencv.hpp>
 #include "AxDCT_algorithm.h"
 
 #define _n_DECIMAL_ -16
 
-class BAS09 : public AxDCT_algorithm
+class PEA12 : public AxDCT_algorithm
 {
 
     private:
@@ -53,8 +53,8 @@ class BAS09 : public AxDCT_algorithm
         cv::Mat getChromaFullQuantMatrix();
 
     public:
-        BAS09() : AxDCT_algorithm() {};
+        PEA12() : AxDCT_algorithm() {};
 
 };
 
-#endif /* _BAS09_H */
+#endif /* _PEA12_H */

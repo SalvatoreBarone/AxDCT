@@ -19,21 +19,24 @@
 //
 
 /******************************************************************************
- * @file   BAS09.h
+ * @file   CB11.h
  * @author Andrea Aletto
- * @date   11 feb 2019
- * @brief  Declaration of BAS09 algorithm class
+ * @date   21 feb 2019
+ * @brief  Declaration of CB11 algorithm class
  ******************************************************************************/
 
-#ifndef _BAS09_H
-#define _BAS09_H
+#ifndef _CB11_H
+#define _CB11_H
 
 #include <opencv2/opencv.hpp>
 #include "AxDCT_algorithm.h"
 
+#include <cnl/fixed_point.h>
+using cnl::fixed_point;
+
 #define _n_DECIMAL_ -16
 
-class BAS09 : public AxDCT_algorithm
+class CB11 : public AxDCT_algorithm
 {
 
     private:
@@ -49,12 +52,13 @@ class BAS09 : public AxDCT_algorithm
 
         cv::Mat getT();
         cv::Mat getD();
+
         cv::Mat getLumaFullQuantMatrix();
         cv::Mat getChromaFullQuantMatrix();
 
     public:
-        BAS09() : AxDCT_algorithm() {};
+        CB11() : AxDCT_algorithm() {};
 
 };
 
-#endif /* _BAS09_H */
+#endif /* _CB11_H */

@@ -25,7 +25,16 @@
  * @brief  Include list of all AxDCT algorithms
  ******************************************************************************/
 
+#ifndef __ALG_LIST_H
+#define __ALG_LIST_H 
+
 #include "algorithms/AxDCT_algorithm.h"
 #include "algorithms/BC12.h"
+#include "algorithms/CB11.h"
 #include "algorithms/BAS09.h"
 #include "algorithms/BAS08.h"
+#include "algorithms/BAS11.h"
+#include "algorithms/PEA12.h"
+#include "algorithms/PEA14.h"
+
+#endif /* __ALG_LIST_H */
