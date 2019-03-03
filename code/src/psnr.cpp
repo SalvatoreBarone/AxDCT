@@ -280,7 +280,7 @@ void print_single_result(std::vector<double> vals, std::string algorithm){
     std::cout << "   " << algorithm << "\t" << vals.at(0) <<std::endl;
     std::cout << "\n**********************************\n\n";
 }
-
+ 
 void usage(){
 	std::cout << "\n\n psnr         [OPTION] [VALUE]                    \n";
 	std::cout << " -i	<VALUE>		Source image path                   \n";
