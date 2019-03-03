@@ -61,4 +61,4 @@ double compute_psnr(const cv::Mat& orig, const cv::Mat& target){
     double psnr = 10*log10( 255*255/mse );
     
     return psnr;
-}
+} 
