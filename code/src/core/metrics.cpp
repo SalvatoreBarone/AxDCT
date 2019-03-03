@@ -62,3 +62,10 @@ double compute_psnr(const cv::Mat& orig, const cv::Mat& target){
     
     return psnr;
 }
+
+double compute_reduction(const double exact_param, const double inexact_param, const int nab, const int n_bit = 16){
+    double v_ext = n_bit * exact_param;
+    double v_inxt = nab*inexact_param + (n_bit - nab)*exact_param;
+
+    return (v_inxt-v_ext)/v_ext * 100;
+}

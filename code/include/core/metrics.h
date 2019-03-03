@@ -39,5 +39,6 @@
 #include "../user_defines.h"
 
 double compute_psnr(const cv::Mat& orig, const cv::Mat& target);
+double compute_reduction(const double exact_param, const double inexact_param, const int nab, const int n_bit = 16);
 
 #endif
