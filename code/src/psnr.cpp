@@ -234,7 +234,7 @@ double BAS11_PSNR(const cv::Mat& orig, double a_param){
     // Compute PSNR and return it
     return compute_psnr(orig, BAS11_itransf_img);
 }
-
+ 
 double PEA12_PSNR(const cv::Mat& orig){
 
     // Declare an empty image for transformation
