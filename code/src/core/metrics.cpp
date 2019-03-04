@@ -87,6 +87,56 @@ double compute_psnr(const cv::Mat& orig, const cv::Mat& target, int component){
     return psnr;
 }
 
+double compute_ad(const cv::Mat& orig, const cv::Mat& target, int component){
+    assert(((component == 0) || (component == 1) || (component == 2)) && "component must be 0, 1 or 2");
+
+    double ret = 0.0;
+
+    cv::Mat origCh[3];
+    cv::Mat targetCh[3];
+
+    cv::split(orig, origCh);
+    cv::split(target, targetCh);
+
+    if( component == 0){
+        origCh[1].deallocate();
+        origCh[2].deallocate();
+        targetCh[1].deallocate();
+        targetCh[2].deallocate();
+    } else if (component == 1){
+        origCh[0].deallocate();
+        origCh[2].deallocate();
+        targetCh[0].deallocate();
+        targetCh[2].deallocate();
+    } else {
+        origCh[1].deallocate();
+        origCh[0].deallocate();
+        targetCh[1].deallocate();
+        targetCh[0].deallocate();
+    }
+    
+
+    cv::Mat origDouble;
+    origCh[component].convertTo(origDouble, CV_64FC1);   
+    
+    cv::Mat targetDouble;   
+    targetCh[component].convertTo(targetDouble, CV_64FC1);
+
+    for(int row=0; row<orig.rows; row++){
+        for(int col=0; col<orig.cols; col++){
+            ret += ( origDouble.at<double>(row,col) - targetDouble.at<double>(row,col) );
+        }
+    }
+
+    origDouble.deallocate();
+    targetDouble.deallocate();
+    origCh[component].deallocate();
+    targetCh[component].deallocate();
+    
+    ret /= (orig.rows * orig.cols);
+    return ret;
+}
+
 /**
  * METRICS for the whole image
 */
@@ -108,6 +158,16 @@ double compute_psnr(const cv::Mat& orig, const cv::Mat& target){
     for( int i=0; i<3; i++ ) psnr[i] = compute_psnr(orig, target, i);
     
     double ret = ( psnr[0] + psnr[1] + psnr[2] )/3;
+    
+    return ret;
+}
+
+double compute_ad(const cv::Mat& orig, const cv::Mat& target){
+    double ad[3] = {0.0, 0.0, 0.0};
+
+    for( int i=0; i<3; i++ ) ad[i] = compute_ad(orig, target, i);
+    
+    double ret = ( ad[0] + ad[1] + ad[2] )/3;
     
     return ret;
 }
