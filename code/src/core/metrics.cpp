@@ -26,25 +26,9 @@
  ******************************************************************************/
 #include "metrics.h"
 
-double compute_psnr(const cv::Mat& orig, const cv::Mat& target){
-    
-    double error[3] = {0.0, 0.0, 0.0};
-
-    for( int i=0; i<3; i++ ) error[i] = compute_mse(orig, target, i);
-    
-    double mse = ( error[0] + error[1] + error[2] );
-
-    double psnr = 10*log10( 255*255/mse );
-    
-    return psnr;
-}
-
-double compute_reduction(const double exact_param, const double inexact_param, const int nab, const int n_bit){
-    double v_ext = n_bit * exact_param;
-    double v_inxt = nab*inexact_param + (n_bit - nab)*exact_param;
-
-    return (v_inxt-v_ext)/v_ext * 100;
-}
+/**
+ * METRICS for one component
+*/
 
 double compute_mse(const cv::Mat& orig, const cv::Mat& target, int component){
     assert(((component == 0) || (component == 1) || (component == 2)) && "component must be 0, 1 or 2");
@@ -95,3 +79,48 @@ double compute_mse(const cv::Mat& orig, const cv::Mat& target, int component){
     ret /= (orig.rows * orig.cols);
     return ret;
 }
+
+double compute_psnr(const cv::Mat& orig, const cv::Mat& target, int component){
+    double mse = compute_mse(orig, target, component);
+    double psnr = 10*log10( 255*255/mse );
+    // std::cout << "\n\npsnr for component" <<component <<" is: --> " <<psnr <<" <--\n"; 
+    return psnr;
+}
+
+/**
+ * METRICS for the whole image
+*/
+
+double compute_mse(const cv::Mat& orig, const cv::Mat& target){
+    double mse[3] = {0.0, 0.0, 0.0};
+
+    for( int i=0; i<3; i++ ) mse[i] = compute_mse(orig, target, i);
+    
+    double ret = ( mse[0] + mse[1] + mse[2] )/3;
+    
+    return ret;
+}
+
+double compute_psnr(const cv::Mat& orig, const cv::Mat& target){
+    
+    double psnr[3] = {0.0, 0.0, 0.0};
+
+    for( int i=0; i<3; i++ ) psnr[i] = compute_psnr(orig, target, i);
+    
+    double ret = ( psnr[0] + psnr[1] + psnr[2] )/3;
+    
+    return ret;
+}
+
+/**
+ * Other METRICS
+*/
+
+double compute_reduction(const double exact_param, const double inexact_param, const int nab, const int n_bit){
+    double v_ext = n_bit * exact_param;
+    double v_inxt = nab*inexact_param + (n_bit - nab)*exact_param;
+
+    return (v_inxt-v_ext)/v_ext * 100;
+}
+
+
