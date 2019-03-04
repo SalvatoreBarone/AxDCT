@@ -29,34 +29,10 @@
 double compute_psnr(const cv::Mat& orig, const cv::Mat& target){
     
     double error[3] = {0.0, 0.0, 0.0};
-    
-    cv::Mat origCh[3];
-    cv::Mat targetCh[3];
 
-    cv::split(orig, origCh);
-    cv::split(target, targetCh);
-
-    for(int i=0; i<3; i++){
-        cv::Mat origDouble;
-        origCh[i].convertTo(origDouble, CV_64FC1);   
-        
-        cv::Mat targetDouble;   
-        targetCh[i].convertTo(targetDouble, CV_64FC1);
-
-        for(int row=0; row<orig.rows; row++){
-            for(int col=0; col<orig.cols; col++){
-                error[i] += ( (origDouble.at<double>(row,col) - targetDouble.at<double>(row,col))*(origDouble.at<double>(row,col) - targetDouble.at<double>(row,col)) );
-            }
-        }
-
-        origDouble.deallocate();
-        targetDouble.deallocate();
-        origCh[i].deallocate();
-        targetCh[i].deallocate();
-    }
+    for( int i=0; i<3; i++ ) error[i] = compute_mse(orig, target, i);
     
     double mse = ( error[0] + error[1] + error[2] );
-    mse /= (orig.cols * orig.rows);
 
     double psnr = 10*log10( 255*255/mse );
     
@@ -68,4 +44,54 @@ double compute_reduction(const double exact_param, const double inexact_param, c
     double v_inxt = nab*inexact_param + (n_bit - nab)*exact_param;
 
     return (v_inxt-v_ext)/v_ext * 100;
+}
+
+double compute_mse(const cv::Mat& orig, const cv::Mat& target, int component){
+    assert(((component == 0) || (component == 1) || (component == 2)) && "component must be 0, 1 or 2");
+
+    double ret = 0.0;
+
+    cv::Mat origCh[3];
+    cv::Mat targetCh[3];
+
+    cv::split(orig, origCh);
+    cv::split(target, targetCh);
+
+    if( component == 0){
+        origCh[1].deallocate();
+        origCh[2].deallocate();
+        targetCh[1].deallocate();
+        targetCh[2].deallocate();
+    } else if (component == 1){
+        origCh[0].deallocate();
+        origCh[2].deallocate();
+        targetCh[0].deallocate();
+        targetCh[2].deallocate();
+    } else {
+        origCh[1].deallocate();
+        origCh[0].deallocate();
+        targetCh[1].deallocate();
+        targetCh[0].deallocate();
+    }
+    
+
+    cv::Mat origDouble;
+    origCh[component].convertTo(origDouble, CV_64FC1);   
+    
+    cv::Mat targetDouble;   
+    targetCh[component].convertTo(targetDouble, CV_64FC1);
+
+    for(int row=0; row<orig.rows; row++){
+        for(int col=0; col<orig.cols; col++){
+            ret += ( (origDouble.at<double>(row,col) - targetDouble.at<double>(row,col))*(origDouble.at<double>(row,col) - targetDouble.at<double>(row,col)) );
+        }
+    }
+
+    origDouble.deallocate();
+    targetDouble.deallocate();
+    origCh[component].deallocate();
+    targetCh[component].deallocate();
+    
+    ret /= (orig.rows * orig.cols);
+    return ret;
 }
