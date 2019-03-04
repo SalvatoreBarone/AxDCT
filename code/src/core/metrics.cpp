@@ -137,6 +137,47 @@ double compute_ad(const cv::Mat& orig, const cv::Mat& target, int component){
     return ret;
 }
 
+double compute_md(const cv::Mat& orig, const cv::Mat& target, int component){
+    assert(((component == 0) || (component == 1) || (component == 2)) && "component must be 0, 1 or 2");
+
+    double ret = 0.0;
+
+    cv::Mat origCh[3];
+    cv::Mat targetCh[3];
+
+    cv::split(orig, origCh);
+    cv::split(target, targetCh);
+
+    if( component == 0){
+        origCh[1].deallocate();
+        origCh[2].deallocate();
+        targetCh[1].deallocate();
+        targetCh[2].deallocate();
+    } else if (component == 1){
+        origCh[0].deallocate();
+        origCh[2].deallocate();
+        targetCh[0].deallocate();
+        targetCh[2].deallocate();
+    } else {
+        origCh[1].deallocate();
+        origCh[0].deallocate();
+        targetCh[1].deallocate();
+        targetCh[0].deallocate();
+    }
+
+    for(int row=0; row<orig.rows; row++){
+        for(int col=0; col<orig.cols; col++){
+            double diff = (double)(origCh[component].at<unsigned char>(row,col) - targetCh[component].at<unsigned char>(row,col));
+            if( ret < diff) ret = diff;
+        }
+    }
+
+    origCh[component].deallocate();
+    targetCh[component].deallocate();
+    
+    return ret;
+}
+
 /**
  * METRICS for the whole image
 */
@@ -170,6 +211,23 @@ double compute_ad(const cv::Mat& orig, const cv::Mat& target){
     double ret = ( ad[0] + ad[1] + ad[2] )/3;
     
     return ret;
+}
+
+double compute_md(const cv::Mat& orig, const cv::Mat& target){
+    double md[3] = {0.0, 0.0, 0.0};
+
+    for( int i=0; i<3; i++ ) md[i] = compute_md(orig, target, i);
+    
+    double max = -1;
+
+    if(md[0] > md[1]){
+        if(md[2] > md[0] ) return md[2];
+        else return md[0];
+    } else {
+        if(md[2] > md[1] ) return md[2];
+        else return md[1];
+    }
+
 }
 
 /**
