@@ -18,16 +18,14 @@
 
 
 char oracle_path[]= "./main_oracle.txt";
-double getMSE();
+
+// extern "C"
+// {
+//     void *__dso_handle = NULL;
+// }
 
 extern "C" double BELLERO_getError()
 {
-
-    return getMSE();
-
-}
-
-double getMSE(){
 
     const std::string img_path = "/home/andrea/lena512color.bmp";
     const cv::Mat bgrImg = imread( img_path.c_str(), cv::IMREAD_COLOR );
@@ -40,5 +38,7 @@ double getMSE(){
 
     // Compute PSNR and return it
     return compute_mse(bgrImg, dst);
+
 }
+
 

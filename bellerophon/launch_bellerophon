@@ -5,27 +5,27 @@ echo "Launching bellerophon"
 echo "*********** REMEMBER TO RUN CMAKE ON ORIGINAL CODE FIRST!! ***********"
 
 bellerophon -v                                                                      \
-                -arcs /usr/local/lib/libopencv_core.a                        \
-                -arcs /usr/local/lib/opencv4/3rdparty/libittnotify.a \
-                -arcs /usr/local/lib/opencv4/3rdparty/libippicv.a \
-                -arcs libade.a \
-                -arcs libIlmImf.a \
-                -arcs /usr/local/lib/opencv4/3rdparty/libippiw.a \
-                -arcs liblibprotobuf.a \
-                -arcs liblibwebp.a \
-                -arcs libquirc.a \
-                -arcs /usr/local/lib/libopencv_imgproc.a                     \
-                -arcs /usr/local/lib/libopencv_imgcodecs.a                   \
-                -arcs /usr/local/lib/libopencv_highgui.a                     \
+                -libdb /home/andrea/AxDCT/code/build/                               \
+                -arcs /usr/lib/x86_64-linux-gnu/libjasper.a                         \
+                -arcs /usr/lib/x86_64-linux-gnu/libjbig.a                           \
+                -arcs /usr/lib/x86_64-linux-gnu/libtiff.a                           \
+                -arcs /usr/lib/x86_64-linux-gnu/libjpeg.a                           \
+                -arcs /usr/lib/x86_64-linux-gnu/libpng.a                            \
+                -arcs /usr/lib/x86_64-linux-gnu/liblzma.a                           \
+                -arcs /usr/local/lib/opencv4/3rdparty/libittnotify.a                \
+                -arcs /usr/local/lib/opencv4/3rdparty/libippicv.a                   \
+                -arcs /usr/local/lib/opencv4/3rdparty/libade.a                      \
+                -arcs /usr/local/lib/opencv4/3rdparty/libIlmImf.a                   \
+                -arcs /usr/local/lib/opencv4/3rdparty/libippiw.a                    \
+                -arcs /usr/local/lib/opencv4/3rdparty/liblibprotobuf.a              \
+                -arcs /usr/local/lib/opencv4/3rdparty/liblibwebp.a                  \
+                -arcs /usr/local/lib/opencv4/3rdparty/libquirc.a                    \
+                -arcs /usr/local/lib/libopencv_core.a                               \
+                -arcs /usr/local/lib/libopencv_imgproc.a                            \
+                -arcs /usr/local/lib/libopencv_imgcodecs.a                          \
+                -arcs /usr/local/lib/libopencv_highgui.a                            \
                 -arcs /usr/lib/libInexactAdders.a                                   \
-                -arcs /home/andrea/AxDCT/code/build/libs.a/libaxdctAlgorithms.a     \
-                -arcs /home/andrea/AxDCT/code/build/libs.a/libaxdctCore.a           \
-                -arcs /home/andrea/AxDCT/code/build/libs.a/libutils.a               \
                 -cd-dir ./                                                          \
                 -r ../chimera/output/mutants/BC12.cpp/1/axdct_report.csv            \
                 -t AxDCTAprx                                                        \
                 -P gaconfig.param 1e-7
-                
-
-
-

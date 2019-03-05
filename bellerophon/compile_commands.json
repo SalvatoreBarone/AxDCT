@@ -1,11 +1,11 @@
 [
 {
-  "command": "clang++ -std=c++11 -c ../chimera/output/mutants/BC12.cpp/1/BC12.cpp -I/home/andrea/bellerophon/include/ -I./include -I./include/algorithms -I./include/core -I./include/utils -I/usr/local/include/opencv4 -I/usr/include/jasper",
+  "command": "clang++ -std=c++11 -fno-use-cxa-atexit -c ../chimera/output/mutants/BC12.cpp/1/BC12.cpp -I/home/andrea/bellerophon/include/ -I./include -I./include/algorithms -I./include/core -I./include/utils -I/usr/local/include/opencv4 -I/usr/include/jasper",
   "directory": "/home/andrea/AxDCT/code",
   "file": "../chimera/output/mutants/BC12.cpp/1/BC12.cpp"
 },
 {
-  "command": "clang++ -std=c++11 -c bellerophon_functions.cpp -I/home/andrea/bellerophon/include/ -I../code/include -I../code/include/algorithms -I../code/include/core -I../code/include/utils -I/usr/local/include/opencv4 -I/usr/include/jasper",
+  "command": "clang++ -std=c++11 -fno-use-cxa-atexit -c bellerophon_functions.cpp -I/home/andrea/bellerophon/include/ -I../code/include -I../code/include/algorithms -I../code/include/core -I../code/include/utils -I/usr/local/include/opencv4 -I/usr/include/jasper",
   "directory": "/home/andrea/AxDCT/bellerophon/",
   "file": "./bellerophon_functions.cpp"
 }
