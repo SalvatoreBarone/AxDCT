@@ -9,44 +9,38 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
+#include "/home/andrea/bellerophon/include/lib/easylogging++.h"
+#include "/home/andrea/bellerophon/include/Log.h"
 
 
 #include "algorithms_list.h"
-#include "algorithms/BC12.h"
+#include "algorithms/BAS08.h"
+#include "core/dct.h"
+#include "core/metrics.h"
 
 
 char oracle_path[]= "./main_oracle.txt";
-
+double getMSE();
 
 extern "C" double BELLERO_getError()
 {
-    // // Local vars
-    // double error = 0;
-    // int expected_val, calc_val;
-    // int first_val, second_val, third_val;
-    // int cnt = 0; // Counter
 
-    // ::std::string first_str, second_str, third_str, expected_str;
-    // ::std::ifstream oracle ( oracle_path );
-    // if ( !oracle.good() ) {
-    //     ::std::cerr << "The oracle does not exist!\n";
-    //     exit ( 1 );
-    // }
+    return getMSE();
 
-    // // Read oracle's values
+}
+
+double getMSE(){
+
+    const std::string img_path = "/home/andrea/lena512color.bmp";
+    const cv::Mat bgrImg = imread( img_path.c_str(), cv::IMREAD_COLOR );
+
+    cv::Mat dst = bgrImg;
+    // Direct and inverse transform
+    transformImage(bgrImg,dst, new BC12 );
+    inverseTransformImage(dst, dst, new BC12);
     
-    // do {
-    //     oracle >> first_str >> second_str >> third_str >> expected_str;
-    //     cnt++;
-    //     expected_val = ::std::atoi ( expected_str.c_str() );
 
-    //     first_val = ::std::atoi( first_str.c_str() );
-    //     second_val = ::std::atoi( second_str.c_str() );
-    //     third_val = ::std::atoi( third_str.c_str() );
-    //     calc_val = sumB(first_val, second_val ,third_val);
-    //     error += fabs ( calc_val - expected_val ) < 10e-16 ? 0 : fabs ( calc_val - expected_val );
-    // } while ( !oracle.eof() );
-
-    return 1e-6;
+    // Compute PSNR and return it
+    return compute_mse(bgrImg, dst);
 }
 
