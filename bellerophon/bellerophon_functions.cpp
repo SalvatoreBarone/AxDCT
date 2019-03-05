@@ -9,8 +9,6 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
-#include "/home/andrea/bellerophon/include/lib/easylogging++.h"
-#include "/home/andrea/bellerophon/include/Log.h"
 
 
 #include "algorithms_list.h"
