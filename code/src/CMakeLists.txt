@@ -3,6 +3,7 @@ project( AxDCT )
 
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
+set(OpenCV_STATIC ON)
 
 add_subdirectory(utils)
 add_subdirectory(core)

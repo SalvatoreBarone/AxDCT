@@ -24,20 +24,30 @@ char oracle_path[]= "./main_oracle.txt";
 //     void *__dso_handle = NULL;
 // }
 
+// class aClass{
+//     private:
+//         int * a;
+
+//     public:
+//         aClass() { this->a = new int; }
+//         ~aClass() { delete a; }
+// };
+
 extern "C" double BELLERO_getError()
 {
+    cv::Mat p = cv::Mat::zeros(8,8,0);
+    return 0.0;
+    // const std::string img_path = "/home/andrea/lena512color.bmp";
+    // const cv::Mat bgrImg = imread( img_path.c_str(), cv::IMREAD_COLOR );
 
-    const std::string img_path = "/home/andrea/lena512color.bmp";
-    const cv::Mat bgrImg = imread( img_path.c_str(), cv::IMREAD_COLOR );
-
-    cv::Mat dst = bgrImg;
-    // Direct and inverse transform
-    transformImage(bgrImg,dst, new BC12 );
-    inverseTransformImage(dst, dst, new BC12);
-    
-
-    // Compute PSNR and return it
-    return compute_mse(bgrImg, dst);
+    // cv::Mat dst = bgrImg;
+    // // Direct and inverse transform
+    // transformImage(bgrImg,dst, new BC12 );
+    // inverseTransformImage(dst, dst, new BC12);
+ 
+ 
+    // // Compute PSNR and return it
+    // return compute_mse(bgrImg, dst);
 
 }
 
