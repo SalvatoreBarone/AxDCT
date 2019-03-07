@@ -728,8 +728,8 @@ void BAS11::dct1d(const cv::Mat& input, cv::Mat& output){
 
     int16_t x0d = x0c + x1c;
     int16_t x1d = x0c - x1c;
-    int16_t x2d;
-    int16_t x3d;
+    int16_t x2d = 0;
+    int16_t x3d = 0;
     int16_t x4d = x4c;
     int16_t x5d = x5c;
     int16_t x6d = x6c;
