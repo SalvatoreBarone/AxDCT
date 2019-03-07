@@ -218,8 +218,6 @@ double compute_md(const cv::Mat& orig, const cv::Mat& target){
 
     for( int i=0; i<3; i++ ) md[i] = compute_md(orig, target, i);
     
-    double max = -1;
-
     if(md[0] > md[1]){
         if(md[2] > md[0] ) return md[2];
         else return md[0];

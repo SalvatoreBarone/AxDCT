@@ -32,8 +32,8 @@
 
 void usage();
 void printSupportedAlgs();
-void print_results(std::vector<double>);
-void print_single_result(std::vector<double>, std::string);
+void print_results(std::vector<double>, bool silent = false);
+void print_single_result(std::vector<double>, std::string, bool silent = false);
 
 double BC12_PSNR(const cv::Mat& orig);
 double CB11_PSNR(const cv::Mat& orig);
@@ -56,8 +56,9 @@ int main(int argc, char** argv){
     std::string algorithm = "";
     double a_param = -1;
     std::string img_path = "";
+    bool isOutputSilent = false;
 
-	while ((c = getopt(argc, argv, "p:x:i:hla")) != -1)
+	while ((c = getopt(argc, argv, "p:x:i:hlas")) != -1)
 	{
 		switch (c)
 		{
@@ -68,6 +69,9 @@ int main(int argc, char** argv){
 		case 'a':
 			algorithm = "__all";
 			break;
+        case 's':
+            isOutputSilent = true;
+            break;
 
         case 'x':
 			algorithm = optarg;
@@ -122,23 +126,23 @@ int main(int argc, char** argv){
         vals.push_back(PEA12_PSNR(bgrImg) );
         vals.push_back(PEA14_PSNR(bgrImg) );
 
-        print_results(vals);
+        print_results(vals, isOutputSilent);
 
     } else if( algorithm == "BC12" || algorithm == "bc12"){
         vals.push_back(BC12_PSNR(bgrImg) );
-        print_single_result(vals, algorithm);
+        print_single_result(vals, algorithm, isOutputSilent);
 
     } else if( algorithm == "CB11" || algorithm == "cb11"){
         vals.push_back(CB11_PSNR(bgrImg) );
-        print_single_result(vals, algorithm);
+        print_single_result(vals, algorithm, isOutputSilent);
 
     } else if( algorithm == "BAS08" || algorithm == "bas08"){
         vals.push_back(BAS08_PSNR(bgrImg) );
-        print_single_result(vals, algorithm);
+        print_single_result(vals, algorithm, isOutputSilent);
 
     } else if( algorithm == "BAS09" || algorithm == "bas09"){
         vals.push_back(BAS09_PSNR(bgrImg) );
-        print_single_result(vals, algorithm);
+        print_single_result(vals, algorithm, isOutputSilent);
 
     } else if( algorithm == "BAS11" || algorithm == "bas11"){
         vals.push_back(BAS11_PSNR(bgrImg, a_param) );
@@ -146,15 +150,15 @@ int main(int argc, char** argv){
         str.erase (str.find_last_not_of('0') + 1, std::string::npos);
         if(a_param != 0.5) str.append("0");
         algorithm.append(" - a=" + str);
-        print_single_result(vals, algorithm);
+        print_single_result(vals, algorithm, isOutputSilent);
 
     } else if( algorithm == "PEA12" || algorithm == "pea12"){
         vals.push_back(PEA12_PSNR(bgrImg) );
-        print_single_result(vals, algorithm);
+        print_single_result(vals, algorithm, isOutputSilent);
 
     } else if( algorithm == "PEA14" || algorithm == "pea14"){
         vals.push_back(PEA14_PSNR(bgrImg) );
-        print_single_result(vals, algorithm);
+        print_single_result(vals, algorithm, isOutputSilent);
 
     } else {
         std::cout << "\nChosen algorithm (" + algorithm + ") is not supported yet.\n";
@@ -263,7 +267,8 @@ double PEA14_PSNR(const cv::Mat& orig){
     return compute_psnr(orig, PEA14_itransf_img);
 }
 
-void print_results(std::vector<double> vals){
+void print_results(std::vector<double> vals, bool silent){
+    if(silent) return;
     std::cout << "\n\n************** PSNR **************\n\n";
 
     for(int i=0; i<vals.size(); i++){
@@ -273,12 +278,17 @@ void print_results(std::vector<double> vals){
     std::cout << "\n**********************************\n\n";
 }
 
-void print_single_result(std::vector<double> vals, std::string algorithm){
-    for (std::string::size_type i=0; i<algorithm.length(); i++) algorithm[i]=std::toupper(algorithm[i], *(new std::locale) );
+void print_single_result(std::vector<double> vals, std::string algorithm, bool silent){
+    if(silent) {
+        std::cout << vals.at(0);
+    } else {
 
-    std::cout << "\n\n************** PSNR **************\n\n";
-    std::cout << "   " << algorithm << "\t" << vals.at(0) <<std::endl;
-    std::cout << "\n**********************************\n\n";
+        for (std::string::size_type i=0; i<algorithm.length(); i++) algorithm[i]=std::toupper(algorithm[i], *(new std::locale) );
+
+        std::cout << "\n\n************** PSNR **************\n\n";
+        std::cout << "   " << algorithm << "\t" << vals.at(0) <<std::endl;
+        std::cout << "\n**********************************\n\n";
+    }
 }
  
 void usage(){
