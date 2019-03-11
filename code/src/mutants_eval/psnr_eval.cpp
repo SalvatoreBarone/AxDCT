@@ -51,16 +51,7 @@ double PEA14_PSNR(const cv::Mat& orig);
 
 static std::vector<std::string> supported_algorithms = {"BC12\t\t", "CB11\t\t", "BAS08\t", "BAS09\t", "BAS11 (a=0.0)", "BAS11 (a=0.5)", "BAS11 (a=1.0)", "BAS11 (a=2.0)", "PEA12\t", "PEA14\t" };
 
-
-void dummy(){
-    std::string cmd  = "/home/andrea/AxDCT/code/build/bin/psnr_eval -s -i /home/andrea/lena.bmp -x BC12";
-    cmd.append(" -n \"nab_127 " + std::to_string(nab_127) + "\"" );
-    cmd.append(" -n \"nab_128 " + std::to_string(nab_128) + "\"" );
-    std::cerr<<cmd;
-}
-
 int main(int argc, char** argv){
-    // dummy(); return 0;
     if( argc < 2){
         usage();
         return EXIT_FAILURE;
