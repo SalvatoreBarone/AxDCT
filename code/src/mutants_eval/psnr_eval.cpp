@@ -34,6 +34,7 @@ void usage();
 void printSupportedAlgs();
 void print_results(std::vector<double>, bool silent = false);
 void print_single_result(std::vector<double>, std::string, bool silent = false);
+void assignNabValue(std::string nabarg);
 
 double BC12_PSNR(const cv::Mat& orig);
 double CB11_PSNR(const cv::Mat& orig);
@@ -42,6 +43,22 @@ double BAS09_PSNR(const cv::Mat& orig);
 double BAS11_PSNR(const cv::Mat& orig, double a_param);
 double PEA12_PSNR(const cv::Mat& orig);
 double PEA14_PSNR(const cv::Mat& orig);
+
+
+extern int nab_68;
+extern int nab_67;
+extern int nab_66;
+extern int nab_65;
+extern int nab_64;
+extern int nab_63;
+extern int nab_62;
+extern int nab_61;
+extern int nab_60;
+extern int nab_59;
+extern int nab_58;
+extern int nab_57;
+extern int nab_56;
+extern int nab_55;
 
 static std::vector<std::string> supported_algorithms = {"BC12\t\t", "CB11\t\t", "BAS08\t", "BAS09\t", "BAS11 (a=0.0)", "BAS11 (a=0.5)", "BAS11 (a=1.0)", "BAS11 (a=2.0)", "PEA12\t", "PEA14\t" };
 
@@ -58,7 +75,7 @@ int main(int argc, char** argv){
     bool isOutputSilent = false;
     std::string nabarg = "";
 
-	while ((c = getopt(argc, argv, "p:x:i:hlas:")) != -1)
+	while ((c = getopt(argc, argv, "p:x:i:hlasn:")) != -1)
 	{
 		switch (c)
 		{
@@ -83,6 +100,10 @@ int main(int argc, char** argv){
 
         case 'i':
 			img_path = optarg;
+			break;
+        case 'n':
+            nabarg = optarg;
+            assignNabValue(nabarg);
 			break;
 
 		case 'h':
@@ -305,5 +326,25 @@ void printSupportedAlgs(){
     std::cout << "\nSupported algorithms:\n";
     for (auto alg : supported_algorithms){
         std::cout <<"\n- " << alg; 
+    }
+}
+
+void assignNabValue(std::string nabarg){
+    std::string nabIdVal [2] = { "", "" };
+    std::string delimiter = " ";
+
+    size_t pos = 0;
+    int c=0;
+    while ((pos = nabarg.find(delimiter)) != std::string::npos) {
+        nabIdVal[c++] = nabarg.substr(0, pos);
+        nabarg.erase(0, pos + delimiter.length());
+    }
+    nabIdVal[1] = nabarg;
+    int nabval = std::stoi(nabIdVal[1]);
+    if(nabIdVal[0] == "nab_55") {
+        nab_55 = nabval;
+    } else {
+        std::cerr << "\nUnexpected nab value";
+        assert(false);
     }
 }

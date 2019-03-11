@@ -44,7 +44,7 @@ std::string exec(const char* cmd);
 
 extern "C" double BELLERO_getError()
 {
-    std::string cmd = "/home/andrea/AxDCT/code/build/bin/psnr -s -i /home/andrea/lena.bmp -x BC12 -n \"nab_55 " + std::to_string(nab_55) + "\"";
+    std::string cmd = "/home/andrea/AxDCT/code/build/bin/psnr_eval -s -i /home/andrea/lena.bmp -x BC12 -n \"nab_55 " + std::to_string(nab_55) + "\"";
     std::string retstring = exec(cmd.c_str());
     return stod(retstring);
     // cv::Mat x = cv::Mat::zeros(8,8, CV_8U);
