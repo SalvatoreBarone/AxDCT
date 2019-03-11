@@ -26,4 +26,15 @@ target_include_directories(psnr PUBLIC ${CMAKE_SOURCE_DIR}/include/core)
 target_include_directories(psnr PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
 target_include_directories(psnr PUBLIC ${CMAKE_SOURCE_DIR}/include/utils)
 
-target_link_libraries( psnr utils ${OpenCV_LIBS} axdctCore axdctAlgorithms)
+target_link_libraries( psnr utils ${OpenCV_LIBS} axdctCore 
+         /home/andrea/AxDCT/code/build/src/algorithms/CMakeFiles/axdctAlgorithms.dir/AxDCT_algorithm.cpp.o
+         /home/andrea/AxDCT/chimera/output/mutants/BC12.cpp/1/BC12.cpp.o
+         /home/andrea/AxDCT/code/build/src/algorithms/CMakeFiles/axdctAlgorithms.dir/BAS08.cpp.o
+         /home/andrea/AxDCT/code/build/src/algorithms/CMakeFiles/axdctAlgorithms.dir/BAS09.cpp.o
+         /home/andrea/AxDCT/code/build/src/algorithms/CMakeFiles/axdctAlgorithms.dir/BAS11.cpp.o
+         /home/andrea/AxDCT/code/build/src/algorithms/CMakeFiles/axdctAlgorithms.dir/CB11.cpp.o
+         /home/andrea/AxDCT/code/build/src/algorithms/CMakeFiles/axdctAlgorithms.dir/PEA12.cpp.o
+         /home/andrea/AxDCT/code/build/src/algorithms/CMakeFiles/axdctAlgorithms.dir/PEA14.cpp.o
+         /usr/lib/libInexactAdders.a
+         
+)
