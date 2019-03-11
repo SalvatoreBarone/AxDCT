@@ -2,14 +2,10 @@
 set -x
 
 echo "Launching bellerophon"
-echo "*********** REMEMBER TO RUN CMAKE ON ORIGINAL CODE FIRST!! ***********"
-
 
 bellerophon -v                                                                      \
                 -libdb /home/andrea/AxDCT/code/build/src/                           \
                 -arcs /usr/lib/libInexactAdders.a                                   \
-                -arcs /home/andrea/AxDCT/code/build/libs.a/libaxdctCore.a           \
-                -arcs /home/andrea/AxDCT/code/build/libs.a/libutils.a               \
                 -cd-dir ./                                                          \
                 -r ../chimera/output/mutants/BC12.cpp/1/axdct_report.csv            \
                 -t AxDCTAprx                                                        \
