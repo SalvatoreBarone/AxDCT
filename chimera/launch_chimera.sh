@@ -1,6 +1,11 @@
 #!/bin/bash
 set -x
 
+CURRENT_PATH=$1
+
+if [[ -n $CURRENT_PATH ]]; then
+    cd $CURRENT_PATH
+fi
 echo "Launching clang-Chimera..."
 rm -Rf output
 clang-chimera -debug -v -fun-op conf.csv -generate-mutants  \

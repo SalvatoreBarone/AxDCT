@@ -29,12 +29,17 @@
 #include "core/metrics.h"
 #include "algorithms_list.h"
 #include <getopt.h>
+#include "nablist.h"
 
-void usage();
-void printSupportedAlgs();
-void print_results(std::vector<double>, bool silent = false);
-void print_single_result(std::vector<double>, std::string, bool silent = false);
-void assignNabValue(std::string nabarg);
+#define ASSIGNVAL(var, nabstr, val) \
+    if(nabstr == #var) { var = val; return; }
+
+static void usage();
+static void printSupportedAlgs();
+static void print_results(std::vector<double>, bool silent = false);
+static void print_single_result(std::vector<double>, std::string, bool silent = false);
+static void assignNabValue(std::string nabarg);
+static void mapNabValue(const std::string& nabid, const int nabVal );
 
 double BC12_PSNR(const cv::Mat& orig);
 double CB11_PSNR(const cv::Mat& orig);
@@ -44,25 +49,18 @@ double BAS11_PSNR(const cv::Mat& orig, double a_param);
 double PEA12_PSNR(const cv::Mat& orig);
 double PEA14_PSNR(const cv::Mat& orig);
 
-
-extern int nab_68;
-extern int nab_67;
-extern int nab_66;
-extern int nab_65;
-extern int nab_64;
-extern int nab_63;
-extern int nab_62;
-extern int nab_61;
-extern int nab_60;
-extern int nab_59;
-extern int nab_58;
-extern int nab_57;
-extern int nab_56;
-extern int nab_55;
-
 static std::vector<std::string> supported_algorithms = {"BC12\t\t", "CB11\t\t", "BAS08\t", "BAS09\t", "BAS11 (a=0.0)", "BAS11 (a=0.5)", "BAS11 (a=1.0)", "BAS11 (a=2.0)", "PEA12\t", "PEA14\t" };
 
+
+void dummy(){
+    std::string cmd  = "/home/andrea/AxDCT/code/build/bin/psnr_eval -s -i /home/andrea/lena.bmp -x BC12";
+    cmd.append(" -n \"nab_127 " + std::to_string(nab_127) + "\"" );
+    cmd.append(" -n \"nab_128 " + std::to_string(nab_128) + "\"" );
+    std::cerr<<cmd;
+}
+
 int main(int argc, char** argv){
+    // dummy(); return 0;
     if( argc < 2){
         usage();
         return EXIT_FAILURE;
@@ -341,10 +339,142 @@ void assignNabValue(std::string nabarg){
     }
     nabIdVal[1] = nabarg;
     int nabval = std::stoi(nabIdVal[1]);
-    if(nabIdVal[0] == "nab_55") {
-        nab_55 = nabval;
-    } else {
-        std::cerr << "\nUnexpected nab value";
-        assert(false);
-    }
+    mapNabValue(nabIdVal[0], nabval);
+}
+
+void mapNabValue(const std::string& nabid, const int nabVal ){
+    
+    ASSIGNVAL(nab_0, nabid, nabVal)
+    ASSIGNVAL(nab_1, nabid, nabVal)
+    ASSIGNVAL(nab_2, nabid, nabVal)
+    ASSIGNVAL(nab_3, nabid, nabVal)
+    ASSIGNVAL(nab_4, nabid, nabVal)
+    ASSIGNVAL(nab_5, nabid, nabVal)
+    ASSIGNVAL(nab_6, nabid, nabVal)
+    ASSIGNVAL(nab_7, nabid, nabVal)
+    ASSIGNVAL(nab_8, nabid, nabVal)
+    ASSIGNVAL(nab_9, nabid, nabVal)
+    ASSIGNVAL(nab_10, nabid, nabVal)
+    ASSIGNVAL(nab_11, nabid, nabVal)
+    ASSIGNVAL(nab_12, nabid, nabVal)
+    ASSIGNVAL(nab_13, nabid, nabVal)
+    ASSIGNVAL(nab_14, nabid, nabVal)
+    ASSIGNVAL(nab_15, nabid, nabVal)
+    ASSIGNVAL(nab_16, nabid, nabVal)
+    ASSIGNVAL(nab_17, nabid, nabVal)
+    ASSIGNVAL(nab_18, nabid, nabVal)
+    ASSIGNVAL(nab_19, nabid, nabVal)
+    ASSIGNVAL(nab_20, nabid, nabVal)
+    ASSIGNVAL(nab_21, nabid, nabVal)
+    ASSIGNVAL(nab_22, nabid, nabVal)
+    ASSIGNVAL(nab_23, nabid, nabVal)
+    ASSIGNVAL(nab_24, nabid, nabVal)
+    ASSIGNVAL(nab_25, nabid, nabVal)
+    ASSIGNVAL(nab_26, nabid, nabVal)
+    ASSIGNVAL(nab_27, nabid, nabVal)
+    ASSIGNVAL(nab_28, nabid, nabVal)
+    ASSIGNVAL(nab_29, nabid, nabVal)
+    ASSIGNVAL(nab_30, nabid, nabVal)
+    ASSIGNVAL(nab_31, nabid, nabVal)
+    ASSIGNVAL(nab_32, nabid, nabVal)
+    ASSIGNVAL(nab_33, nabid, nabVal)
+    ASSIGNVAL(nab_34, nabid, nabVal)
+    ASSIGNVAL(nab_35, nabid, nabVal)
+    ASSIGNVAL(nab_36, nabid, nabVal)
+    ASSIGNVAL(nab_37, nabid, nabVal)
+    ASSIGNVAL(nab_38, nabid, nabVal)
+    ASSIGNVAL(nab_39, nabid, nabVal)
+    ASSIGNVAL(nab_40, nabid, nabVal)
+    ASSIGNVAL(nab_41, nabid, nabVal)
+    ASSIGNVAL(nab_42, nabid, nabVal)
+    ASSIGNVAL(nab_43, nabid, nabVal)
+    ASSIGNVAL(nab_44, nabid, nabVal)
+    ASSIGNVAL(nab_45, nabid, nabVal)
+    ASSIGNVAL(nab_46, nabid, nabVal)
+    ASSIGNVAL(nab_47, nabid, nabVal)
+    ASSIGNVAL(nab_48, nabid, nabVal)
+    ASSIGNVAL(nab_49, nabid, nabVal)
+    ASSIGNVAL(nab_50, nabid, nabVal)
+    ASSIGNVAL(nab_51, nabid, nabVal)
+    ASSIGNVAL(nab_52, nabid, nabVal)
+    ASSIGNVAL(nab_53, nabid, nabVal)
+    ASSIGNVAL(nab_54, nabid, nabVal)
+    ASSIGNVAL(nab_55, nabid, nabVal)
+    ASSIGNVAL(nab_56, nabid, nabVal)
+    ASSIGNVAL(nab_57, nabid, nabVal)
+    ASSIGNVAL(nab_58, nabid, nabVal)
+    ASSIGNVAL(nab_59, nabid, nabVal)
+    ASSIGNVAL(nab_60, nabid, nabVal)
+    ASSIGNVAL(nab_61, nabid, nabVal)
+    ASSIGNVAL(nab_62, nabid, nabVal)
+    ASSIGNVAL(nab_63, nabid, nabVal)
+    ASSIGNVAL(nab_64, nabid, nabVal)
+    ASSIGNVAL(nab_65, nabid, nabVal)
+    ASSIGNVAL(nab_66, nabid, nabVal)
+    ASSIGNVAL(nab_67, nabid, nabVal)
+    ASSIGNVAL(nab_68, nabid, nabVal)
+    ASSIGNVAL(nab_69, nabid, nabVal)
+    ASSIGNVAL(nab_70, nabid, nabVal)
+    ASSIGNVAL(nab_71, nabid, nabVal)
+    ASSIGNVAL(nab_72, nabid, nabVal)
+    ASSIGNVAL(nab_73, nabid, nabVal)
+    ASSIGNVAL(nab_74, nabid, nabVal)
+    ASSIGNVAL(nab_75, nabid, nabVal)
+    ASSIGNVAL(nab_76, nabid, nabVal)
+    ASSIGNVAL(nab_77, nabid, nabVal)
+    ASSIGNVAL(nab_78, nabid, nabVal)
+    ASSIGNVAL(nab_79, nabid, nabVal)
+    ASSIGNVAL(nab_80, nabid, nabVal)
+    ASSIGNVAL(nab_81, nabid, nabVal)
+    ASSIGNVAL(nab_82, nabid, nabVal)
+    ASSIGNVAL(nab_83, nabid, nabVal)
+    ASSIGNVAL(nab_84, nabid, nabVal)
+    ASSIGNVAL(nab_85, nabid, nabVal)
+    ASSIGNVAL(nab_86, nabid, nabVal)
+    ASSIGNVAL(nab_87, nabid, nabVal)
+    ASSIGNVAL(nab_88, nabid, nabVal)
+    ASSIGNVAL(nab_89, nabid, nabVal)
+    ASSIGNVAL(nab_90, nabid, nabVal)
+    ASSIGNVAL(nab_91, nabid, nabVal)
+    ASSIGNVAL(nab_92, nabid, nabVal)
+    ASSIGNVAL(nab_93, nabid, nabVal)
+    ASSIGNVAL(nab_94, nabid, nabVal)
+    ASSIGNVAL(nab_95, nabid, nabVal)
+    ASSIGNVAL(nab_96, nabid, nabVal)
+    ASSIGNVAL(nab_97, nabid, nabVal)
+    ASSIGNVAL(nab_98, nabid, nabVal)
+    ASSIGNVAL(nab_99, nabid, nabVal)
+    ASSIGNVAL(nab_100, nabid, nabVal)
+    ASSIGNVAL(nab_101, nabid, nabVal)
+    ASSIGNVAL(nab_102, nabid, nabVal)
+    ASSIGNVAL(nab_103, nabid, nabVal)
+    ASSIGNVAL(nab_104, nabid, nabVal)
+    ASSIGNVAL(nab_105, nabid, nabVal)
+    ASSIGNVAL(nab_106, nabid, nabVal)
+    ASSIGNVAL(nab_107, nabid, nabVal)
+    ASSIGNVAL(nab_108, nabid, nabVal)
+    ASSIGNVAL(nab_109, nabid, nabVal)
+    ASSIGNVAL(nab_110, nabid, nabVal)
+    ASSIGNVAL(nab_111, nabid, nabVal)
+    ASSIGNVAL(nab_112, nabid, nabVal)
+    ASSIGNVAL(nab_113, nabid, nabVal)
+    ASSIGNVAL(nab_114, nabid, nabVal)
+    ASSIGNVAL(nab_115, nabid, nabVal)
+    ASSIGNVAL(nab_116, nabid, nabVal)
+    ASSIGNVAL(nab_117, nabid, nabVal)
+    ASSIGNVAL(nab_118, nabid, nabVal)
+    ASSIGNVAL(nab_119, nabid, nabVal)
+    ASSIGNVAL(nab_120, nabid, nabVal)
+    ASSIGNVAL(nab_121, nabid, nabVal)
+    ASSIGNVAL(nab_122, nabid, nabVal)
+    ASSIGNVAL(nab_123, nabid, nabVal)
+    ASSIGNVAL(nab_124, nabid, nabVal)
+    ASSIGNVAL(nab_125, nabid, nabVal)
+    ASSIGNVAL(nab_126, nabid, nabVal)
+    ASSIGNVAL(nab_127, nabid, nabVal)
+    ASSIGNVAL(nab_128, nabid, nabVal)
+
+    std::cerr << "\nUnexpected nab value";
+    assert(false);
+    
 }
