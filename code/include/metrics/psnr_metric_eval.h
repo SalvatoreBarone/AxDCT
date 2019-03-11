@@ -19,10 +19,10 @@
 //
 
 /******************************************************************************
- * @file   psnr_metric_eval.cpp
+ * @file   psnr_metric_eval.h
  * @author Andrea Aletto
  * @date   11 mar 2019
- * @brief  Implementation of psnr calc function
+ * @brief  Declaration of psnr calc function
  ******************************************************************************/
 
 #ifndef _PSNR_METRIC_EVAL_H
