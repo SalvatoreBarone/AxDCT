@@ -29,11 +29,16 @@
 #include "core/metrics.h"
 #include "algorithms_list.h"
 #include <getopt.h>
+#include <dirent.h>
+#include <climits>
+#include <cstdio>
+#include <unistd.h>
 
 void usage();
 void printSupportedAlgs();
 void print_results(std::vector<double>, bool silent = false);
 void print_single_result(std::vector<double>, std::string, bool silent = false);
+static std::vector<std::string> listFolder(std::string dir);
 
 double BC12_PSNR(const cv::Mat& orig);
 double CB11_PSNR(const cv::Mat& orig);
@@ -57,8 +62,9 @@ int main(int argc, char** argv){
     std::string img_path = "";
     bool isOutputSilent = false;
     std::string nabarg = "";
+    std::string folder_path = "";
 
-	while ((c = getopt(argc, argv, "p:x:i:hlas:")) != -1)
+	while ((c = getopt(argc, argv, "p:x:i:hlasf:")) != -1)
 	{
 		switch (c)
 		{
@@ -89,6 +95,10 @@ int main(int argc, char** argv){
 			usage();
 			return EXIT_SUCCESS;
 
+        case 'f':
+            folder_path = optarg;
+            break;
+
 		default:
 			std::cout << "\n\nInvalid option: \n\n";
 			usage();
@@ -96,8 +106,8 @@ int main(int argc, char** argv){
 		}
 	}
 
-    if( img_path == ""){
-        std::cout << "\nImage path is mandatory.";
+    if((img_path == "") && (folder_path == "")){
+        std::cout << "\nImage path or folder path is mandatory.";
         usage();
         return EXIT_FAILURE;
     }
@@ -108,62 +118,118 @@ int main(int argc, char** argv){
         return EXIT_FAILURE;
     }
 
-    std::vector<double> vals;
+    if(img_path != ""){
 
-    // Load img
-    cv::Mat bgrImg = imread( img_path.c_str(), cv::IMREAD_COLOR );
-    assert( bgrImg.data && "No image data");
+        std::vector<double> vals;
 
-    if( algorithm == "__all") {
-        vals.push_back(BC12_PSNR(bgrImg) );
-        vals.push_back(CB11_PSNR(bgrImg) );
-        vals.push_back(BAS08_PSNR(bgrImg) );
-        vals.push_back(BAS09_PSNR(bgrImg) );
-        vals.push_back(BAS11_PSNR(bgrImg, 0.0) );
-        vals.push_back(BAS11_PSNR(bgrImg, 0.5) );
-        vals.push_back(BAS11_PSNR(bgrImg, 1.0) );
-        vals.push_back(BAS11_PSNR(bgrImg, 2.0) );
-        vals.push_back(PEA12_PSNR(bgrImg) );
-        vals.push_back(PEA14_PSNR(bgrImg) );
+        // Load img
+        cv::Mat bgrImg = imread( img_path.c_str(), cv::IMREAD_COLOR );
+        assert( bgrImg.data && "No image data");
 
-        print_results(vals, isOutputSilent);
+        if( algorithm == "__all") {
+            vals.push_back(BC12_PSNR(bgrImg) );
+            vals.push_back(CB11_PSNR(bgrImg) );
+            vals.push_back(BAS08_PSNR(bgrImg) );
+            vals.push_back(BAS09_PSNR(bgrImg) );
+            vals.push_back(BAS11_PSNR(bgrImg, 0.0) );
+            vals.push_back(BAS11_PSNR(bgrImg, 0.5) );
+            vals.push_back(BAS11_PSNR(bgrImg, 1.0) );
+            vals.push_back(BAS11_PSNR(bgrImg, 2.0) );
+            vals.push_back(PEA12_PSNR(bgrImg) );
+            vals.push_back(PEA14_PSNR(bgrImg) );
 
-    } else if( algorithm == "BC12" || algorithm == "bc12"){
-        vals.push_back(BC12_PSNR(bgrImg) );
-        print_single_result(vals, algorithm, isOutputSilent);
+            print_results(vals, isOutputSilent);
 
-    } else if( algorithm == "CB11" || algorithm == "cb11"){
-        vals.push_back(CB11_PSNR(bgrImg) );
-        print_single_result(vals, algorithm, isOutputSilent);
+        } else if( algorithm == "BC12" || algorithm == "bc12"){
+            vals.push_back(BC12_PSNR(bgrImg) );
+            print_single_result(vals, algorithm, isOutputSilent);
 
-    } else if( algorithm == "BAS08" || algorithm == "bas08"){
-        vals.push_back(BAS08_PSNR(bgrImg) );
-        print_single_result(vals, algorithm, isOutputSilent);
+        } else if( algorithm == "CB11" || algorithm == "cb11"){
+            vals.push_back(CB11_PSNR(bgrImg) );
+            print_single_result(vals, algorithm, isOutputSilent);
 
-    } else if( algorithm == "BAS09" || algorithm == "bas09"){
-        vals.push_back(BAS09_PSNR(bgrImg) );
-        print_single_result(vals, algorithm, isOutputSilent);
+        } else if( algorithm == "BAS08" || algorithm == "bas08"){
+            vals.push_back(BAS08_PSNR(bgrImg) );
+            print_single_result(vals, algorithm, isOutputSilent);
 
-    } else if( algorithm == "BAS11" || algorithm == "bas11"){
-        vals.push_back(BAS11_PSNR(bgrImg, a_param) );
-        std::string str = std::to_string(a_param);
-        str.erase (str.find_last_not_of('0') + 1, std::string::npos);
-        if(a_param != 0.5) str.append("0");
-        algorithm.append(" - a=" + str);
-        print_single_result(vals, algorithm, isOutputSilent);
+        } else if( algorithm == "BAS09" || algorithm == "bas09"){
+            vals.push_back(BAS09_PSNR(bgrImg) );
+            print_single_result(vals, algorithm, isOutputSilent);
 
-    } else if( algorithm == "PEA12" || algorithm == "pea12"){
-        vals.push_back(PEA12_PSNR(bgrImg) );
-        print_single_result(vals, algorithm, isOutputSilent);
+        } else if( algorithm == "BAS11" || algorithm == "bas11"){
+            vals.push_back(BAS11_PSNR(bgrImg, a_param) );
+            std::string str = std::to_string(a_param);
+            str.erase (str.find_last_not_of('0') + 1, std::string::npos);
+            if(a_param != 0.5) str.append("0");
+            algorithm.append(" - a=" + str);
+            print_single_result(vals, algorithm, isOutputSilent);
 
-    } else if( algorithm == "PEA14" || algorithm == "pea14"){
-        vals.push_back(PEA14_PSNR(bgrImg) );
-        print_single_result(vals, algorithm, isOutputSilent);
+        } else if( algorithm == "PEA12" || algorithm == "pea12"){
+            vals.push_back(PEA12_PSNR(bgrImg) );
+            print_single_result(vals, algorithm, isOutputSilent);
 
+        } else if( algorithm == "PEA14" || algorithm == "pea14"){
+            vals.push_back(PEA14_PSNR(bgrImg) );
+            print_single_result(vals, algorithm, isOutputSilent);
+
+        } else {
+            std::cout << "\nChosen algorithm (" + algorithm + ") is not supported yet.\n";
+            usage();
+            return EXIT_FAILURE;
+        }
     } else {
-        std::cout << "\nChosen algorithm (" + algorithm + ") is not supported yet.\n";
-        usage();
-        return EXIT_FAILURE;
+        std::vector<double> vals;
+        std::vector<std::string> list = listFolder(folder_path);
+        for (const auto& entry : list){
+            std::string anImg = folder_path;
+            anImg.append("/");
+            anImg.append(entry);
+            if(anImg.find(".bmp") == std::string::npos) continue;
+            // Load img
+            cv::Mat bgrImg = imread( anImg.c_str(), cv::IMREAD_COLOR );
+            if( bgrImg.data == nullptr){ 
+                continue;
+            }
+
+            if( algorithm == "BC12" || algorithm == "bc12"){
+                vals.push_back(BC12_PSNR(bgrImg) );
+
+            } else if( algorithm == "CB11" || algorithm == "cb11"){
+                vals.push_back(CB11_PSNR(bgrImg) );
+
+            } else if( algorithm == "BAS08" || algorithm == "bas08"){
+                vals.push_back(BAS08_PSNR(bgrImg) );
+
+            } else if( algorithm == "BAS09" || algorithm == "bas09"){
+                vals.push_back(BAS09_PSNR(bgrImg) );
+
+            } else if( algorithm == "BAS11" || algorithm == "bas11"){
+                vals.push_back(BAS11_PSNR(bgrImg, a_param) );
+                std::string str = std::to_string(a_param);
+                str.erase (str.find_last_not_of('0') + 1, std::string::npos);
+                if(a_param != 0.5) str.append("0");
+                algorithm.append(" - a=" + str);
+
+            } else if( algorithm == "PEA12" || algorithm == "pea12"){
+                vals.push_back(PEA12_PSNR(bgrImg) );
+
+            } else if( algorithm == "PEA14" || algorithm == "pea14"){
+                vals.push_back(PEA14_PSNR(bgrImg) );
+
+            } else {
+                std::cout << "\nChosen algorithm (" + algorithm + ") is not supported yet.\n";
+                usage();
+                return EXIT_FAILURE;
+            }
+
+        }
+        std::vector<double> mean = {0.0}; //media dei psnr
+        for( auto val : vals){
+            mean.at(0) += val;
+        }
+        mean.at(0) /= vals.size();
+        print_single_result(mean, algorithm, isOutputSilent);
+
     }
 
     return EXIT_SUCCESS;
@@ -306,4 +372,19 @@ void printSupportedAlgs(){
     for (auto alg : supported_algorithms){
         std::cout <<"\n- " << alg; 
     }
+}
+
+std::vector<std::string> listFolder(std::string path){
+    std::vector<std::string>ret;
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir (path.c_str())) != NULL) {
+        while ((ent = readdir (dir)) != NULL) {
+            std::string elem = ent->d_name;
+            ret.push_back(elem);
+        }
+        closedir (dir);
+        
+    }
+    return ret;
 }
