@@ -27,15 +27,7 @@
 
 #include "psnr_metric_eval.h"
 
-double BC12_PSNR(const cv::Mat& orig);
-double CB11_PSNR(const cv::Mat& orig);
-double BAS08_PSNR(const cv::Mat& orig);
-double BAS09_PSNR(const cv::Mat& orig);
-double BAS11_PSNR(const cv::Mat& orig, double a_param);
-double PEA12_PSNR(const cv::Mat& orig);
-double PEA14_PSNR(const cv::Mat& orig);
-
-double BC12_PSNR(const cv::Mat& orig){
+double metrics::BC12_PSNR(const cv::Mat& orig){
 
     // Declare an empty image for transformation
     cv::Mat BC12_transf_img = orig;
@@ -49,7 +41,7 @@ double BC12_PSNR(const cv::Mat& orig){
     return compute_psnr(orig, BC12_itransf_img);
 }
 
-double CB11_PSNR(const cv::Mat& orig){
+double metrics::CB11_PSNR(const cv::Mat& orig){
 
     // Declare an empty image for transformation
     cv::Mat CB11_transf_img = orig;
@@ -63,7 +55,7 @@ double CB11_PSNR(const cv::Mat& orig){
     return compute_psnr(orig, CB11_itransf_img);
 }
 
-double BAS08_PSNR(const cv::Mat& orig){
+double metrics::BAS08_PSNR(const cv::Mat& orig){
 
     // Declare an empty image for transformation
     cv::Mat BAS08_transf_img = orig;
@@ -77,7 +69,7 @@ double BAS08_PSNR(const cv::Mat& orig){
     return compute_psnr(orig, BAS08_itransf_img);
 }
 
-double BAS09_PSNR(const cv::Mat& orig){
+double metrics::BAS09_PSNR(const cv::Mat& orig){
 
     // Declare an empty image for transformation
     cv::Mat BAS09_transf_img = orig;
@@ -91,7 +83,7 @@ double BAS09_PSNR(const cv::Mat& orig){
     return compute_psnr(orig, BAS09_itransf_img);
 }
 
-double BAS11_PSNR(const cv::Mat& orig, double a_param){
+double metrics::BAS11_PSNR(const cv::Mat& orig, double a_param){
 
     // Declare an empty image for transformation
     cv::Mat BAS11_transf_img = orig;
@@ -105,7 +97,7 @@ double BAS11_PSNR(const cv::Mat& orig, double a_param){
     return compute_psnr(orig, BAS11_itransf_img);
 }
  
-double PEA12_PSNR(const cv::Mat& orig){
+double metrics::PEA12_PSNR(const cv::Mat& orig){
 
     // Declare an empty image for transformation
     cv::Mat PEA12_transf_img = orig;
@@ -119,7 +111,7 @@ double PEA12_PSNR(const cv::Mat& orig){
     return compute_psnr(orig, PEA12_itransf_img);
 }
 
-double PEA14_PSNR(const cv::Mat& orig){
+double metrics::PEA14_PSNR(const cv::Mat& orig){
 
     // Declare an empty image for transformation
     cv::Mat PEA14_transf_img = orig;

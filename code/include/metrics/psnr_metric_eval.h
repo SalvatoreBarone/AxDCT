@@ -32,12 +32,14 @@
 #include "../algorithms_list.h"
 #include "metrics.h"
 
-double BC12_PSNR(const cv::Mat& orig);
-double CB11_PSNR(const cv::Mat& orig);
-double BAS08_PSNR(const cv::Mat& orig);
-double BAS09_PSNR(const cv::Mat& orig);
-double BAS11_PSNR(const cv::Mat& orig, double a_param);
-double PEA12_PSNR(const cv::Mat& orig);
-double PEA14_PSNR(const cv::Mat& orig);
+namespace metrics {
+    double BC12_PSNR(const cv::Mat& orig);
+    double CB11_PSNR(const cv::Mat& orig);
+    double BAS08_PSNR(const cv::Mat& orig);
+    double BAS09_PSNR(const cv::Mat& orig);
+    double BAS11_PSNR(const cv::Mat& orig, double a_param);
+    double PEA12_PSNR(const cv::Mat& orig);
+    double PEA14_PSNR(const cv::Mat& orig);
+}
 
 #endif /* _PSNR_METRIC_EVAL_H */

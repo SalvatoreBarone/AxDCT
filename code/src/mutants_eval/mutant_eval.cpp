@@ -21,8 +21,8 @@
 /******************************************************************************
  * @file   psnr.cpp
  * @author Andrea Aletto
- * @date   28 feb 2019
- * @brief  Implementation of psnr executable function
+ * @date   11 mar 2019
+ * @brief  Implementation of mutant_eval executable function
  ******************************************************************************/
 
 #include "core/dct.h"
@@ -57,8 +57,17 @@ int main(int argc, char** argv){
     std::string folder_path = "";
     bool isOutputSilent = false;
     std::string nabarg = "";
+    std::string metric = "";
 
-	while ((c = getopt(argc, argv, "p:x:i::hlasn:f:")) != -1)
+    double (*PEA14_compute_metric)(const cv::Mat& orig);
+    double (*PEA12_compute_metric)(const cv::Mat& orig);
+    double (*CB11_compute_metric)(const cv::Mat& orig);
+    double (*BC12_compute_metric)(const cv::Mat& orig);
+    double (*BAS08_compute_metric)(const cv::Mat& orig);
+    double (*BAS09_compute_metric)(const cv::Mat& orig);
+    double (*BAS11_compute_metric)(const cv::Mat& orig, const double a_param);
+
+	while ((c = getopt(argc, argv, ":p:x:i:hlasn:f:m:")) != -1)
 	{
 		switch (c)
 		{
@@ -82,8 +91,10 @@ int main(int argc, char** argv){
             break;
 
         case 'i':
+            std::cerr << optarg;
 			img_path = optarg;
 			break;
+
         case 'n':
             nabarg = optarg;
             assignNabValue(nabarg);
@@ -95,6 +106,10 @@ int main(int argc, char** argv){
 
         case 'f':
             folder_path = optarg;
+            break;
+        
+        case 'm':
+            metric = optarg;
             break;
 
 		default:
@@ -116,6 +131,16 @@ int main(int argc, char** argv){
         usage();
         return EXIT_FAILURE;
     }
+
+    if(( metric == "psnr")||(metric == "PSNR")){
+        PEA14_compute_metric = &(metrics::PEA14_PSNR);
+        PEA12_compute_metric = &(metrics::PEA12_PSNR);
+        CB11_compute_metric = &(metrics::CB11_PSNR);
+        BC12_compute_metric = &(metrics::BC12_PSNR);
+        BAS08_compute_metric = &(metrics::BAS08_PSNR);
+        BAS09_compute_metric = &(metrics::BAS09_PSNR);
+        BAS11_compute_metric = &(metrics::BAS11_PSNR);
+    }
     
 
     if(img_path != ""){
@@ -127,37 +152,37 @@ int main(int argc, char** argv){
         assert( bgrImg.data && "No image data");
 
         if( algorithm == "__all") {
-            vals.push_back(BC12_PSNR(bgrImg) );
-            vals.push_back(CB11_PSNR(bgrImg) );
-            vals.push_back(BAS08_PSNR(bgrImg) );
-            vals.push_back(BAS09_PSNR(bgrImg) );
-            vals.push_back(BAS11_PSNR(bgrImg, 0.0) );
-            vals.push_back(BAS11_PSNR(bgrImg, 0.5) );
-            vals.push_back(BAS11_PSNR(bgrImg, 1.0) );
-            vals.push_back(BAS11_PSNR(bgrImg, 2.0) );
-            vals.push_back(PEA12_PSNR(bgrImg) );
-            vals.push_back(PEA14_PSNR(bgrImg) );
+            vals.push_back(BC12_compute_metric(bgrImg) );
+            vals.push_back(CB11_compute_metric(bgrImg) );
+            vals.push_back(BAS08_compute_metric(bgrImg) );
+            vals.push_back(BAS09_compute_metric(bgrImg) );
+            vals.push_back(BAS11_compute_metric(bgrImg, 0.0) );
+            vals.push_back(BAS11_compute_metric(bgrImg, 0.5) );
+            vals.push_back(BAS11_compute_metric(bgrImg, 1.0) );
+            vals.push_back(BAS11_compute_metric(bgrImg, 2.0) );
+            vals.push_back(PEA12_compute_metric(bgrImg) );
+            vals.push_back(PEA14_compute_metric(bgrImg) );
 
             utils::print_results(vals, isOutputSilent);
 
         } else if( algorithm == "BC12" || algorithm == "bc12"){
-            vals.push_back(BC12_PSNR(bgrImg) );
+            vals.push_back(BC12_compute_metric(bgrImg) );
             utils::print_single_result(vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "CB11" || algorithm == "cb11"){
-            vals.push_back(CB11_PSNR(bgrImg) );
+            vals.push_back(CB11_compute_metric(bgrImg) );
             utils::print_single_result(vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS08" || algorithm == "bas08"){
-            vals.push_back(BAS08_PSNR(bgrImg) );
+            vals.push_back(BAS08_compute_metric(bgrImg) );
             utils::print_single_result(vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS09" || algorithm == "bas09"){
-            vals.push_back(BAS09_PSNR(bgrImg) );
+            vals.push_back(BAS09_compute_metric(bgrImg) );
             utils::print_single_result(vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS11" || algorithm == "bas11"){
-            vals.push_back(BAS11_PSNR(bgrImg, a_param) );
+            vals.push_back(BAS11_compute_metric(bgrImg, a_param) );
             std::string str = std::to_string(a_param);
             str.erase (str.find_last_not_of('0') + 1, std::string::npos);
             if(a_param != 0.5) str.append("0");
@@ -165,11 +190,11 @@ int main(int argc, char** argv){
             utils::print_single_result(vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "PEA12" || algorithm == "pea12"){
-            vals.push_back(PEA12_PSNR(bgrImg) );
+            vals.push_back(PEA12_compute_metric(bgrImg) );
             utils::print_single_result(vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "PEA14" || algorithm == "pea14"){
-            vals.push_back(PEA14_PSNR(bgrImg) );
+            vals.push_back(PEA14_compute_metric(bgrImg) );
             utils::print_single_result(vals, algorithm, isOutputSilent);
 
         } else {
@@ -192,29 +217,29 @@ int main(int argc, char** argv){
             }
 
             if( algorithm == "BC12" || algorithm == "bc12"){
-                vals.push_back(BC12_PSNR(bgrImg) );
+                vals.push_back(BC12_compute_metric(bgrImg) );
 
             } else if( algorithm == "CB11" || algorithm == "cb11"){
-                vals.push_back(CB11_PSNR(bgrImg) );
+                vals.push_back(CB11_compute_metric(bgrImg) );
 
             } else if( algorithm == "BAS08" || algorithm == "bas08"){
-                vals.push_back(BAS08_PSNR(bgrImg) );
+                vals.push_back(BAS08_compute_metric(bgrImg) );
 
             } else if( algorithm == "BAS09" || algorithm == "bas09"){
-                vals.push_back(BAS09_PSNR(bgrImg) );
+                vals.push_back(BAS09_compute_metric(bgrImg) );
 
             } else if( algorithm == "BAS11" || algorithm == "bas11"){
-                vals.push_back(BAS11_PSNR(bgrImg, a_param) );
+                vals.push_back(BAS11_compute_metric(bgrImg, a_param) );
                 std::string str = std::to_string(a_param);
                 str.erase (str.find_last_not_of('0') + 1, std::string::npos);
                 if(a_param != 0.5) str.append("0");
                 algorithm.append(" - a=" + str);
 
             } else if( algorithm == "PEA12" || algorithm == "pea12"){
-                vals.push_back(PEA12_PSNR(bgrImg) );
+                vals.push_back(PEA12_compute_metric(bgrImg) );
 
             } else if( algorithm == "PEA14" || algorithm == "pea14"){
-                vals.push_back(PEA14_PSNR(bgrImg) );
+                vals.push_back(PEA14_compute_metric(bgrImg) );
 
             } else {
                 std::cout << "\nChosen algorithm (" + algorithm + ") is not supported yet.\n";
@@ -223,7 +248,7 @@ int main(int argc, char** argv){
             }
 
         }
-        
+
         std::vector<double> mean = {0.0};
         for( auto val : vals){
             mean.at(0) += val;

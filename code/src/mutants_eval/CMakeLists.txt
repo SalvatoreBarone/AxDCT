@@ -28,16 +28,16 @@ add_library(axdctMutatedAlgorithms OBJECT
 
 target_include_directories(axdctMutatedAlgorithms PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms ${CMAKE_SOURCE_DIR}/include)
 
-add_executable( psnr_eval psnr_eval.cpp )
+add_executable( mutant_eval mutant_eval.cpp )
 
-target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/core)
-target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
-target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/utils)
-target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/mutants_eval)
-target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/metrics)
+target_include_directories(mutant_eval PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(mutant_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/core)
+target_include_directories(mutant_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
+target_include_directories(mutant_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/utils)
+target_include_directories(mutant_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/mutants_eval)
+target_include_directories(mutant_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/metrics)
 
-target_link_libraries( psnr_eval
+target_link_libraries( mutant_eval
     utils 
     ${OpenCV_LIBS} 
     axdctCore 
@@ -46,12 +46,11 @@ target_link_libraries( psnr_eval
     /usr/lib/libInexactAdders.a
 )
 
-add_dependencies(psnr_eval library_database)
+add_dependencies(mutant_eval library_database)
 
 
 #Then we list all of them into a the library_database file
 add_custom_target(library_database ALL
-  COMMAND ${CMAKE_COMMAND} -E echo adding compile modules to the library_database.csv file
   COMMAND echo "\\\\\\\\list of all objects which must be loaded to run the software as JIT" >> ${PROJECT_BINARY_DIR}/library_database.csv
   COMMAND echo "\\\\\\\\dynamic and shared libraries" >> ${PROJECT_BINARY_DIR}/library_database.csv
   COMMAND if [ -d ${PROJECT_BINARY_DIR}/libs.o ]; then ls ${PROJECT_BINARY_DIR}/libs.o | grep 'o\\|so' >> ${PROJECT_BINARY_DIR}/library_database.csv\; fi
