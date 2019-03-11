@@ -24,6 +24,8 @@
  * @date   11 mar 2019
  * @brief  Declaration of all external variables for bellerophon optimization
  ******************************************************************************/
+#ifndef _NABLIST_H
+#define _NABLIST_H
 
 //BAS08
 extern int nab_17;
@@ -161,3 +163,5 @@ extern int nab_118;
 extern int nab_117;
 extern int nab_116;
 extern int nab_115;
+
+#endif /* _NABLIST_H */

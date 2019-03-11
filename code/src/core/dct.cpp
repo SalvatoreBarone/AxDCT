@@ -148,8 +148,6 @@ void transformImage(const cv::Mat& bgrImg, cv::Mat& output, AxDCT_algorithm *alg
 
 void inverseTransformImage(const cv::Mat& transfImg, cv::Mat& output, AxDCT_algorithm *alg){
 
-    if(&output == nullptr) std::cerr << "\n[WARNING] Output image in inverseTransformImage function is not null. It will be erased.";
-
     /* Split transfImg into 3 channels */
     std::vector<cv::Mat> chan(3);
     cv::split(transfImg, chan);

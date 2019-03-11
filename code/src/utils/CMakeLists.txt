@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.3)
 
-add_library(utils STATIC 
+add_library(utils OBJECT 
     
     mat_operations.cpp
+    generic_utils.cpp
+    ${CMAKE_SOURCE_DIR}/include/utils/generic_utils.h
     ${CMAKE_SOURCE_DIR}/include/utils/mat_operations.h
 )
 

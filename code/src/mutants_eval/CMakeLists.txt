@@ -35,12 +35,14 @@ target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/core)
 target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
 target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/utils)
 target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/mutants_eval)
+target_include_directories(psnr_eval PUBLIC ${CMAKE_SOURCE_DIR}/include/metrics)
 
 target_link_libraries( psnr_eval
     utils 
     ${OpenCV_LIBS} 
     axdctCore 
     axdctMutatedAlgorithms
+    metrics
     /usr/lib/libInexactAdders.a
 )
 
