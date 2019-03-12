@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "Installing dependencies"
+
+apt-get -qq install -y git make ninja-build build-essential wget unzip zlib1g-dev libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev jasper libdc1394-22-dev libffi-dev libedit-dev libncurses5-dev libboost-dev> /dev/null
+
+echo "Installing cmake 3.14.0rc4"
+apt remove --purge --auto-remove cmake
+apt purge --auto-remove cmake
+wget https://github.com/Kitware/CMake/releases/download/v3.14.0-rc4/cmake-3.14.0-rc4.tar.gz
+tar xfz cmake-3.14.0-rc4.tar.gz
+cd cmake-3.14.0-rc4
+./bootstrap
+make -j4 && make install
