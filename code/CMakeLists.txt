@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 3.3)
 project(AxDCT)
 
-SET (CMAKE_AR      "/usr/bin/llvm-ar")
-SET (CMAKE_LINKER  "/usr/bin/llvm-ld")
-SET (CMAKE_NM      "/usr/bin/llvm-nm")
-SET (CMAKE_OBJDUMP "/usr/bin/llvm-objdump")
-SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
 set(CMAKE_CXX_STANDARD 11)
 set(CXX_STANDARD_REQUIRED ON)
 #set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
