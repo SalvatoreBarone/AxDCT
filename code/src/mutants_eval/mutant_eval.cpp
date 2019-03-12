@@ -30,6 +30,8 @@
 #include "metrics/metrics.h"
 #include "metrics/psnr_metric_eval.h"
 #include "metrics/mse_metric_eval.h"
+#include "metrics/ad_metric_eval.h"
+#include "metrics/md_metric_eval.h"
 #include "algorithms_list.h"
 #include <getopt.h>
 #include "nablist.h"
@@ -149,6 +151,26 @@ int main(int argc, char** argv){
         BAS08_compute_metric = &(metrics::BAS08_MSE);
         BAS09_compute_metric = &(metrics::BAS09_MSE);
         BAS11_compute_metric = &(metrics::BAS11_MSE);
+    } else if (( metric == "ad")||(metric == "AD")){
+        PEA14_compute_metric = &(metrics::PEA14_AD);
+        PEA12_compute_metric = &(metrics::PEA12_AD);
+        CB11_compute_metric = &(metrics::CB11_AD);
+        BC12_compute_metric = &(metrics::BC12_AD);
+        BAS08_compute_metric = &(metrics::BAS08_AD);
+        BAS09_compute_metric = &(metrics::BAS09_AD);
+        BAS11_compute_metric = &(metrics::BAS11_AD);
+    } else if (( metric == "md")||(metric == "MD")){
+        PEA14_compute_metric = &(metrics::PEA14_MD);
+        PEA12_compute_metric = &(metrics::PEA12_MD);
+        CB11_compute_metric = &(metrics::CB11_MD);
+        BC12_compute_metric = &(metrics::BC12_MD);
+        BAS08_compute_metric = &(metrics::BAS08_MD);
+        BAS09_compute_metric = &(metrics::BAS09_MD);
+        BAS11_compute_metric = &(metrics::BAS11_MD);
+    } else {
+        std::cout << "\nA valid metric is mandatory.";
+        usage();
+        return EXIT_FAILURE;
     }
     
 
