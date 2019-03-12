@@ -28,6 +28,7 @@
 #include "core/dct.h"
 #include "metrics/metrics.h"
 #include "metrics/psnr_metric_eval.h"
+#include "metrics/mse_metric_eval.h"
 #include "utils/generic_utils.h"
 #include "algorithms_list.h"
 #include <getopt.h>
@@ -125,6 +126,14 @@ int main(int argc, char** argv){
         BAS08_compute_metric = &(metrics::BAS08_PSNR);
         BAS09_compute_metric = &(metrics::BAS09_PSNR);
         BAS11_compute_metric = &(metrics::BAS11_PSNR);
+    } else if (( metric == "mse")||(metric == "MSE")){
+        PEA14_compute_metric = &(metrics::PEA14_MSE);
+        PEA12_compute_metric = &(metrics::PEA12_MSE);
+        CB11_compute_metric = &(metrics::CB11_MSE);
+        BC12_compute_metric = &(metrics::BC12_MSE);
+        BAS08_compute_metric = &(metrics::BAS08_MSE);
+        BAS09_compute_metric = &(metrics::BAS09_MSE);
+        BAS11_compute_metric = &(metrics::BAS11_MSE);
     }
 
     if(img_path != ""){
