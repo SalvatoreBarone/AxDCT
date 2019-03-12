@@ -40,10 +40,11 @@
 namespace utils {
 
     extern std::vector<std::string> supported_algorithms;
+    extern std::vector<std::string> supported_metrics;
 
-    void printSupportedAlgs();
-    void print_results(std::vector<double>, bool silent = false);
-    void print_single_result(std::vector<double>, std::string, bool silent = false);
+    void printSupportedAlgsAndMetrics();
+    void print_results(std::string metric, std::vector<double>, bool silent = false);
+    void print_single_result(std::string metric, std::vector<double>, std::string, bool silent = false);
     std::vector<std::string> listFolder(std::string dir);
 
 } /* end of namespace utils */

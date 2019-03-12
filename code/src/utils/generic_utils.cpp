@@ -28,13 +28,19 @@
 #include "generic_utils.h"
 
 namespace utils {
-    std::vector<std::string> supported_algorithms = {"BC12\t\t", "CB11\t\t", "BAS08\t", "BAS09\t", "BAS11 (a=0.0)", "BAS11 (a=0.5)", "BAS11 (a=1.0)", "BAS11 (a=2.0)", "PEA12\t", "PEA14\t" };
+    std::vector<std::string> supported_algorithms = {"BC12\t\t", "CB11\t\t", "BAS08\t", "BAS09\t", "BAS11 (a=0.0)", "BAS11 (a=0.5)", "BAS11 (a=1.0)", "BAS11 (a=2.0)", "PEA12\t", "PEA14\t" };    
+    std::vector<std::string> supported_metrics = {"PSNR", "MSE", "MD", "AD" };
 }
 
-void utils::printSupportedAlgs(){
+void utils::printSupportedAlgsAndMetrics(){
     std::cout << "\nSupported algorithms:\n";
     for (auto alg : supported_algorithms){
         std::cout <<"\n- " << alg; 
+    }
+
+    std::cout << "\n\nSupported metrics:\n";
+    for (auto m : supported_metrics){
+        std::cout <<"\n- " << m; 
     }
 }
 
@@ -53,9 +59,10 @@ std::vector<std::string> utils::listFolder(std::string path){
     return ret;
 }
 
-void utils::print_results(std::vector<double> vals, bool silent){
+void utils::print_results(std::string metric, std::vector<double> vals, bool silent){
     if(silent) return;
-    std::cout << "\n\n************** PSNR **************\n\n";
+    
+    std::cout << "\n\n************** " <<std::toupper(metric, *(new std::locale)) <<" **************\n\n";
 
     for(int i=0; i<vals.size(); i++){
         std::cout << "   " << supported_algorithms.at(i) << "\t" << vals.at(i) <<std::endl;
@@ -64,14 +71,14 @@ void utils::print_results(std::vector<double> vals, bool silent){
     std::cout << "\n**********************************\n\n";
 }
 
-void utils::print_single_result(std::vector<double> vals, std::string algorithm, bool silent){
+void utils::print_single_result(std::string metric, std::vector<double> vals, std::string algorithm, bool silent){
     if(silent) {
         std::cout << vals.at(0);
     } else {
 
         for (std::string::size_type i=0; i<algorithm.length(); i++) algorithm[i]=std::toupper(algorithm[i], *(new std::locale) );
 
-        std::cout << "\n\n************** PSNR **************\n\n";
+        std::cout << "\n\n************** " <<metric <<" **************\n\n";
         std::cout << "   " << algorithm << "\t" << vals.at(0) <<std::endl;
         std::cout << "\n**********************************\n\n";
     }

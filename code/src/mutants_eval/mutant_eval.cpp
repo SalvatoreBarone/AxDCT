@@ -75,7 +75,7 @@ int main(int argc, char** argv){
 		switch (c)
 		{
 		case 'l':
-			utils::printSupportedAlgs();
+			utils::printSupportedAlgsAndMetrics();
 			return EXIT_SUCCESS;
 
 		case 'a':
@@ -193,23 +193,23 @@ int main(int argc, char** argv){
             vals.push_back(PEA12_compute_metric(bgrImg) );
             vals.push_back(PEA14_compute_metric(bgrImg) );
 
-            utils::print_results(vals, isOutputSilent);
+            utils::print_results(metric, vals, isOutputSilent);
 
         } else if( algorithm == "BC12" || algorithm == "bc12"){
             vals.push_back(BC12_compute_metric(bgrImg) );
-            utils::print_single_result(vals, algorithm, isOutputSilent);
+            utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "CB11" || algorithm == "cb11"){
             vals.push_back(CB11_compute_metric(bgrImg) );
-            utils::print_single_result(vals, algorithm, isOutputSilent);
+            utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS08" || algorithm == "bas08"){
             vals.push_back(BAS08_compute_metric(bgrImg) );
-            utils::print_single_result(vals, algorithm, isOutputSilent);
+            utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS09" || algorithm == "bas09"){
             vals.push_back(BAS09_compute_metric(bgrImg) );
-            utils::print_single_result(vals, algorithm, isOutputSilent);
+            utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS11" || algorithm == "bas11"){
             vals.push_back(BAS11_compute_metric(bgrImg, a_param) );
@@ -217,15 +217,15 @@ int main(int argc, char** argv){
             str.erase (str.find_last_not_of('0') + 1, std::string::npos);
             if(a_param != 0.5) str.append("0");
             algorithm.append(" - a=" + str);
-            utils::print_single_result(vals, algorithm, isOutputSilent);
+            utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "PEA12" || algorithm == "pea12"){
             vals.push_back(PEA12_compute_metric(bgrImg) );
-            utils::print_single_result(vals, algorithm, isOutputSilent);
+            utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "PEA14" || algorithm == "pea14"){
             vals.push_back(PEA14_compute_metric(bgrImg) );
-            utils::print_single_result(vals, algorithm, isOutputSilent);
+            utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else {
             std::cout << "\nChosen algorithm (" + algorithm + ") is not supported yet.\n";
@@ -284,7 +284,7 @@ int main(int argc, char** argv){
             mean.at(0) += val;
         }
         mean.at(0) /= vals.size();
-        utils::print_single_result(mean, algorithm, isOutputSilent);
+        utils::print_single_result(metric, mean, algorithm, isOutputSilent);
 
     }
 
@@ -293,12 +293,19 @@ int main(int argc, char** argv){
 
  
 void usage(){
-	std::cout << "\n\n psnr         [OPTION] [VALUE]                    \n";
-	std::cout << " -i	<VALUE>		Source image path                   \n";
-    std::cout << " -x	<VALUE>		Chosen AxDCT algorithm              \n";
-	std::cout << " -a	    		Compute PSNR for every algorithm    \n";
-    std::cout << " -l	        	List of supported algorithms	    \n";
-    std::cout << " -h	        	Help                        	    \n";
+    
+	std::cout << "\n\n psnr             [OPTION] [VALUE]                                \n";
+	std::cout << " -i	<VALUE>		    Source image path                               \n";
+	std::cout << " -f	<VALUE>		    Folder path (to run among several images)       \n";
+    std::cout << " -x	<VALUE>		    Chosen AxDCT algorithm                          \n";
+	std::cout << " -a	    		    Compute PSNR for every algorithm                \n";
+    std::cout << " -p   <VALUE>         Addition parameter for BAS11 algorithm          \n";
+    std::cout << " -n   <ID>    <VALUE>	Assign a VALUE to the global variable ID        \n";
+	std::cout << " -m	<VALUE>		    Metric to evaluate                              \n";
+    std::cout << " -s	        	    Silent execution                        	    \n";
+    std::cout << " -l	        	    List of supported algorithms and metrics        \n";
+    std::cout << " -h	        	    Help                        	                \n";
+
 	std::cout << std::endl;
 }
 
