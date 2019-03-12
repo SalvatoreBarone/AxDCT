@@ -33,7 +33,6 @@
 #include <opencv2/opencv.hpp>
 #include <stdio.h>
 #include <stdlib.h>
-#include <inexact_adders.h>
 #include "../utils/mat_operations.h"
 
 #include <cnl/fixed_point.h>
