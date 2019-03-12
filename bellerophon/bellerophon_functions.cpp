@@ -42,7 +42,7 @@ std::string exec(const char* cmd);
 
 extern "C" double BELLERO_getError()
 {
-    std::string cmd = "/home/andrea/AxDCT/code/build/bin/psnr_eval -s -i /home/andrea/lena.bmp -x BC12";
+    std::string cmd = "/home/andrea/AxDCT/code/build/bin/mutant_eval -s -i /home/andrea/lena512color.bmp -x BC12 -m mse";
     
     // cmd.append(" -n \"nab_0 " + std::to_string(nab_0) + "\"" );
     // cmd.append(" -n \"nab_1 " + std::to_string(nab_1) + "\"" );
