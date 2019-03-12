@@ -154,3 +154,13 @@ This compile process will generate a new executable, too:
 * ```mutants_eval``` - To evaluate metrics onto the AxDCT mutation.
 
 In particular, this executable introduces the flag -n, used to assign a static value to a global variable. The list of the available global variables can be found inside the csv produced by clang-chimera.
+
+#### LICENSE
+--------
+
+* [GPLV3.0](https://www.gnu.org/licenses/licenses.html)
+
+#### Contributing
+----------
+
+Github is for social coding: if you want to write code, I encourage contributions through pull requests from forks of this repository. 
