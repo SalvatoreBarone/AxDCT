@@ -8,7 +8,7 @@ This software suite is meant be used together with [IIDEAA](http://wpage.unina.i
 
 In order to build **AxDCT** source code you will need an installation of a Linux distro (in the following Ubuntu 18.04 will be assumed) with the following dependencies:
 - An up-to-date development software suite (_build-essential, git, cmake, make, etc._),
-- An installation of [OpenCV](https://opencv.org/) (minimum supported version 2.4.13.6),
+- An installation of [OpenCV](https://opencv.org/) (minimum supported version 4.0.1),
 - An installation of [CNL](https://github.com/johnmcfarlane/cnl) Library for fixed point math.
 
 In order to build and run code mutation stuff, you will need the following dependencies, too:
@@ -25,7 +25,7 @@ Firstly, you need to update your development machine. To do so, run the followin
 # apt-get install git make ninja-build build-essential wget unzip zlib1g-dev libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev jasper libdc1394-22-dev libffi-dev libedit-dev libncurses5-dev libboost-dev
 ```
 
-In order to configure AxDCT project it is required the latest version of cmake (3.14), so you need to remove (if already installed) and to install the newer version:
+In order to configure AxDCT project it is required the latest version of cmake (3.14), so you need to remove it (if already installed) and to install the newer version:
 ```
 # apt remove --purge --auto-remove cmake
 # apt purge --auto-remove cmake
@@ -83,7 +83,7 @@ At the end of the process, you will find the following executables in ```bin``` 
 * ```axdct``` - To obtain and visualize an image direct-transformed with an approximate DCT and inverse-transformed with an exact IDCT.
 * ```image_eval``` - To calculate a particular metric upon an image direct-transformed with an approximate DCT and inverse-transformed with an exact IDCT.
 
-Running ```axdct -h``` or ```image_eval -h```, it is possible to discorver all the option flag to pass to the program.
+Running ```axdct -h``` or ```image_eval -h```, it is possible to discover all the option flag to pass to the program.
 
 #### A simple example
 Just for example purposes, after compilation, we run the -l option order to discover the supported algorithms:
@@ -120,7 +120,7 @@ $ bin/axdct -i /path/to/image.bmp -x bc12
 Using OpenCV library the following output is shown:
 TODO: screenshot
 
-If now we want to evaluate the PSNR of the that process, we run:
+If now we want to evaluate the PSNR of that process, we run:
 ```
 $ bin/image_eval -i /path/to/image.bmp -x bc12 -m PSNR
 
@@ -131,3 +131,26 @@ Output:
 
 **********************************
 ```
+
+### Prepare code-mutants with clang-chimera
+If you want to evaluate code mutation on AxDCT, you will need to generate mutants. So, assuming you've already gone through _Additional dependencies installation_ section, run the following commands:
+```
+$ cd $HOME/AxDCT/chimera
+$ chmod +x launch_chimera.sh
+$ ./launch_chimera.sh
+```
+
+This will generate in the folder ```output``` a new .cpp file for each algorithm implementation, substituting every sum operation in the AxDCT algorithm, with a function call to the model of inexact-addition of ```AxC-Adders``` library.
+
+### Compile AxDCT with mutants
+In order to include mutants in the build process, you need to re-run cmake as follows:
+```
+$ cd $HOME/AxDCT/code/build
+$ cmake .. -G Ninja -DAXDCT_BUILD_MUTANTS=ON
+$ ninja
+```
+
+This compile process will generate a new executable, too:
+* ```mutants_eval``` - To evaluate metrics onto the AxDCT mutation.
+
+In particular, this executable introduces the flag -n, used to assign a static value to a global variable. The list of the available global variables can be found inside the csv produced by clang-chimera.
