@@ -72,6 +72,7 @@ cv::Mat BAS11::getLumaFullQuantMatrix(){
     else if(this->a == 0.5) return luma05Mat();
     else if(this->a == 1.0) return luma1Mat();
     else if(this->a == 2.0) return luma2Mat();
+    else return cv::Mat::zeros(8,8,CV_16S);
 }
 
 cv::Mat luma0Mat(){
@@ -381,6 +382,7 @@ cv::Mat BAS11::getChromaFullQuantMatrix(){
     else if(this->a == 0.5) return chroma05Mat();
     else if(this->a == 1.0) return chroma1Mat();
     else if(this->a == 2.0) return chroma2Mat();
+    else return cv::Mat::zeros(8,8,CV_16S);
 }
 
 cv::Mat chroma0Mat(){
@@ -726,8 +728,8 @@ void BAS11::dct1d(const cv::Mat& input, cv::Mat& output){
 
     int16_t x0d = x0c + x1c;
     int16_t x1d = x0c - x1c;
-    int16_t x2d;
-    int16_t x3d;
+    int16_t x2d = 0;
+    int16_t x3d = 0;
     int16_t x4d = x4c;
     int16_t x5d = x5c;
     int16_t x6d = x6c;

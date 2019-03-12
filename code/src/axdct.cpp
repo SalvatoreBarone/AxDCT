@@ -175,7 +175,7 @@ AxDCT_algorithm *stringToAlgorithm(std::string algorithm, double a_param){
     } else if( algorithm == "PEA14" || algorithm == "pea14"){
         return new PEA14;
 
-    }
+    } else return nullptr;
 }
 
 

@@ -40,5 +40,6 @@ install:
 - ninja
 
 script:
-- ls bin/axdct -h
-- ls bin/psnr -h
+- ./bin/axdct -h
+- ./bin/image_eval -h
+#- ./bin/mutant_eval -h

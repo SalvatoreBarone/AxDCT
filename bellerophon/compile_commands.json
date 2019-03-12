@@ -1,14 +1,8 @@
 [
 {
-  "command": "clang++  -std=c++11 -c ../chimera/output/mutants/BC12.cpp/1/BC12.cpp -I./include -I./include/algorithms -I./include/core -I./include/utils -I/usr/local/include/opencv4 -lopencv_core",
-  "directory": "/home/andrea/AxDCT/code",
-  "file": "../chimera/output/mutants/BC12.cpp/1/BC12.cpp"
-},
-{
-  "command": "clang++  -std=c++11 -c bellerophon_functions.cpp -I../code/include -I../code/include/algorithms -I../code/include/core -I../code/include/utils -I/usr/local/include/opencv4 -lopencv_core",
+  "command": "clang++ -std=c++11 -c -Wall bellerophon_functions.cpp -I/home/andrea/bellerophon/include/ -I/home/andrea/AxDCT/code/include -I/home/andrea/AxDCT/code/include/algorithms -I/home/andrea/AxDCT/code/include/core -I/home/andrea/AxDCT/code/include/utils -I/usr/local/include/opencv4 -I/usr/include/jasper -lopencv_shape -lopencv_stitching -lopencv_superres -lopencv_videostab -lopencv_aruco -lopencv_bgsegm -lopencv_bioinspired -lopencv_ccalib -lopencv_datasets -lopencv_dpm -lopencv_face -lopencv_freetype -lopencv_fuzzy -lopencv_hdf -lopencv_line_descriptor -lopencv_optflow -lopencv_video -lopencv_plot -lopencv_reg -lopencv_saliency -lopencv_stereo -lopencv_structured_light -lopencv_phase_unwrapping -lopencv_rgbd -lopencv_viz -lopencv_surface_matching -lopencv_text -lopencv_ximgproc -lopencv_calib3d -lopencv_features2d -lopencv_flann -lopencv_xobjdetect -lopencv_objdetect -lopencv_ml -lopencv_xphoto -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_photo -lopencv_imgproc -lopencv_core",
   "directory": "/home/andrea/AxDCT/bellerophon/",
-  "file": "./bellerophon_functions.cpp"
+  "file": "/home/andrea/AxDCT/bellerophon/bellerophon_functions.cpp"
 }
-
 ]
 
