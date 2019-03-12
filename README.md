@@ -31,7 +31,7 @@ In order to configure AxDCT project it is required the latest version of cmake (
 # apt purge --auto-remove cmake
 $ wget https://github.com/Kitware/CMake/releases/download/v3.14.0-rc4/cmake-3.14.0-rc4.tar.gz
 $ tar xvfz cmake-3.14.0-rc4.tar.gz
-$ cd cmake-3.14.0
+$ cd cmake-3.14.0-rc4
 $ ./bootstrap
 $ make -j4 && sudo make install
 $ cmake --version
