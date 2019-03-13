@@ -29,6 +29,7 @@
 #include "../utils/generic_utils.h"
 #include "metrics/metrics.h"
 #include "metrics/psnr_metric_eval.h"
+#include "metrics/mssim_metric_eval.h"
 #include "metrics/mse_metric_eval.h"
 #include "metrics/ad_metric_eval.h"
 #include "metrics/md_metric_eval.h"
@@ -166,6 +167,14 @@ int main(int argc, char** argv){
         BAS08_compute_metric = &(metrics::BAS08_MD);
         BAS09_compute_metric = &(metrics::BAS09_MD);
         BAS11_compute_metric = &(metrics::BAS11_MD);
+    } else if (( metric == "mssim")||(metric == "MSSIM")){
+        PEA14_compute_metric = &(metrics::PEA14_MSSIM);
+        PEA12_compute_metric = &(metrics::PEA12_MSSIM);
+        CB11_compute_metric = &(metrics::CB11_MSSIM);
+        BC12_compute_metric = &(metrics::BC12_MSSIM);
+        BAS08_compute_metric = &(metrics::BAS08_MSSIM);
+        BAS09_compute_metric = &(metrics::BAS09_MSSIM);
+        BAS11_compute_metric = &(metrics::BAS11_MSSIM);
     } else {
         std::cout << "\nA valid metric is mandatory.";
         usage();
