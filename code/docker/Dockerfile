@@ -8,7 +8,7 @@ RUN apt-get -qq dist-upgrade -y > /dev/null && apt-get -qq autoremove -y > /dev/
 # Copy install script
 ADD ./configure_environment /opt
 ADD ./scripts /opt/scripts
-ADD ../.. /root
+ADD . /root
 
 SHELL ["/bin/bash", "-c"]
 
@@ -32,5 +32,8 @@ RUN ["apt-get", "-qq", "install", "-y", "zsh", "nano"]
 RUN wget --quiet https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 RUN sed -i "s/git/git sudo docker /g" ~/.zshrc
 RUN sed -i "s/robbyrussell/af-magic/g" ~/.zshrc
+
+# Clone AxDCT Repo (impossible while repo is private)
+#RUN cd ~ && git clone https://github.com/andreaaletto/AxDCT.git
 
 RUN echo "Configuration completed. Packaging Docker Image..."
