@@ -22,6 +22,9 @@ RUN rm -Rf ~/llvm
 RUN rm -f /opt/configure_environment
 RUN rm -Rf /opt/scripts
 RUN rm -Rf /opt/ParadisEO-2.0/build
+RUN rm -Rf /opt/opencv
+RUN rm -Rf /opt/cnl
+RUN rm -Rf /opt/cmake-3.14.0-rc4
 
 # Install zsh and oh-my-zsh
 RUN echo "Installing a fancy shell..."

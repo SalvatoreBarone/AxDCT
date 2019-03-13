@@ -7,6 +7,7 @@ apt-get -qq install -y git make ninja-build build-essential wget unzip zlib1g-de
 echo "Installing cmake 3.14.0rc4"
 apt remove --purge --auto-remove cmake
 apt purge --auto-remove cmake
+cd /opt
 wget https://github.com/Kitware/CMake/releases/download/v3.14.0-rc4/cmake-3.14.0-rc4.tar.gz
 tar xfz cmake-3.14.0-rc4.tar.gz
 cd cmake-3.14.0-rc4
