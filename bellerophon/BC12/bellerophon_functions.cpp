@@ -46,7 +46,7 @@ static std::string exec(const char* cmd);
 
 extern "C" double BELLERO_getError()
 {
-    std::string cmd = "/home/andrea/AxDCT/code/build/bin/mutant_eval -s -i /home/andrea/lena512color.bmp -x BC12 -m mssim";
+    std::string cmd = "~/AxDCT/code/build/bin/mutant_eval -s -i ~/lena512color.bmp -x BC12 -m mssim";
     
     cmd.append(" -n \"nab_55 " + std::to_string(nab_55) + "\"" );
     cmd.append(" -n \"nab_56 " + std::to_string(nab_56) + "\"" );
