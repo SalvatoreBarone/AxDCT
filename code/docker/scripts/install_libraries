@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo "Installing other libs"
+
+cd /opt
+git clone https://github.com/johnmcfarlane/cnl.git && cd cnl
+mkdir build && cd build
+cmake .. -G Ninja
+ninja install

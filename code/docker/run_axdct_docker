@@ -1,0 +1,4 @@
+#!/bin/bash
+mkdir -p ~/axdct_shared
+
+docker run -v ~/axdct_shared:/root/mnt -w /root -it andreaaletto/axdct-docker /bin/zsh

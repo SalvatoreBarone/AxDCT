@@ -38,8 +38,11 @@ install:
 - mkdir build && cd build
 - cmake .. -G Ninja
 - ninja
+- cd ../docker
+- ./build_axdct_docker
 
 script:
-- ./bin/axdct -h
-- ./bin/image_eval -h
-#- ./bin/mutant_eval -h
+- ../build/bin/axdct -h
+- ../build/bin/image_eval -h
+#- ../build/bin/mutant_eval -h
+- ./run_axdct_docker
