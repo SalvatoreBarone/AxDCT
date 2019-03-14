@@ -29,7 +29,7 @@
 
 namespace utils {
     std::vector<std::string> supported_algorithms = {"BC12\t\t", "CB11\t\t", "BAS08\t", "BAS09\t", "BAS11 (a=0.0)", "BAS11 (a=0.5)", "BAS11 (a=1.0)", "BAS11 (a=2.0)", "PEA12\t", "PEA14\t" };    
-    std::vector<std::string> supported_metrics = {"PSNR", "MSE", "MD", "AD" };
+    std::vector<std::string> supported_metrics = {"PSNR", "MSE", "MD", "AD", "MSSIM" };
 }
 
 void utils::printSupportedAlgsAndMetrics(){
