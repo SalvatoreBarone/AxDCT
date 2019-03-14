@@ -4,10 +4,8 @@ set -x
 echo "Launching bellerophon"
 
 bellerophon -v                                                                      \
-                -libdb ../../code/build/src/                           \
-                -arcs /usr/lib/libInexactAdders.a                                   \
                 -cd-dir ./                                                          \
-                -r ../../chimera/output/mutants/BC12.cpp/1/axdct_report.csv            \
+                -r ../../chimera/output/mutants/BC12.cpp/2/axdct_report.csv         \
                 -t AxDCTAprx                                                        \
                 -P ../gaconfig.param 1
 

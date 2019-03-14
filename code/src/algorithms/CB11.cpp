@@ -258,12 +258,16 @@ void CB11::dct1d(const cv::Mat& input, cv::Mat& output){
     int16_t x7c = x7b;
 
     output.at<int16_t>(0,0) = x0c + x1c;
-    output.at<int16_t>(1,0) = x4c + x5c + x6c;
+    output.at<int16_t>(1,0) = x4c + x5c;
+    output.at<int16_t>(1,0) = output.at<int16_t>(1,0) + x6c;
     output.at<int16_t>(2,0) = x3c;
-    output.at<int16_t>(3,0) = x4c - x6c - x7c;
+    output.at<int16_t>(3,0) = x4c - x6c; 
+    output.at<int16_t>(3,0) = output.at<int16_t>(3,0) - x7c;
     output.at<int16_t>(4,0) = x0c - x1c;
-    output.at<int16_t>(5,0) = x4c - x5c + x7c;
+    output.at<int16_t>(5,0) = x4c - x5c; 
+    output.at<int16_t>(5,0) = output.at<int16_t>(5,0) + x7c;
     output.at<int16_t>(6,0) = -x2c;
-    output.at<int16_t>(7,0) = x6c - x5c - x7c;
+    output.at<int16_t>(7,0) = x6c - x5c; 
+    output.at<int16_t>(7,0) = output.at<int16_t>(7,0) - x7c;
 
 }

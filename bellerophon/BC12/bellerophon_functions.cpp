@@ -37,13 +37,13 @@
 #include <array>
 
 #include "../bellero_nablist.h"
+#include "../bellero_celltype_list.h"
 
 static std::string exec(const char* cmd);
 
 extern "C" double BELLERO_getError()
 {
     std::string cmd = "/home/andrea/AxDCT/code/build/bin/mutant_eval -s -i /home/andrea/lena512color.bmp -x BC12 -m mssim";
-    
     
     cmd.append(" -n \"nab_55 " + std::to_string(nab_55) + "\"" );
     cmd.append(" -n \"nab_56 " + std::to_string(nab_56) + "\"" );
@@ -59,6 +59,20 @@ extern "C" double BELLERO_getError()
     cmd.append(" -n \"nab_66 " + std::to_string(nab_66) + "\"" );
     cmd.append(" -n \"nab_67 " + std::to_string(nab_67) + "\"" );
     cmd.append(" -n \"nab_68 " + std::to_string(nab_68) + "\"" );
+    cmd.append(" -n \"cellType_55 " + std::to_string(cellType_55) + "\"" );
+    cmd.append(" -n \"cellType_56 " + std::to_string(cellType_56) + "\"" );
+    cmd.append(" -n \"cellType_57 " + std::to_string(cellType_57) + "\"" );
+    cmd.append(" -n \"cellType_58 " + std::to_string(cellType_58) + "\"" );
+    cmd.append(" -n \"cellType_59 " + std::to_string(cellType_59) + "\"" );
+    cmd.append(" -n \"cellType_60 " + std::to_string(cellType_60) + "\"" );
+    cmd.append(" -n \"cellType_61 " + std::to_string(cellType_61) + "\"" );
+    cmd.append(" -n \"cellType_62 " + std::to_string(cellType_62) + "\"" );
+    cmd.append(" -n \"cellType_63 " + std::to_string(cellType_63) + "\"" );
+    cmd.append(" -n \"cellType_64 " + std::to_string(cellType_64) + "\"" );
+    cmd.append(" -n \"cellType_65 " + std::to_string(cellType_65) + "\"" );
+    cmd.append(" -n \"cellType_66 " + std::to_string(cellType_66) + "\"" );
+    cmd.append(" -n \"cellType_67 " + std::to_string(cellType_67) + "\"" );
+    cmd.append(" -n \"cellType_68 " + std::to_string(cellType_68) + "\"" );
     cmd.append(" -n \"base_0 " + std::to_string(base_0) + "\"" );
     
 

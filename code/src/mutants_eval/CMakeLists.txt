@@ -3,14 +3,14 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 set(OpenCV_STATIC ON)
 
 add_library(axdctMutatedAlgorithms OBJECT 
-    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/AxDCT_algorithm.cpp/1/AxDCT_algorithm.cpp
-    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/BC12.cpp/1/BC12.cpp
-    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/CB11.cpp/1/CB11.cpp
-    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/BAS09.cpp/1/BAS09.cpp
-    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/BAS08.cpp/1/BAS08.cpp
-    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/BAS11.cpp/1/BAS11.cpp
-    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/PEA12.cpp/1/PEA12.cpp
-    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/PEA14.cpp/1/PEA14.cpp
+    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/AxDCT_algorithm.cpp/2/AxDCT_algorithm.cpp
+    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/BC12.cpp/2/BC12.cpp
+    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/CB11.cpp/2/CB11.cpp
+    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/BAS09.cpp/2/BAS09.cpp
+    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/BAS08.cpp/2/BAS08.cpp
+    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/BAS11.cpp/2/BAS11.cpp
+    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/PEA12.cpp/2/PEA12.cpp
+    ${CMAKE_SOURCE_DIR}/../chimera/output/mutants/PEA14.cpp/2/PEA14.cpp
 
     ${CMAKE_SOURCE_DIR}/include/mutants_eval/nablist.h
     ${CMAKE_SOURCE_DIR}/include/user_defines.h
