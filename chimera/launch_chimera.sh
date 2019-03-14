@@ -8,7 +8,9 @@ if [[ -n $CURRENT_PATH ]]; then
 fi
 echo "Launching clang-Chimera..."
 rm -Rf output
-clang-chimera -debug -v -fun-op conf.csv -generate-mutants  \
+clang-chimera                                               \
+        -debug -v                                           \
+        -fun-op conf.csv -generate-mutants                  \
         ../code/src/algorithms/AxDCT_algorithm.cpp          \
         ../code/src/algorithms/BAS08.cpp                    \
         ../code/src/algorithms/BAS09.cpp                    \

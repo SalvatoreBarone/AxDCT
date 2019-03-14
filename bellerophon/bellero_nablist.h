@@ -22,9 +22,11 @@
  * @file   bellero_nablist.h
  * @author Andrea Aletto
  * @date   11 mar 2019
- * @brief  Declaration of all external variables for bellerophon optimization
+ * @brief  Declaration of nab and base external variables for bellerophon optimization
  ******************************************************************************/
 
+//AxDCT_Algorithm
+int base_0 = 0;
 //BAS08
 int nab_17 = 0;
 int nab_16 = 0;

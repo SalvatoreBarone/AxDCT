@@ -27,6 +27,8 @@
 #ifndef _NABLIST_H
 #define _NABLIST_H
 
+//AxDCT_algorithm
+extern int base_0;
 //BAS08
 extern int nab_17;
 extern int nab_16;
