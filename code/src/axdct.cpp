@@ -28,8 +28,7 @@
 #include "core/dct.h"
 #include "algorithms_list.h"
 #include <getopt.h>
-#include <cnl/fixed_point.h>
-using cnl::fixed_point;
+#include "generic_utils.h"
 
 #define CHECKPOINT (std::cerr<<"\n\n\n"<<__PRETTY_FUNCTION__<<__LINE__<<std::endl);
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
@@ -50,7 +49,7 @@ int main(int argc, char** argv )
     double a_param = -1;
     std::string img_path = "";
 
-	while ((c = getopt(argc, argv, "p:x:i:ha")) != -1){
+	while ((c = getopt(argc, argv, ":p:x:i:hla")) != -1){
 		switch (c)
 		{
         case 'x':
@@ -71,6 +70,10 @@ int main(int argc, char** argv )
 
 		case 'h':
 			usage();
+			return EXIT_SUCCESS;
+        
+        case 'l':
+			utils::printSupportedAlgsAndMetrics();
 			return EXIT_SUCCESS;
 
 		default:
@@ -148,9 +151,12 @@ void usage(){
 	std::cout << "\n\n axdct         [OPTION] [VALUE]                                   \n";
 	std::cout << " -i	<VALUE>		Source image path                                   \n";
     std::cout << " -x	<VALUE>		Chosen AxDCT algorithm                              \n";
+    std::cout << " -p   <VALUE>         Addition parameter for BAS11 algorithm          \n";
     std::cout << " -a	        	Compute AxDCT image for every supported algorithm   \n";
+    std::cout << " -l	        	    List of supported algorithms and metrics        \n";
     std::cout << " -h	        	Help                        	                    \n";
 	std::cout << std::endl;
+
 }
 
 AxDCT_algorithm *stringToAlgorithm(std::string algorithm, double a_param){

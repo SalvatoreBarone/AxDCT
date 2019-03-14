@@ -36,13 +36,13 @@
 #include <string>
 #include <array>
 
-#include "bellero_nablist.h"
+#include "../bellero_nablist.h"
 
 std::string exec(const char* cmd);
 
 extern "C" double BELLERO_getError()
 {
-    std::string cmd = "/home/andrea/AxDCT/code/build/bin/mutant_eval -s -i /home/andrea/lena512color.bmp -x BC12 -m mse";
+    std::string cmd = "/home/andrea/AxDCT/code/build/bin/mutant_eval -s -i /home/andrea/lena512color.bmp -x BC12 -m mssim";
     
     // cmd.append(" -n \"nab_0 " + std::to_string(nab_0) + "\"" );
     // cmd.append(" -n \"nab_1 " + std::to_string(nab_1) + "\"" );
@@ -175,7 +175,7 @@ extern "C" double BELLERO_getError()
     // cmd.append(" -n \"nab_128 " + std::to_string(nab_128) + "\"" );
 
     std::string retstring = exec(cmd.c_str());
-    return stod(retstring);
+    return (1-stod(retstring));
 }
 
 

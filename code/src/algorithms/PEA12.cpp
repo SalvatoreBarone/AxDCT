@@ -249,10 +249,14 @@ void PEA12::dct1d(const cv::Mat& input, cv::Mat& output){
     int16_t x1c = x1b + x2b;
     int16_t x2c = x1b - x2b;
     int16_t x3c = x0b - x3b;
-    int16_t x4c = x5b + x6b + (x7b << 1);
-    int16_t x5c = x7b - (x5b << 1) - x4b;
-    int16_t x6c = x4b - (x6b << 1) + x7b;
-    int16_t x7c = x5b - (x4b << 1) - x6b;
+    int16_t x4c = x5b + x6b; 
+    x4c = x4c + (x7b << 1);
+    int16_t x5c = x7b - (x5b << 1); 
+    x5c = x5c - x4b;
+    int16_t x6c = x4b - (x6b << 1);
+    x6c = x6c + x7b;
+    int16_t x7c = x5b - (x4b << 1);
+    x7c = x7c - x6b;
 
     int16_t x0d = x0c + x1c;
     int16_t x1d = x0c - x1c;
