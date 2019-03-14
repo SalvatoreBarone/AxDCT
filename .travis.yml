@@ -42,4 +42,3 @@ install:
 script:
 - ./bin/axdct -h
 - ./bin/image_eval -h
-#- ./bin/mutant_eval -h

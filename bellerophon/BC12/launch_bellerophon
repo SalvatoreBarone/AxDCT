@@ -1,0 +1,11 @@
+#!/bin/bash
+set -x
+
+echo "Launching bellerophon"
+
+bellerophon -v                                                                      \
+                -cd-dir ./                                                          \
+                -r ../../chimera/output/mutants/BC12.cpp/2/axdct_report.csv         \
+                -t AxDCTAprx                                                        \
+                -P ../gaconfig.param 0.2
+
