@@ -36,7 +36,7 @@
 #include <string>
 #include <array>
 
-#include "bellero_nablist.h"
+#include "../bellero_nablist.h"
 
 std::string exec(const char* cmd);
 

@@ -337,6 +337,7 @@ void assignNabValue(std::string nabarg){
 
 void mapNabValue(const std::string& nabid, const int nabVal ){
     
+    ASSIGNVAL(base_0, nabid, nabVal)
     ASSIGNVAL(nab_0, nabid, nabVal)
     ASSIGNVAL(nab_1, nabid, nabVal)
     ASSIGNVAL(nab_2, nabid, nabVal)
