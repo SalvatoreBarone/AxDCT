@@ -82,6 +82,7 @@ sed -i -e 's@--pMut=0.1@'"--pMut=$PMUT"'@' ./gaconfig.param
 if [ "$FILENAME" = "" ]; then
     bellerophon -cd-dir ./ -r ../../chimera/output/mutants/BC12.cpp/2/BC12_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR
 else
+    touch $FILENAME
     cat gaconfig.param > $FILENAME
     echo "##################################" > $FILENAME
     bellerophon -cd-dir ./ -r ../../chimera/output/mutants/BC12.cpp/2/BC12_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR > $FILENAME
