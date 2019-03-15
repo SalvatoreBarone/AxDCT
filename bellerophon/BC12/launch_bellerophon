@@ -1,11 +1,92 @@
 #!/bin/bash
-set -x
+#set -x
+
+#!/bin/bash
+
+POPSIZE=1
+MAXGEN=10
+PMUT=0.4
+FILENAME=""
+CROSSRATE=1    
+SHIFTMUTRATE=0.5        
+EXCHANGEMUTRATE=0.5        
+PCROSS=0.5
+ERROR=0.2
+
+for i in "$@"
+do
+case $i in
+    -p=*|--popSize=*)
+    POPSIZE="${i#*=}"
+    shift
+    ;;
+
+    -g=*|--maxGen=*)
+    MAXGEN="${i#*=}"
+    shift
+    ;;
+    
+    -m=*|--pmut=*)
+    PMUT="${i#*=}"
+    shift
+    ;;
+
+    -o=*|--output=*)
+    FILENAME="${i#*=}"
+    shift
+    ;;
+
+    -e=*|--error=*)
+    ERROR="${i#*=}"
+    shift
+    ;;
+
+    --crossRate=*)
+    CROSSRATE="${i#*=}"
+    shift
+    ;;
+
+    --shiftMutRate=*)
+    SHIFTMUTRATE="${i#*=}"
+    shift
+    ;;
+
+    --exchangeMutRate=*)
+    EXCHANGEMUTRATE="${i#*=}"
+    shift
+    ;;
+
+    --pCross=*)
+    PCROSS="${i#*=}"
+    shift
+    ;;
+
+    *)
+    echo "Unknown option"
+    exit 1
+    ;;
+esac
+done
+
+rm -f gaconfig.param
+cp ../gaconfig.param ./gaconfig.param
+
+sed -i -e 's@--popSize=100@'"--popSize=$POPSIZE"'@' ./gaconfig.param
+sed -i -e 's@--maxGen=3@'"--maxGen=$MAXGEN"'@' ./gaconfig.param
+sed -i -e 's@--crossRate=1@'"--crossRate=$CROSSRATE"'@' ./gaconfig.param
+sed -i -e 's@--shiftMutRate=0.5@'"--shiftMutRate=$SHIFTMUTRATE"'@' ./gaconfig.param
+sed -i -e 's@--exchangeMutRate=0.5@'"--exchangeMutRate=$EXCHANGEMUTRATE"'@' ./gaconfig.param
+sed -i -e 's@--pCross=0.5@'"--pCross=$PCROSS"'@' ./gaconfig.param
+sed -i -e 's@--pMut=0.1@'"--pMut=$PMUT"'@' ./gaconfig.param
+
+if [ "$FILENAME" = "" ]; then
+    bellerophon -cd-dir ./ -r ../../chimera/output/mutants/BC12.cpp/2/BC12_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR
+else
+    cat gaconfig.param > $FILENAME
+    echo "##################################" > $FILENAME
+    bellerophon -cd-dir ./ -r ../../chimera/output/mutants/BC12.cpp/2/BC12_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR > $FILENAME
+fi
 
 echo "Launching bellerophon"
 
-bellerophon -v                                                                      \
-                -cd-dir ./                                                          \
-                -r ../../chimera/output/mutants/BC12.cpp/2/axdct_report.csv         \
-                -t AxDCTAprx                                                        \
-                -P ../gaconfig.param 0.2
-
+rm gaconfig.param
