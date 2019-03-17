@@ -1,8 +1,6 @@
 #!/bin/bash
 #set -x
 
-#!/bin/bash
-
 POPSIZE=1
 MAXGEN=10
 PMUT=0.4
@@ -79,15 +77,20 @@ sed -i -e 's@--exchangeMutRate=0.5@'"--exchangeMutRate=$EXCHANGEMUTRATE"'@' ./ga
 sed -i -e 's@--pCross=0.5@'"--pCross=$PCROSS"'@' ./gaconfig.param
 sed -i -e 's@--pMut=0.1@'"--pMut=$PMUT"'@' ./gaconfig.param
 
+SECONDS=0 ;
 if [ "$FILENAME" = "" ]; then
+    echo "Launching bellerophon"
     bellerophon -cd-dir ./ -r ../../chimera/output/mutants/BC12.cpp/2/BC12_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR
+    echo Elapsed time: $SECONDS seconds
 else
     touch $FILENAME
     cat gaconfig.param > $FILENAME
-    echo "##################################" > $FILENAME
-    bellerophon -cd-dir ./ -r ../../chimera/output/mutants/BC12.cpp/2/BC12_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR > $FILENAME
-fi
+    echo "##################################" >> $FILENAME
+    echo "Launching bellerophon" >> $FILENAME
 
-echo "Launching bellerophon"
+    bellerophon -cd-dir ./ -r ../../chimera/output/mutants/BC12.cpp/2/BC12_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR >> $FILENAME
+    echo "##################################" >> $FILENAME
+    echo Elapsed time: $SECONDS seconds  >> $FILENAME
+fi
 
 rm gaconfig.param

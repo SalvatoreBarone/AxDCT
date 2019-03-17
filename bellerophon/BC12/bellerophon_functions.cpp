@@ -80,7 +80,7 @@ extern "C" double BELLERO_getError()
     
 
     std::string retstring = exec(cmd.c_str());
-    return (1-stod(retstring));
+    return (1-stod(retstring)/2);
 }
 
 extern "C" double BELLERO_getReward()
