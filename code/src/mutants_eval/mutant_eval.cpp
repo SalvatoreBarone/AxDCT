@@ -63,6 +63,7 @@ int main(int argc, char** argv){
     bool isOutputSilent = false;
     std::string globalvararg = "";
     std::string metric = "";
+    int count = -1;
 
     double (*PEA14_compute_metric)(const cv::Mat& orig);
     double (*PEA12_compute_metric)(const cv::Mat& orig);
@@ -72,7 +73,7 @@ int main(int argc, char** argv){
     double (*BAS09_compute_metric)(const cv::Mat& orig);
     double (*BAS11_compute_metric)(const cv::Mat& orig, const double a_param);
 
-	while ((c = getopt(argc, argv, ":p:x:i:hlasn:f:m:")) != -1)
+	while ((c = getopt(argc, argv, ":p:x:i:hlasn:f:m:r:")) != -1)
 	{
 		switch (c)
 		{
@@ -111,6 +112,11 @@ int main(int argc, char** argv){
         case 'f':
             folder_path = optarg;
             break;
+
+        case 'r':
+            count = atoi(optarg);
+            break;
+
         
         case 'm':
             metric = optarg;
@@ -249,7 +255,7 @@ int main(int argc, char** argv){
             std::string anImg = folder_path;
             anImg.append("/");
             anImg.append(entry);
-            if(anImg.find(".bmp") == std::string::npos) continue;
+            if( (anImg.find(".bmp") == std::string::npos) && (anImg.find(".png") == std::string::npos) && (anImg.find(".jpg") == std::string::npos) ) continue;
             // Load img
             cv::Mat bgrImg = imread( anImg.c_str(), cv::IMREAD_COLOR );
             if( bgrImg.data == nullptr){ 
@@ -286,6 +292,8 @@ int main(int argc, char** argv){
                 usage();
                 return EXIT_FAILURE;
             }
+            
+            if(count-- == 0) break;
 
         }
 
@@ -307,6 +315,7 @@ void usage(){
 	std::cout << "\n\n psnr             [OPTION] [VALUE]                                \n";
 	std::cout << " -i	<VALUE>		    Source image path                               \n";
 	std::cout << " -f	<VALUE>		    Folder path (to run among several images)       \n";
+    std::cout << " -r	<VALUE>		    Maximum number of images to evaluate within the folder       \n";
     std::cout << " -x	<VALUE>		    Chosen AxDCT algorithm                          \n";
 	std::cout << " -a	    		    Compute PSNR for every algorithm                \n";
     std::cout << " -p   <VALUE>         Addition parameter for BAS11 algorithm          \n";
