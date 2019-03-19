@@ -1,33 +1,40 @@
 #!/bin/bash
 
 set -x
-mkdir -p /home/seclab/DOE/20190317
+FOLDER_NAME=$1
 
-./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/20190317/prova_1.txt 
-./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/20190317/prova_2.txt 
-./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/20190317/prova_3.txt 
-./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/20190317/prova_4.txt 
+if [[ -n $FOLDER_NAME ]]; then
+    $CURRENT_PATH=$RANDOM
+fi
 
-./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/20190317/prova_5.txt 
-./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/20190317/prova_6.txt 
-./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/20190317/prova_7.txt 
-./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/20190317/prova_8.txt
+RUN_NUMBER=0
+mkdir -p $HOME/DOE/$FOLDER_NAME
 
-#./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/20190317/prova_9.txt 
-#./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/20190317/prova_10.txt 
-#./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/20190317/prova_11.txt 
-#./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/20190317/prova_12.txt
-#
-#./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/20190317/prova_13.txt 
-#./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/20190317/prova_14.txt 
-#./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/20190317/prova_15.txt 
-#./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/20190317/prova_16.txt
-#
-#./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/20190317/prova_17.txt 
-#./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/20190317/prova_18.txt 
-#./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/20190317/prova_19.txt 
-#./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/20190317/prova_20.txt
+./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 
-cd /home/seclab/DOE
-zip -r bellero_20190317.zip 20190317
-echo "Lo script di Bellerofonte è terminato." | mail -s "Bellerofonte" "andrea.aletto8@gmail.com" -A bellero_20190317.zip
+./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+
+./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+
+./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+
+./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+
+cd $HOME/DOE
+tar -zcvf bellero_$FOLDER_NAME.tar.gz $FOLDER_NAME
+echo "Lo script di Bellerofonte è terminato." | mail -s "Bellerofonte" "andrea.aletto8@gmail.com" -A bellero_$FOLDER_NAME.zip

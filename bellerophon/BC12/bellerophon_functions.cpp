@@ -46,7 +46,7 @@ static std::string exec(const char* cmd);
 
 extern "C" double BELLERO_getError()
 {
-    std::string cmd = "~/AxDCT/code/build/bin/mutant_eval -s -i ~/lena512color.bmp -x BC12 -m mssim";
+    std::string cmd = "~/AxDCT/code/build/bin/mutant_eval -s -f ~/image_dataset -x BC12 -m dssim";
     
     cmd.append(" -n \"nab_55 " + std::to_string(nab_55) + "\"" );
     cmd.append(" -n \"nab_56 " + std::to_string(nab_56) + "\"" );
@@ -80,7 +80,7 @@ extern "C" double BELLERO_getError()
     
 
     std::string retstring = exec(cmd.c_str());
-    return (1-stod(retstring)/2);
+    return stod(retstring);
 }
 
 extern "C" double BELLERO_Reward()
