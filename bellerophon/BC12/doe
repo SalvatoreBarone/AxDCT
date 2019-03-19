@@ -3,38 +3,58 @@
 set -x
 FOLDER_NAME=$1
 
-if [[ -n $FOLDER_NAME ]]; then
-    $CURRENT_PATH=$RANDOM
+if [[ -z $FOLDER_NAME ]]; then
+    echo "Pass an experiment name as an argument"
+    exit 1
 fi
 
 RUN_NUMBER=0
 mkdir -p $HOME/DOE/$FOLDER_NAME
 
-./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.5 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.5 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.5 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.5 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.5 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
 
-./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.6 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+((RUN_NUMBER++))
 
-./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.7 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
 
-./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.8 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.8 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.8 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.8 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.8 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+((RUN_NUMBER++))
 
-./launch_bellerophon --popSize=600 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=800 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-./launch_bellerophon --popSize=1500 --error=0.15 --pmut=0.9 --output=/home/seclab/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.9 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.9 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.9 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.9 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+((RUN_NUMBER++))
 
 cd $HOME/DOE
 tar -zcvf bellero_$FOLDER_NAME.tar.gz $FOLDER_NAME
-echo "Lo script di Bellerofonte è terminato." | mail -s "Bellerofonte" "andrea.aletto8@gmail.com" -A bellero_$FOLDER_NAME.zip
+echo "Lo script di Bellerofonte è terminato." | mail -s "Bellerofonte" "andrea.aletto8@gmail.com" -A bellero_$FOLDER_NAME.tar.gz
