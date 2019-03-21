@@ -96,50 +96,6 @@ extern "C" double BELLERO_Reward()
 {
     double ret = 0.0;
 
-    if( (cellType_55 % 10) == 0) ret += (( nab_55 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
-    if( (cellType_55 % 10) == 1) ret += (( nab_55 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
-    if( (cellType_55 % 10) == 2) ret += (( nab_55 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
-    if( (cellType_55 % 10) == 3) ret += (( nab_55 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
-    if( (cellType_55 % 10) == 4) ret += (( nab_55 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
-    if( (cellType_55 % 10) == 5) ret += (( nab_55 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
-    if( (cellType_55 % 10) == 6) ret += (( nab_55 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
-    if( (cellType_55 % 10) == 7) ret += (( nab_55 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
-    if( (cellType_55 % 10) == 8) ret += (( nab_55 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
-    if( (cellType_55 % 10) == 9) ret += (( nab_55 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
-
-    if( (cellType_56 % 10) == 0) ret += (( nab_56 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
-    if( (cellType_56 % 10) == 1) ret += (( nab_56 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
-    if( (cellType_56 % 10) == 2) ret += (( nab_56 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
-    if( (cellType_56 % 10) == 3) ret += (( nab_56 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
-    if( (cellType_56 % 10) == 4) ret += (( nab_56 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
-    if( (cellType_56 % 10) == 5) ret += (( nab_56 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
-    if( (cellType_56 % 10) == 6) ret += (( nab_56 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
-    if( (cellType_56 % 10) == 7) ret += (( nab_56 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
-    if( (cellType_56 % 10) == 8) ret += (( nab_56 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
-    if( (cellType_56 % 10) == 9) ret += (( nab_56 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
-
-    if( (cellType_57 % 10) == 0) ret += (( nab_57 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
-    if( (cellType_57 % 10) == 1) ret += (( nab_57 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
-    if( (cellType_57 % 10) == 2) ret += (( nab_57 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
-    if( (cellType_57 % 10) == 3) ret += (( nab_57 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
-    if( (cellType_57 % 10) == 4) ret += (( nab_57 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
-    if( (cellType_57 % 10) == 5) ret += (( nab_57 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
-    if( (cellType_57 % 10) == 6) ret += (( nab_57 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
-    if( (cellType_57 % 10) == 7) ret += (( nab_57 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
-    if( (cellType_57 % 10) == 8) ret += (( nab_57 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
-    if( (cellType_57 % 10) == 9) ret += (( nab_57 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
-
-    if( (cellType_58 % 10) == 0) ret += (( nab_58 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
-    if( (cellType_58 % 10) == 1) ret += (( nab_58 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
-    if( (cellType_58 % 10) == 2) ret += (( nab_58 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
-    if( (cellType_58 % 10) == 3) ret += (( nab_58 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
-    if( (cellType_58 % 10) == 4) ret += (( nab_58 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
-    if( (cellType_58 % 10) == 5) ret += (( nab_58 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
-    if( (cellType_58 % 10) == 6) ret += (( nab_58 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
-    if( (cellType_58 % 10) == 7) ret += (( nab_58 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
-    if( (cellType_58 % 10) == 8) ret += (( nab_58 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
-    if( (cellType_58 % 10) == 9) ret += (( nab_58 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
-
     if( (cellType_59 % 10) == 0) ret += (( nab_59 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
     if( (cellType_59 % 10) == 1) ret += (( nab_59 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
     if( (cellType_59 % 10) == 2) ret += (( nab_59 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
@@ -250,7 +206,95 @@ extern "C" double BELLERO_Reward()
     if( (cellType_68 % 10) == 8) ret += (( nab_68 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
     if( (cellType_68 % 10) == 9) ret += (( nab_68 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
 
-    ret /= (14.0 * 16 * FA_TRANSISTOR_COUNT);
+    if( (cellType_69 % 10) == 0) ret += (( nab_69 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
+    if( (cellType_69 % 10) == 1) ret += (( nab_69 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
+    if( (cellType_69 % 10) == 2) ret += (( nab_69 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
+    if( (cellType_69 % 10) == 3) ret += (( nab_69 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_69 % 10) == 4) ret += (( nab_69 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_69 % 10) == 5) ret += (( nab_69 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
+    if( (cellType_69 % 10) == 6) ret += (( nab_69 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
+    if( (cellType_69 % 10) == 7) ret += (( nab_69 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_69 % 10) == 8) ret += (( nab_69 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_69 % 10) == 9) ret += (( nab_69 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
+
+    if( (cellType_70 % 10) == 0) ret += (( nab_70 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
+    if( (cellType_70 % 10) == 1) ret += (( nab_70 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
+    if( (cellType_70 % 10) == 2) ret += (( nab_70 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
+    if( (cellType_70 % 10) == 3) ret += (( nab_70 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_70 % 10) == 4) ret += (( nab_70 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_70 % 10) == 5) ret += (( nab_70 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
+    if( (cellType_70 % 10) == 6) ret += (( nab_70 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
+    if( (cellType_70 % 10) == 7) ret += (( nab_70 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_70 % 10) == 8) ret += (( nab_70 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_70 % 10) == 9) ret += (( nab_70 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
+
+    if( (cellType_71 % 10) == 0) ret += (( nab_71 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
+    if( (cellType_71 % 10) == 1) ret += (( nab_71 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
+    if( (cellType_71 % 10) == 2) ret += (( nab_71 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
+    if( (cellType_71 % 10) == 3) ret += (( nab_71 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_71 % 10) == 4) ret += (( nab_71 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_71 % 10) == 5) ret += (( nab_71 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
+    if( (cellType_71 % 10) == 6) ret += (( nab_71 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
+    if( (cellType_71 % 10) == 7) ret += (( nab_71 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_71 % 10) == 8) ret += (( nab_71 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_71 % 10) == 9) ret += (( nab_71 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
+
+    if( (cellType_72 % 10) == 0) ret += (( nab_72 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
+    if( (cellType_72 % 10) == 1) ret += (( nab_72 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
+    if( (cellType_72 % 10) == 2) ret += (( nab_72 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
+    if( (cellType_72 % 10) == 3) ret += (( nab_72 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_72 % 10) == 4) ret += (( nab_72 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_72 % 10) == 5) ret += (( nab_72 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
+    if( (cellType_72 % 10) == 6) ret += (( nab_72 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
+    if( (cellType_72 % 10) == 7) ret += (( nab_72 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_72 % 10) == 8) ret += (( nab_72 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_72 % 10) == 9) ret += (( nab_72 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
+
+    if( (cellType_73 % 10) == 0) ret += (( nab_73 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
+    if( (cellType_73 % 10) == 1) ret += (( nab_73 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
+    if( (cellType_73 % 10) == 2) ret += (( nab_73 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
+    if( (cellType_73 % 10) == 3) ret += (( nab_73 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_73 % 10) == 4) ret += (( nab_73 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_73 % 10) == 5) ret += (( nab_73 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
+    if( (cellType_73 % 10) == 6) ret += (( nab_73 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
+    if( (cellType_73 % 10) == 7) ret += (( nab_73 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_73 % 10) == 8) ret += (( nab_73 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_73 % 10) == 9) ret += (( nab_73 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
+
+    if( (cellType_74 % 10) == 0) ret += (( nab_74 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
+    if( (cellType_74 % 10) == 1) ret += (( nab_74 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
+    if( (cellType_74 % 10) == 2) ret += (( nab_74 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
+    if( (cellType_74 % 10) == 3) ret += (( nab_74 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_74 % 10) == 4) ret += (( nab_74 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_74 % 10) == 5) ret += (( nab_74 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
+    if( (cellType_74 % 10) == 6) ret += (( nab_74 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
+    if( (cellType_74 % 10) == 7) ret += (( nab_74 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_74 % 10) == 8) ret += (( nab_74 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_74 % 10) == 9) ret += (( nab_74 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
+
+    if( (cellType_75 % 10) == 0) ret += (( nab_75 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
+    if( (cellType_75 % 10) == 1) ret += (( nab_75 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
+    if( (cellType_75 % 10) == 2) ret += (( nab_75 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
+    if( (cellType_75 % 10) == 3) ret += (( nab_75 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_75 % 10) == 4) ret += (( nab_75 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_75 % 10) == 5) ret += (( nab_75 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
+    if( (cellType_75 % 10) == 6) ret += (( nab_75 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
+    if( (cellType_75 % 10) == 7) ret += (( nab_75 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_75 % 10) == 8) ret += (( nab_75 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_75 % 10) == 9) ret += (( nab_75 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
+
+    if( (cellType_76 % 10) == 0) ret += (( nab_76 * (FA_TRANSISTOR_COUNT - InAx1_TRANSISTOR_COUNT) ) );
+    if( (cellType_76 % 10) == 1) ret += (( nab_76 * (FA_TRANSISTOR_COUNT - InAx2_TRANSISTOR_COUNT) ) );
+    if( (cellType_76 % 10) == 2) ret += (( nab_76 * (FA_TRANSISTOR_COUNT - InAx3_TRANSISTOR_COUNT) ) );
+    if( (cellType_76 % 10) == 3) ret += (( nab_76 * (FA_TRANSISTOR_COUNT - AMA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_76 % 10) == 4) ret += (( nab_76 * (FA_TRANSISTOR_COUNT - AMA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_76 % 10) == 5) ret += (( nab_76 * (FA_TRANSISTOR_COUNT - AMA3_TRANSISTOR_COUNT) ) );
+    if( (cellType_76 % 10) == 6) ret += (( nab_76 * (FA_TRANSISTOR_COUNT - AMA4_TRANSISTOR_COUNT) ) );
+    if( (cellType_76 % 10) == 7) ret += (( nab_76 * (FA_TRANSISTOR_COUNT - AXA1_TRANSISTOR_COUNT) ) );
+    if( (cellType_76 % 10) == 8) ret += (( nab_76 * (FA_TRANSISTOR_COUNT - AXA2_TRANSISTOR_COUNT) ) );
+    if( (cellType_76 % 10) == 9) ret += (( nab_76 * (FA_TRANSISTOR_COUNT - AXA3_TRANSISTOR_COUNT) ) );
+
+    ret /= (18.0 * 16 * FA_TRANSISTOR_COUNT);
     return ret;
 }
 
