@@ -247,7 +247,7 @@ int main(int argc, char** argv){
             std::string anImg = folder_path;
             anImg.append("/");
             anImg.append(entry);
-            if( (anImg.find(".bmp") == std::string::npos) && (anImg.find(".png") == std::string::npos) && (anImg.find(".jpg") == std::string::npos) ) continue;
+            if( (anImg.find(".tiff") == std::string::npos) && (anImg.find(".bmp") == std::string::npos) && (anImg.find(".png") == std::string::npos) && (anImg.find(".jpg") == std::string::npos) ) continue;
             // Load img
             // std::cerr << "\nProcessing image at: " <<anImg.c_str();
             cv::Mat bgrImg = imread( anImg.c_str(), cv::IMREAD_COLOR );
