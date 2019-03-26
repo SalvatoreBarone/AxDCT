@@ -11,48 +11,48 @@ fi
 RUN_NUMBER=0
 mkdir -p $HOME/DOE/$FOLDER_NAME
 
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.5 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=60 --error=0.15 --pmut=0.3 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 ((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.5 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=100 --error=0.15 --pmut=0.3 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 ((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.5 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=350 --error=0.15 --pmut=0.3 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 ((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.5 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-((RUN_NUMBER++))
-
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.3 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 ((RUN_NUMBER++))
 
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=60 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 ((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=100 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 ((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=350 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 ((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
-
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.8 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.8 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.8 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
-((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.8 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+./launch_bellerophon --popSize=1000 --error=0.15 --pmut=0.6 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
 ((RUN_NUMBER++))
 
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.9 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=60 --error=0.15 --pCross=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 ((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.9 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=100 --error=0.15 --pCross=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 ((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.9 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+./launch_bellerophon --popSize=350 --error=0.15 --pCross=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
 ((RUN_NUMBER++))
-./launch_bellerophon --popSize=1 --error=0.15 --pmut=0.9 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+./launch_bellerophon --popSize=1000 --error=0.15 --pCross=0.7 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+
+./launch_bellerophon --popSize=60 --error=0.10 --maxGen=10 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=100 --error=0.10 --maxGen=10 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=350 --error=0.10 --maxGen=10 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1000 --error=0.10 --maxGen=10 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
+((RUN_NUMBER++))
+
+./launch_bellerophon --popSize=60 --error=0.10 --pmut=0.6 --pCross=0.6 --maxGen=4 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=100 --error=0.10 --pmut=0.6 --pCross=0.6 --maxGen=4 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=350 --error=0.10 --pmut=0.6 --pCross=0.6 --maxGen=4 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt 
+((RUN_NUMBER++))
+./launch_bellerophon --popSize=1000 --error=0.10 --pmut=0.6 --pCross=0.6 --maxGen=4 --output=$HOME/DOE/$FOLDER_NAME/prova_$RUN_NUMBER.txt
 ((RUN_NUMBER++))
 
 cd $HOME/DOE
