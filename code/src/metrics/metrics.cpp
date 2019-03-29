@@ -85,11 +85,12 @@ double compute_reduction(const double exact_param, const double inexact_param, c
 
 double compute_mssim(const cv::Mat& orig, const cv::Mat& target){
     cv::Scalar mssim = getMSSIM(orig,target);
+    // std::cout << "\nmssim components:\n" <<mssim.val[0] <<"\n" << mssim.val[1] << "\n" << mssim.val[2] << "\n\n\n";
     return ((mssim.val[0] + mssim.val[1] + mssim.val[2])/3);
 }
 
 double compute_dssim(const cv::Mat& orig, const cv::Mat& target){
-    return (1-compute_mssim(orig,target)) /2;
+    return (1-compute_mssim(orig,target));
 }
 
 

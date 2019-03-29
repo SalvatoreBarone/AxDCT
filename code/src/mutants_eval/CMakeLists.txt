@@ -46,8 +46,21 @@ target_link_libraries( mutant_eval
     /usr/lib/libInexactAdders.a
 )
 
-add_dependencies(mutant_eval library_database)
+add_executable( mutant_show mutant_show.cpp )
 
+target_include_directories(mutant_show PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(mutant_show PUBLIC ${CMAKE_SOURCE_DIR}/include/core)
+target_include_directories(mutant_show PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
+target_include_directories(mutant_show PUBLIC ${CMAKE_SOURCE_DIR}/include/utils)
+target_include_directories(mutant_show PUBLIC ${CMAKE_SOURCE_DIR}/include/mutants_eval)
+
+target_link_libraries( mutant_show
+    utils 
+    ${OpenCV_LIBS} 
+    axdctCore 
+    axdctMutatedAlgorithms
+    /usr/lib/libInexactAdders.a
+)
 
 #Then we list all of them into a the library_database file
 add_custom_target(library_database ALL
