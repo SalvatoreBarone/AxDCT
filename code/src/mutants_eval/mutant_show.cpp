@@ -214,8 +214,6 @@ void assignGlobalValue(std::string globalvararg){
 }
 
 void mapGlobalValue(const std::string& id, const int val ){
-
-    std::cout<<"\nAssign value "<<val <<" to " <<id;
     
     ASSIGNVAL(base_0, id, val)
     ASSIGNVAL(nab_0, id, val)
