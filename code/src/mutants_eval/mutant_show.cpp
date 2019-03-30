@@ -215,7 +215,10 @@ void assignGlobalValue(std::string globalvararg){
 
 void mapGlobalValue(const std::string& id, const int val ){
     
-    ASSIGNVAL(base_0, id, val)
+    if(id == "base_0") { 
+        (val > 8) ? (base_0 = 8) : (base_0 = val); 
+        return; 
+    }    
     ASSIGNVAL(nab_0, id, val)
     ASSIGNVAL(nab_1, id, val)
     ASSIGNVAL(nab_2, id, val)
