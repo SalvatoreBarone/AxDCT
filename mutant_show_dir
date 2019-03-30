@@ -1,0 +1,48 @@
+#!/bin/bash
+
+IMAGES=$(ls ~/image_dataset)
+IMAGES_ARRAY=($IMAGES)
+
+for i in `seq 0 $((${#IMAGES_ARRAY[@]} -1))`
+do
+
+    ~/AxDCT/code/build/bin/mutant_show -i ~/image_dataset/${IMAGES_ARRAY[$i]} -x BC12    \
+    -n "base_0 3"                                                                        \
+    -n "nab_76 7"                                                                        \
+    -n "cellType_76 0"                                                                   \
+    -n "nab_75 10"                                                                       \
+    -n "cellType_75 11"                                                                  \
+    -n "nab_74 6"                                                                        \
+    -n "cellType_74 11"                                                                  \
+    -n "nab_73 6"                                                                        \
+    -n "cellType_73 9"                                                                   \
+    -n "nab_72 6"                                                                        \
+    -n "cellType_72 8"                                                                   \
+    -n "nab_71 4"                                                                        \
+    -n "cellType_71 2"                                                                   \
+    -n "nab_70 1"                                                                        \
+    -n "cellType_70 11"                                                                  \
+    -n "nab_69 6"                                                                        \
+    -n "cellType_69 10"                                                                  \
+    -n "nab_68 4"                                                                        \
+    -n "cellType_68 5"                                                                   \
+    -n "nab_67 1"                                                                        \
+    -n "cellType_67 3"                                                                   \
+    -n "nab_66 1"                                                                        \
+    -n "cellType_66 3"                                                                   \
+    -n "nab_65 1"                                                                        \
+    -n "cellType_65 12"                                                                  \
+    -n "nab_64 3"                                                                        \
+    -n "cellType_64 0"                                                                   \
+    -n "nab_63 3"                                                                        \
+    -n "cellType_63 2"                                                                   \
+    -n "nab_62 5"                                                                        \
+    -n "cellType_62 3"                                                                   \
+    -n "nab_61 0"                                                                        \
+    -n "cellType_61 9"                                                                   \
+    -n "nab_60 3"                                                                        \
+    -n "cellType_60 12"                                                                  \
+    -n "nab_59 0"                                                                        \
+    -n "cellType_59 3"
+
+done
