@@ -1,7 +1,7 @@
 [
 {
   "command": "clang++ -std=c++11 -c -Wall bellerophon_functions.cpp -I../../code/include -I../../code/include/algorithms -I../../code/include/core -I../../code/include/utils",
-  "directory": "/home/andrea/AxDCT/bellerophon/BAS08",
+  "directory": "/home/seclab/AxDCT/bellerophon/BAS08",
   "file": "bellerophon_functions.cpp"
 }
 ]

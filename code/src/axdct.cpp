@@ -139,7 +139,7 @@ void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, double 
     delete alg;
 
     if(save){
-        imwrite( "/home/andrea/approximate_image.bmp", itransfImg );
+        imwrite( "/home/seclab/approximate_image.bmp", itransfImg );
     }
     // Show the approximate image 
     std::string winName("Approximate Image (" + algorithm );
