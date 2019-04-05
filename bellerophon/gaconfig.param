@@ -9,7 +9,7 @@
 
 ######    Stopping criterion      ######
 --maxGen=3                                 #-G : Maximum number of generations
---maxTime=5000000
+--maxTime=9000000
 
 ######    Variation Operators     ######
 --crossRate=1                              # Relative rate for the only crossover
