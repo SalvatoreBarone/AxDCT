@@ -80,7 +80,7 @@ sed -i -e 's@--pMut=0.1@'"--pMut=$PMUT"'@' ./gaconfig.param
 SECONDS=0 ;
 if [ "$FILENAME" = "" ]; then
     echo "Launching bellerophon"
-    bellerophon -cd-dir ./ -r ../../chimera/output/mutants/CB11.cpp/2/CB11_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR
+    bellerophon -cd-dir ./ -r ../../chimera/output/mutants/PEA14.cpp/2/PEA14_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR
     echo Elapsed time: $SECONDS seconds
 else
     touch $FILENAME
@@ -88,7 +88,7 @@ else
     echo "##################################" >> $FILENAME
     echo "Launching bellerophon" >> $FILENAME
 
-    bellerophon -cd-dir ./ -r ../../chimera/output/mutants/CB11.cpp/2/CB11_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR >> $FILENAME
+    bellerophon -cd-dir ./ -r ../../chimera/output/mutants/PEA14.cpp/2/PEA14_report.csv -t AxDCTAprx -P ./gaconfig.param $ERROR >> $FILENAME
     echo "##################################" >> $FILENAME
     echo Elapsed time: $SECONDS seconds  >> $FILENAME
 fi
