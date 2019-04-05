@@ -285,10 +285,10 @@ int main(int argc, char** argv){
 
             } else if( algorithm == "BAS11" || algorithm == "bas11"){
                 vals.push_back(BAS11_compute_metric(bgrImg, a_param) );
-                std::string str = std::to_string(a_param);
-                str.erase (str.find_last_not_of('0') + 1, std::string::npos);
-                if(a_param != 0.5) str.append("0");
-                algorithm.append(" - a=" + str);
+                // std::string str = std::to_string(a_param);
+                // str.erase (str.find_last_not_of('0') + 1, std::string::npos);
+                // if(a_param != 0.5) str.append("0");
+                // algorithm.append(" - a=" + str);
 
             } else if( algorithm == "PEA12" || algorithm == "pea12"){
                 vals.push_back(PEA12_compute_metric(bgrImg) );
