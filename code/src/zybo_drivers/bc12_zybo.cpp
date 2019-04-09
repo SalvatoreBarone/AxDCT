@@ -27,6 +27,8 @@
 
 #include "bc12_zybo.h"
 
+#define __DEBUG__
+
 static void setComponent(unsigned* bc12_phy_addr, int i, int j, int16_t val);
 static int16_t getComponent(unsigned* bc12_phy_addr, int i, int j);
 
@@ -52,9 +54,14 @@ void BC12_zybo::dct(const cv::Mat& input, cv::Mat& output){
 	page_offset = bc12_base_addr - page_addr;
 	ptr = mmap(NULL, page_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, page_addr);
 
+#ifdef __DEBUG__
 	std::cout << "\npage addr: " <<(void*)page_addr;
 	std::cout << "\npage offset: " <<(void*)page_offset;
 	std::cout << "\nptr: " <<(void*)ptr;
+	std::cout << "\nslv_reg63 addr: " << (void*)(ptr+page_offset + 4*(8*(input.rows-1)+(input.cols-1)));
+	std::cout << "\nslv_reg127 addr: " << (void*)(ptr+page_offset + 64*4 + 4*(8*(input.rows-1)+(input.cols-1)));
+#endif
+
 	if (ptr == MAP_FAILED) {
 		printf("Mapping indirizzo fisico - indirizzo virtuale FALLITO!\n");
 		return;
@@ -70,7 +77,7 @@ void BC12_zybo::dct(const cv::Mat& input, cv::Mat& output){
         }
     }
 
-	std::cout<<(void*)(ptr+page_offset + 4*(8*(input.rows-1)+(input.cols-1)));
+	
 
 	// TODO: ci vuole un'attesa?
 
