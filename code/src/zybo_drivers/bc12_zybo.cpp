@@ -35,7 +35,7 @@ void BC12_zybo::dct(const cv::Mat& input, cv::Mat& output){
     std::cout<<"\nCalling BC12 Zybo Linux driver...";
 
 	int fd;
-	unsigned bc12_base_addr = 0x40200000;
+	unsigned bc12_base_addr = 0x43C00000;
 	unsigned page_addr, page_offset;
 	void *ptr;
 	unsigned page_size=sysconf(_SC_PAGESIZE);
