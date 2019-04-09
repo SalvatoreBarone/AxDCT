@@ -51,6 +51,14 @@ void BC12_zybo::dct(const cv::Mat& input, cv::Mat& output){
 	page_addr = (bc12_base_addr & (~(page_size-1)));
 	page_offset = bc12_base_addr - page_addr;
 	ptr = mmap(NULL, page_size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, page_addr);
+
+	std::cout << "\npage addr: " <<(void*)page_addr;
+	std::cout << "\npage offset: " <<(void*)page_offset;
+	std::cout << "\nptr: " <<(void*)ptr;
+	if (ptr == MAP_FAILED) {
+		printf("Mapping indirizzo fisico - indirizzo virtuale FALLITO!\n");
+		return;
+	}
 	
 	/* Write values to the device registers */
     for(int i=0; i<input.rows; i++){
@@ -61,6 +69,8 @@ void BC12_zybo::dct(const cv::Mat& input, cv::Mat& output){
 	        // printf("Going to write onto %08x the value %08x\n", bc12_base_addr, value);
         }
     }
+
+	std::cout<<(void*)(ptr+page_offset + 4*(8*(input.rows-1)+(input.cols-1))));
 
 	// TODO: ci vuole un'attesa?
 
@@ -77,7 +87,7 @@ void BC12_zybo::dct(const cv::Mat& input, cv::Mat& output){
 
 void setComponent(unsigned* bc12_phy_addr, int i, int j, int16_t val){
 	// BC12_AXI_mWriteReg(bc12_phy_addr, 4*(8*i+j), val);
-	*((unsigned*)(bc12_phy_addr + 4*(8*i+j))) = val;
+	*((unsigned*)(bc12_phy_addr + 4*(8*i+j))) = (unsigned)val;
 
 }
 
