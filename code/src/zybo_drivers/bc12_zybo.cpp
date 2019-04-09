@@ -57,6 +57,7 @@ void BC12_zybo::dct(const cv::Mat& input, cv::Mat& output){
 #ifdef __DEBUG__
 	std::cout << "\npage addr: " <<(void*)page_addr;
 	std::cout << "\npage offset: " <<(void*)page_offset;
+	std::cout << "\npage size: " <<(void*)page_size;
 	std::cout << "\nptr: " <<(void*)ptr;
 	std::cout << "\nslv_reg63 addr: " << (void*)(ptr+page_offset + 4*(8*(input.rows-1)+(input.cols-1)));
 	std::cout << "\nslv_reg127 addr: " << (void*)(ptr+page_offset + 64*4 + 4*(8*(input.rows-1)+(input.cols-1)));
