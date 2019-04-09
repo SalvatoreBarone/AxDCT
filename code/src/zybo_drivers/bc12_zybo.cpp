@@ -83,6 +83,7 @@ void BC12_zybo::dct(const cv::Mat& input, cv::Mat& output){
     }
 
 	munmap(ptr, page_size);
+	close(fd);
 }
 
 void setComponent(unsigned* bc12_phy_addr, int i, int j, int16_t val){
