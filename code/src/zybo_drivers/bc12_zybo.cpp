@@ -35,7 +35,7 @@ void BC12_zybo::dct(const cv::Mat& input, cv::Mat& output){
 #endif
 
 	int fd;
-	unsigned bc12_base_addr = 0x43C00000;
+	unsigned bc12_base_addr = 0x43C00000; //BE SURE THAT THIS IS THE BASE ADDRESS OF THE AXI PERIPHERAL IN THE HW DESIGN
 	unsigned page_addr, page_offset;
 	void *ptr;
 	unsigned page_size=sysconf(_SC_PAGESIZE);
