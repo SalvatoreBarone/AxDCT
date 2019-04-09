@@ -70,7 +70,7 @@ void BC12_zybo::dct(const cv::Mat& input, cv::Mat& output){
         }
     }
 
-	std::cout<<(void*)(ptr+page_offset + 4*(8*(input.rows-1)+(input.cols-1))));
+	std::cout<<(void*)(ptr+page_offset + 4*(8*(input.rows-1)+(input.cols-1)));
 
 	// TODO: ci vuole un'attesa?
 
