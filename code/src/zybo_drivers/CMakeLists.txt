@@ -47,3 +47,12 @@ target_link_libraries( hw_eval
     zyboDrivers
 )
 
+add_executable( hw_show hw_show.cpp )
+
+target_include_directories(hw_show PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(hw_show PUBLIC ${CMAKE_SOURCE_DIR}/include/core)
+target_include_directories(hw_show PUBLIC ${CMAKE_SOURCE_DIR}/include/algorithms)
+target_include_directories(hw_show PUBLIC ${CMAKE_SOURCE_DIR}/include/utils)
+target_include_directories(hw_show PUBLIC ${CMAKE_SOURCE_DIR}/include/zybo_drivers)
+
+target_link_libraries( hw_show utils ${OpenCV_LIBS} axdctCore axdctAlgorithms zyboDrivers)
