@@ -36,6 +36,12 @@
 #include "generic_utils.h"
 #include "algorithms_list.h"
 #include "bc12_zybo.h"
+#include "cb11_zybo.h"
+#include "pea12_zybo.h"
+#include "pea14_zybo.h"
+#include "bas08_zybo.h"
+#include "bas09_zybo.h"
+#include "bas11_zybo.h"
 #include <getopt.h>
 
 void usage();
@@ -129,53 +135,53 @@ int main(int argc, char** argv){
     }
 
     if(( metric == "psnr")||(metric == "PSNR")){
-        // PEA14_compute_metric = &(metrics::PEA14_zybo_PSNR);
-        // PEA12_compute_metric = &(metrics::PEA12_zybo_PSNR);
-        // CB11_compute_metric = &(metrics::CB11_zybo_PSNR);
+        PEA14_compute_metric = &(metrics::PEA14_zybo_PSNR);
+        PEA12_compute_metric = &(metrics::PEA12_zybo_PSNR);
+        CB11_compute_metric = &(metrics::CB11_zybo_PSNR);
         BC12_compute_metric = &(metrics::BC12_zybo_PSNR);
-        // BAS08_compute_metric = &(metrics::BAS08_zybo_PSNR);
-        // BAS09_compute_metric = &(metrics::BAS09_zybo_PSNR);
-        // BAS11_compute_metric = &(metrics::BAS11_zybo_PSNR);
+        BAS08_compute_metric = &(metrics::BAS08_zybo_PSNR);
+        BAS09_compute_metric = &(metrics::BAS09_zybo_PSNR);
+        BAS11_compute_metric = &(metrics::BAS11_zybo_PSNR);
     } else if (( metric == "mse")||(metric == "MSE")){
-        // PEA14_compute_metric = &(metrics::PEA14_zybo_MSE);
-        // PEA12_compute_metric = &(metrics::PEA12_zybo_MSE);
-        // CB11_compute_metric = &(metrics::CB11_zybo_MSE);
+        PEA14_compute_metric = &(metrics::PEA14_zybo_MSE);
+        PEA12_compute_metric = &(metrics::PEA12_zybo_MSE);
+        CB11_compute_metric = &(metrics::CB11_zybo_MSE);
         BC12_compute_metric = &(metrics::BC12_zybo_MSE);
-        // BAS08_compute_metric = &(metrics::BAS08_zybo_MSE);
-        // BAS09_compute_metric = &(metrics::BAS09_zybo_MSE);
-        // BAS11_compute_metric = &(metrics::BAS11_zybo_MSE);
+        BAS08_compute_metric = &(metrics::BAS08_zybo_MSE);
+        BAS09_compute_metric = &(metrics::BAS09_zybo_MSE);
+        BAS11_compute_metric = &(metrics::BAS11_zybo_MSE);
     } else if (( metric == "ad")||(metric == "AD")){
-        // PEA14_compute_metric = &(metrics::PEA14_zybo_AD);
-        // PEA12_compute_metric = &(metrics::PEA12_zybo_AD);
-        // CB11_compute_metric = &(metrics::CB11_zybo_AD);
+        PEA14_compute_metric = &(metrics::PEA14_zybo_AD);
+        PEA12_compute_metric = &(metrics::PEA12_zybo_AD);
+        CB11_compute_metric = &(metrics::CB11_zybo_AD);
         BC12_compute_metric = &(metrics::BC12_zybo_AD);
-        // BAS08_compute_metric = &(metrics::BAS08_zybo_AD);
-        // BAS09_compute_metric = &(metrics::BAS09_zybo_AD);
-        // BAS11_compute_metric = &(metrics::BAS11_zybo_AD);
+        BAS08_compute_metric = &(metrics::BAS08_zybo_AD);
+        BAS09_compute_metric = &(metrics::BAS09_zybo_AD);
+        BAS11_compute_metric = &(metrics::BAS11_zybo_AD);
     } else if (( metric == "md")||(metric == "MD")){
-        // PEA14_compute_metric = &(metrics::PEA14_zybo_MD);
-        // PEA12_compute_metric = &(metrics::PEA12_zybo_MD);
-        // CB11_compute_metric = &(metrics::CB11_zybo_MD);
+        PEA14_compute_metric = &(metrics::PEA14_zybo_MD);
+        PEA12_compute_metric = &(metrics::PEA12_zybo_MD);
+        CB11_compute_metric = &(metrics::CB11_zybo_MD);
         BC12_compute_metric = &(metrics::BC12_zybo_MD);
-        // BAS08_compute_metric = &(metrics::BAS08_zybo_MD);
-        // BAS09_compute_metric = &(metrics::BAS09_zybo_MD);
-        // BAS11_compute_metric = &(metrics::BAS11_zybo_MD);
+        BAS08_compute_metric = &(metrics::BAS08_zybo_MD);
+        BAS09_compute_metric = &(metrics::BAS09_zybo_MD);
+        BAS11_compute_metric = &(metrics::BAS11_zybo_MD);
     } else if (( metric == "mssim")||(metric == "MSSIM")){
-        // PEA14_compute_metric = &(metrics::PEA14_zybo_MSSIM);
-        // PEA12_compute_metric = &(metrics::PEA12_zybo_MSSIM);
-        // CB11_compute_metric = &(metrics::CB11_zybo_MSSIM);
+        PEA14_compute_metric = &(metrics::PEA14_zybo_MSSIM);
+        PEA12_compute_metric = &(metrics::PEA12_zybo_MSSIM);
+        CB11_compute_metric = &(metrics::CB11_zybo_MSSIM);
         BC12_compute_metric = &(metrics::BC12_zybo_MSSIM);
-        // BAS08_compute_metric = &(metrics::BAS08_zybo_MSSIM);
-        // BAS09_compute_metric = &(metrics::BAS09_zybo_MSSIM);
-        // BAS11_compute_metric = &(metrics::BAS11_zybo_MSSIM);
+        BAS08_compute_metric = &(metrics::BAS08_zybo_MSSIM);
+        BAS09_compute_metric = &(metrics::BAS09_zybo_MSSIM);
+        BAS11_compute_metric = &(metrics::BAS11_zybo_MSSIM);
     } else if (( metric == "dssim")||(metric == "DSSIM")){
-        // PEA14_compute_metric = &(metrics::PEA14_zybo_DSSIM);
-        // PEA12_compute_metric = &(metrics::PEA12_zybo_DSSIM);
-        // CB11_compute_metric = &(metrics::CB11_zybo_DSSIM);
+        PEA14_compute_metric = &(metrics::PEA14_zybo_DSSIM);
+        PEA12_compute_metric = &(metrics::PEA12_zybo_DSSIM);
+        CB11_compute_metric = &(metrics::CB11_zybo_DSSIM);
         BC12_compute_metric = &(metrics::BC12_zybo_DSSIM);
-        // BAS08_compute_metric = &(metrics::BAS08_zybo_DSSIM);
-        // BAS09_compute_metric = &(metrics::BAS09_zybo_DSSIM);
-        // BAS11_compute_metric = &(metrics::BAS11_zybo_DSSIM);
+        BAS08_compute_metric = &(metrics::BAS08_zybo_DSSIM);
+        BAS09_compute_metric = &(metrics::BAS09_zybo_DSSIM);
+        BAS11_compute_metric = &(metrics::BAS11_zybo_DSSIM);
     } else {
         std::cout << "\nA valid metric is mandatory.";
         usage();

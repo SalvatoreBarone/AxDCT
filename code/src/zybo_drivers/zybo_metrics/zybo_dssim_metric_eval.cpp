@@ -41,86 +41,86 @@ double metrics::BC12_zybo_DSSIM(const cv::Mat& orig){
     return compute_dssim(orig, BC12_itransf_img);
 }
 
-// double metrics::CB11_zybo_DSSIM(const cv::Mat& orig){
+double metrics::CB11_zybo_DSSIM(const cv::Mat& orig){
 
-//     // Declare an empty image for transformation
-//     cv::Mat CB11_transf_img = orig;
-//     cv::Mat CB11_itransf_img = orig;
+    // Declare an empty image for transformation
+    cv::Mat CB11_transf_img = orig;
+    cv::Mat CB11_itransf_img = orig;
 
-//     // Direct and inverse transform
-//     transformImage(orig,CB11_transf_img, new CB11_zybo);
-//     inverseTransformImage(CB11_transf_img, CB11_itransf_img, new CB11_zybo);
+    // Direct and inverse transform
+    transformImage(orig,CB11_transf_img, new CB11_zybo);
+    inverseTransformImage(CB11_transf_img, CB11_itransf_img, new CB11_zybo);
 
-//     // Compute PSNR and return it
-//     return compute_dssim(orig, CB11_itransf_img);
-// }
+    // Compute PSNR and return it
+    return compute_dssim(orig, CB11_itransf_img);
+}
 
-// double metrics::BAS08_zybo_DSSIM(const cv::Mat& orig){
+double metrics::BAS08_zybo_DSSIM(const cv::Mat& orig){
 
-//     // Declare an empty image for transformation
-//     cv::Mat BAS08_transf_img = orig;
-//     cv::Mat BAS08_itransf_img = orig;
+    // Declare an empty image for transformation
+    cv::Mat BAS08_transf_img = orig;
+    cv::Mat BAS08_itransf_img = orig;
 
-//     // Direct and inverse transform
-//     transformImage(orig,BAS08_transf_img, new BAS08_zybo);
-//     inverseTransformImage(BAS08_transf_img, BAS08_itransf_img, new BAS08_zybo);
+    // Direct and inverse transform
+    transformImage(orig,BAS08_transf_img, new BAS08_zybo);
+    inverseTransformImage(BAS08_transf_img, BAS08_itransf_img, new BAS08_zybo);
 
-//     // Compute PSNR and return it
-//     return compute_dssim(orig, BAS08_itransf_img);
-// }
+    // Compute PSNR and return it
+    return compute_dssim(orig, BAS08_itransf_img);
+}
 
-// double metrics::BAS09_zybo_DSSIM(const cv::Mat& orig){
+double metrics::BAS09_zybo_DSSIM(const cv::Mat& orig){
 
-//     // Declare an empty image for transformation
-//     cv::Mat BAS09_transf_img = orig;
-//     cv::Mat BAS09_itransf_img = orig;
+    // Declare an empty image for transformation
+    cv::Mat BAS09_transf_img = orig;
+    cv::Mat BAS09_itransf_img = orig;
 
-//     // Direct and inverse transform
-//     transformImage(orig,BAS09_transf_img, new BAS09_zybo);
-//     inverseTransformImage(BAS09_transf_img, BAS09_itransf_img, new BAS09_zybo);
+    // Direct and inverse transform
+    transformImage(orig,BAS09_transf_img, new BAS09_zybo);
+    inverseTransformImage(BAS09_transf_img, BAS09_itransf_img, new BAS09_zybo);
 
-//     // Compute PSNR and return it
-//     return compute_dssim(orig, BAS09_itransf_img);
-// }
+    // Compute PSNR and return it
+    return compute_dssim(orig, BAS09_itransf_img);
+}
 
-// double metrics::BAS11_zybo_DSSIM(const cv::Mat& orig, double a_param){
+double metrics::BAS11_zybo_DSSIM(const cv::Mat& orig, double a_param){
 
-//     // Declare an empty image for transformation
-//     cv::Mat BAS11_transf_img = orig;
-//     cv::Mat BAS11_itransf_img = orig;
+    // Declare an empty image for transformation
+    cv::Mat BAS11_transf_img = orig;
+    cv::Mat BAS11_itransf_img = orig;
 
-//     // Direct and inverse transform
-//     transformImage(orig,BAS11_transf_img, new BAS11_zybo(a_param));
-//     inverseTransformImage(BAS11_transf_img, BAS11_itransf_img, new BAS11_zybo(a_param));
+    // Direct and inverse transform
+    transformImage(orig,BAS11_transf_img, new BAS11_zybo(a_param));
+    inverseTransformImage(BAS11_transf_img, BAS11_itransf_img, new BAS11_zybo(a_param));
 
-//     // Compute PSNR and return it
-//     return compute_dssim(orig, BAS11_itransf_img);
-// }
+    // Compute PSNR and return it
+    return compute_dssim(orig, BAS11_itransf_img);
+}
  
-// double metrics::PEA12_zybo_DSSIM(const cv::Mat& orig){
+double metrics::PEA12_zybo_DSSIM(const cv::Mat& orig){
 
-//     // Declare an empty image for transformation
-//     cv::Mat PEA12_transf_img = orig;
-//     cv::Mat PEA12_itransf_img = orig;
+    // Declare an empty image for transformation
+    cv::Mat PEA12_transf_img = orig;
+    cv::Mat PEA12_itransf_img = orig;
 
-//     // Direct and inverse transform
-//     transformImage(orig,PEA12_transf_img, new PEA12_zybo);
-//     inverseTransformImage(PEA12_transf_img, PEA12_itransf_img, new PEA12_zybo);
+    // Direct and inverse transform
+    transformImage(orig,PEA12_transf_img, new PEA12_zybo);
+    inverseTransformImage(PEA12_transf_img, PEA12_itransf_img, new PEA12_zybo);
 
-//     // Compute PSNR and return it
-//     return compute_dssim(orig, PEA12_itransf_img);
-// }
+    // Compute PSNR and return it
+    return compute_dssim(orig, PEA12_itransf_img);
+}
 
-// double metrics::PEA14_zybo_DSSIM(const cv::Mat& orig){
+double metrics::PEA14_zybo_DSSIM(const cv::Mat& orig){
 
-//     // Declare an empty image for transformation
-//     cv::Mat PEA14_transf_img = orig;
-//     cv::Mat PEA14_itransf_img = orig;
+    // Declare an empty image for transformation
+    cv::Mat PEA14_transf_img = orig;
+    cv::Mat PEA14_itransf_img = orig;
 
-//     // Direct and inverse transform
-//     transformImage(orig,PEA14_transf_img, new PEA14_zybo);
-//     inverseTransformImage(PEA14_transf_img, PEA14_itransf_img, new PEA14_zybo);
+    // Direct and inverse transform
+    transformImage(orig,PEA14_transf_img, new PEA14_zybo);
+    inverseTransformImage(PEA14_transf_img, PEA14_itransf_img, new PEA14_zybo);
 
-//     // Compute PSNR and return it
-//     return compute_dssim(orig, PEA14_itransf_img);
-// }
+    // Compute PSNR and return it
+    return compute_dssim(orig, PEA14_itransf_img);
+}

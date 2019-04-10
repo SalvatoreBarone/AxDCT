@@ -6,8 +6,20 @@ add_subdirectory(zybo_metrics)
 
 add_library(zyboDrivers STATIC 
     bc12_zybo.cpp
+    pea12_zybo.cpp
+    pea14_zybo.cpp
+    cb11_zybo.cpp
+    bas08_zybo.cpp
+    bas09_zybo.cpp
+    bas11_zybo.cpp
 
     ${CMAKE_SOURCE_DIR}/include/zybo_drivers/bc12_zybo.h
+    ${CMAKE_SOURCE_DIR}/include/zybo_drivers/pea12_zybo.h
+    ${CMAKE_SOURCE_DIR}/include/zybo_drivers/pea14_zybo.h
+    ${CMAKE_SOURCE_DIR}/include/zybo_drivers/cb11_zybo.h
+    ${CMAKE_SOURCE_DIR}/include/zybo_drivers/bas08_zybo.h
+    ${CMAKE_SOURCE_DIR}/include/zybo_drivers/bas09_zybo.h
+    ${CMAKE_SOURCE_DIR}/include/zybo_drivers/bas11_zybo.h
     
 )
 

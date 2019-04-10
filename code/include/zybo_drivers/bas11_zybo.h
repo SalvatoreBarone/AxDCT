@@ -19,34 +19,32 @@
 //
 
 /******************************************************************************
- * @file   ad_metric_eval.h
+ * @file   bas11_zybo.h
  * @author Andrea Aletto
- * @date   12 mar 2019
- * @brief  Declaration of ad calc function
+ * @date   10 apr 2019
+ * @brief  Declaration of bas11_zybo class
  ******************************************************************************/
 
-#ifndef _AD_ZYBO_METRIC_EVAL_H
-#define _AD_ZYBO_METRIC_EVAL_H
+#ifndef _BAS11_ZYBO_DRIVER_H
+#define _BAS11_ZYBO_DRIVER_H
 
-#include "../core/dct.h"
-#include "../algorithms_list.h"
-#include "metrics.h"
-#include "bc12_zybo.h"
-#include "cb11_zybo.h"
-#include "pea12_zybo.h"
-#include "pea14_zybo.h"
-#include "bas08_zybo.h"
-#include "bas09_zybo.h"
-#include "bas11_zybo.h"
+#include <opencv2/opencv.hpp>
+#include "AxDCT_algorithm.h"
+#include "BAS11.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <fcntl.h>
 
-namespace metrics {
-    double BC12_zybo_AD(const cv::Mat& orig);
-    double CB11_zybo_AD(const cv::Mat& orig);
-    double BAS08_zybo_AD(const cv::Mat& orig);
-    double BAS09_zybo_AD(const cv::Mat& orig);
-    double BAS11_zybo_AD(const cv::Mat& orig, double a_param);
-    double PEA12_zybo_AD(const cv::Mat& orig);
-    double PEA14_zybo_AD(const cv::Mat& orig);
-}
+class BAS11_zybo : public BAS11
+{
 
-#endif /* _AD_ZYBO_METRIC_EVAL_H */
+    private:
+        void dct(const cv::Mat& input, cv::Mat& output);
+
+    public:
+        BAS11_zybo(double a_param) : BAS11(a_param) {};
+};
+
+#endif /* _BAS11_ZYBO_DRIVER_H */

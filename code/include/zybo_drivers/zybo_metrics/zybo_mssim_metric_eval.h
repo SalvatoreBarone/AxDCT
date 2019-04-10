@@ -32,16 +32,21 @@
 #include "../algorithms_list.h"
 #include "metrics.h"
 #include "bc12_zybo.h"
-
+#include "cb11_zybo.h"
+#include "pea12_zybo.h"
+#include "pea14_zybo.h"
+#include "bas08_zybo.h"
+#include "bas11_zybo.h"
+#include "bas09_zybo.h"
 
 namespace metrics {
     double BC12_zybo_MSSIM(const cv::Mat& orig);
-    // double CB11_zybo_MSSIM(const cv::Mat& orig);
-    // double BAS08_zybo_MSSIM(const cv::Mat& orig);
-    // double BAS09_zybo_MSSIM(const cv::Mat& orig);
-    // double BAS11_zybo_MSSIM(const cv::Mat& orig, double a_param);
-    // double PEA12_zybo_MSSIM(const cv::Mat& orig);
-    // double PEA14_zybo_MSSIM(const cv::Mat& orig);
+    double CB11_zybo_MSSIM(const cv::Mat& orig);
+    double BAS08_zybo_MSSIM(const cv::Mat& orig);
+    double BAS09_zybo_MSSIM(const cv::Mat& orig);
+    double BAS11_zybo_MSSIM(const cv::Mat& orig, double a_param);
+    double PEA12_zybo_MSSIM(const cv::Mat& orig);
+    double PEA14_zybo_MSSIM(const cv::Mat& orig);
 }
 
 #endif /* _ZYBO_MSSIM_METRIC_EVAL_H */
