@@ -46,9 +46,17 @@
 #define ASSIGNVAL(var, nabstr, val) \
     if(nabstr == #var) { var = val; return; }
 
+typedef struct {
+    std::vector<std::string> varName;
+    std::vector<int> varValue;
+} ConfigVector;
 static void usage();
 static void assignGlobalValue(std::string globalvararg);
 static void mapGlobalValue(const std::string&, const int);
+static void setConfiguration();
+static void resetConfiguration();
+
+static ConfigVector conf;
 
 int main(int argc, char** argv){
     if( argc < 2){
@@ -74,7 +82,7 @@ int main(int argc, char** argv){
     double (*BAS09_compute_metric)(const cv::Mat& orig);
     double (*BAS11_compute_metric)(const cv::Mat& orig, const double a_param);
 
-	while ((c = getopt(argc, argv, ":p:x:i:hlasn:f:m:r:")) != -1)
+	while ((c = getopt(argc, argv, ":p:x:i:hlsn:f:m:r:")) != -1)
 	{
 		switch (c)
 		{
@@ -82,9 +90,6 @@ int main(int argc, char** argv){
 			utils::printSupportedAlgsAndMetrics();
 			return EXIT_SUCCESS;
 
-		case 'a':
-			algorithm = "__all";
-			break;
         case 's':
             isOutputSilent = true;
             break;
@@ -206,38 +211,47 @@ int main(int argc, char** argv){
         cv::Mat bgrImg = imread( img_path.c_str(), cv::IMREAD_COLOR );
         assert( bgrImg.data && "No image data");
 
-        if( algorithm == "__all") {
-            vals.push_back(BC12_compute_metric(bgrImg) );
-            vals.push_back(CB11_compute_metric(bgrImg) );
-            vals.push_back(BAS08_compute_metric(bgrImg) );
-            vals.push_back(BAS09_compute_metric(bgrImg) );
-            vals.push_back(BAS11_compute_metric(bgrImg, 0.0) );
-            vals.push_back(BAS11_compute_metric(bgrImg, 0.5) );
-            vals.push_back(BAS11_compute_metric(bgrImg, 1.0) );
-            vals.push_back(BAS11_compute_metric(bgrImg, 2.0) );
-            vals.push_back(PEA12_compute_metric(bgrImg) );
-            vals.push_back(PEA14_compute_metric(bgrImg) );
-
-            utils::print_results(metric, vals, isOutputSilent);
-
-        } else if( algorithm == "BC12" || algorithm == "bc12"){
-            vals.push_back(BC12_compute_metric(bgrImg) );
+        cv::Mat aprxTransfImg = bgrImg;
+        cv::Mat aprxItransfImg = bgrImg;
+        
+        if( algorithm == "BC12" || algorithm == "bc12"){
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new BC12 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new BC12);
+            setConfiguration();
+            vals.push_back(BC12_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "CB11" || algorithm == "cb11"){
-            vals.push_back(CB11_compute_metric(bgrImg) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new CB11 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new CB11);
+            setConfiguration();
+            vals.push_back(CB11_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS08" || algorithm == "bas08"){
-            vals.push_back(BAS08_compute_metric(bgrImg) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new BAS08 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS08);
+            setConfiguration();
+            vals.push_back(BAS08_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS09" || algorithm == "bas09"){
-            vals.push_back(BAS09_compute_metric(bgrImg) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new BAS09 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS09);
+            setConfiguration();
+            vals.push_back(BAS09_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS11" || algorithm == "bas11"){
-            vals.push_back(BAS11_compute_metric(bgrImg, a_param) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new BAS11(a_param) );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS11(a_param));
+            setConfiguration();
+            vals.push_back(BAS11_compute_metric(aprxItransfImg, a_param) );
             std::string str = std::to_string(a_param);
             str.erase (str.find_last_not_of('0') + 1, std::string::npos);
             if(a_param != 0.5) str.append("0");
@@ -245,11 +259,19 @@ int main(int argc, char** argv){
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "PEA12" || algorithm == "pea12"){
-            vals.push_back(PEA12_compute_metric(bgrImg) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new PEA12 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new PEA12);
+            setConfiguration();
+            vals.push_back(PEA12_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "PEA14" || algorithm == "pea14"){
-            vals.push_back(PEA14_compute_metric(bgrImg) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new PEA14 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new PEA14);
+            setConfiguration();
+            vals.push_back(PEA14_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else {
@@ -267,34 +289,66 @@ int main(int argc, char** argv){
             if( (anImg.find(".tiff") == std::string::npos) && (anImg.find(".bmp") == std::string::npos) && (anImg.find(".png") == std::string::npos) && (anImg.find(".jpg") == std::string::npos) ) continue;
             // Load img
             cv::Mat bgrImg = imread( anImg.c_str(), cv::IMREAD_COLOR );
+
+            cv::Mat aprxTransfImg = bgrImg;
+            cv::Mat aprxItransfImg = bgrImg;
+
             if( bgrImg.data == nullptr){ 
                 continue;
             }
 
             if( algorithm == "BC12" || algorithm == "bc12"){
-                vals.push_back(BC12_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new BC12 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new BC12);
+                setConfiguration();
+                vals.push_back(BC12_compute_metric(aprxItransfImg) );
 
             } else if( algorithm == "CB11" || algorithm == "cb11"){
-                vals.push_back(CB11_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new CB11 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new CB11);
+                setConfiguration();
+                vals.push_back(CB11_compute_metric(aprxItransfImg) );
 
             } else if( algorithm == "BAS08" || algorithm == "bas08"){
-                vals.push_back(BAS08_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new BAS08 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS08);
+                setConfiguration();
+                vals.push_back(BAS08_compute_metric(aprxItransfImg) );
 
             } else if( algorithm == "BAS09" || algorithm == "bas09"){
-                vals.push_back(BAS09_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new BAS09 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS09);
+                setConfiguration();
+                vals.push_back(BAS09_compute_metric(aprxItransfImg) );
 
             } else if( algorithm == "BAS11" || algorithm == "bas11"){
-                vals.push_back(BAS11_compute_metric(bgrImg, a_param) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new BAS11(a_param) );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS11(a_param));
+                setConfiguration();
+                vals.push_back(BAS11_compute_metric(aprxItransfImg, a_param) );
                 // std::string str = std::to_string(a_param);
                 // str.erase (str.find_last_not_of('0') + 1, std::string::npos);
                 // if(a_param != 0.5) str.append("0");
                 // algorithm.append(" - a=" + str);
 
             } else if( algorithm == "PEA12" || algorithm == "pea12"){
-                vals.push_back(PEA12_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new PEA12 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new PEA12);
+                setConfiguration();
+                vals.push_back(PEA12_compute_metric(aprxItransfImg) );
 
             } else if( algorithm == "PEA14" || algorithm == "pea14"){
-                vals.push_back(PEA14_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new PEA14 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new PEA14);
+                setConfiguration();
+                vals.push_back(PEA14_compute_metric(aprxItransfImg) );
 
             } else {
                 std::cout << "\nChosen algorithm (" + algorithm + ") is not supported yet.\n";
@@ -326,7 +380,6 @@ void usage(){
 	std::cout << " -f	<VALUE>		    Folder path (to run among several images)       \n";
     std::cout << " -r	<VALUE>		    Maximum number of images to evaluate within the folder       \n";
     std::cout << " -x	<VALUE>		    Chosen AxDCT algorithm                          \n";
-	std::cout << " -a	    		    Compute PSNR for every algorithm                \n";
     std::cout << " -p   <VALUE>         Addition parameter for BAS11 algorithm          \n";
     std::cout << " -n   <ID>    <VALUE>	Assign a VALUE to the global variable ID        \n";
 	std::cout << " -m	<VALUE>		    Metric to evaluate                              \n";
@@ -351,7 +404,9 @@ void assignGlobalValue(std::string globalvararg){
     }
     globalIdVal[1] = globalvararg;
     int val = std::stoi(globalIdVal[1]);
-    mapGlobalValue(globalIdVal[0], val);
+    conf.varName.push_back(globalIdVal[0]);
+    conf.varValue.push_back(val);
+    // mapGlobalValue(globalIdVal[0], val);
 }
 
 void mapGlobalValue(const std::string& id, const int val ){
@@ -644,3 +699,16 @@ void mapGlobalValue(const std::string& id, const int val ){
     
 }
 
+void setConfiguration(){
+    for(int i=0;i<conf.varName.size(); i++){
+        mapGlobalValue(conf.varName.at(i), conf.varValue.at(i));
+    }
+}
+
+void resetConfiguration(){
+    for(int i=0;i<conf.varName.size(); i++){
+        mapGlobalValue(conf.varName.at(i), 0);
+    }
+    mapGlobalValue("base_0", 8);
+
+}

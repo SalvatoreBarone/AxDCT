@@ -39,10 +39,19 @@
 
 void usage();
 AxDCT_algorithm *stringToAlgorithm(std::string, double a_param = -1);
-void showAxDCTImage(const cv::Mat&, const std::string&, double = -1);
+void showAxDCTImage(const cv::Mat&, const std::string&, const std::string& = "", double = -1);
 
+typedef struct {
+    std::vector<std::string> varName;
+    std::vector<int> varValue;
+} ConfigVector;
 static void assignGlobalValue(std::string globalvararg);
 static void mapGlobalValue(const std::string&, const int);
+static void setConfiguration();
+static void resetConfiguration();
+
+static ConfigVector conf;
+
 
 int main(int argc, char** argv )
 {
@@ -117,14 +126,22 @@ int main(int argc, char** argv )
         showAxDCTImage(bgrImg,"CB11");
         showAxDCTImage(bgrImg,"BAS08");
         showAxDCTImage(bgrImg,"BAS09");
-        showAxDCTImage(bgrImg,"BAS11", 0);
-        showAxDCTImage(bgrImg,"BAS11", 0.5);
-        showAxDCTImage(bgrImg,"BAS11", 1.0);
-        showAxDCTImage(bgrImg,"BAS11", 2.0);
+        showAxDCTImage(bgrImg,"BAS11", "", 0);
+        showAxDCTImage(bgrImg,"BAS11", "", 0.5);
+        showAxDCTImage(bgrImg,"BAS11", "", 1.0);
+        showAxDCTImage(bgrImg,"BAS11", "", 2.0);
         showAxDCTImage(bgrImg,"PEA12");
         showAxDCTImage(bgrImg,"PEA14");
     } else {
-        showAxDCTImage(bgrImg,algorithm,a_param);
+        showAxDCTImage(bgrImg,"","original image",a_param);
+
+        resetConfiguration();
+        showAxDCTImage(bgrImg,algorithm,algorithm,a_param);
+
+        setConfiguration();
+        std::string winName("mutated ");
+        // winName.append(algorithm);
+        showAxDCTImage(bgrImg,algorithm,winName,a_param);
     }
     
     
@@ -132,7 +149,7 @@ int main(int argc, char** argv )
     return 0;
 }
 
-void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, double a_param){
+void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, const std::string& windowName, double a_param){
     
     // Declare an empty image for transformation
     cv::Mat transfImg = bgrImg;
@@ -140,14 +157,16 @@ void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, double 
 
     // Direct and inverse transform
     AxDCT_algorithm *alg = stringToAlgorithm(algorithm,a_param);
+    if(alg != nullptr) {
+        transformImage(bgrImg,transfImg, alg );
+        inverseTransformImage(transfImg, itransfImg, alg);
 
-    transformImage(bgrImg,transfImg, alg );
-    inverseTransformImage(transfImg, itransfImg, alg);
+        delete alg;
 
-    delete alg;
+    }
 
     // Show the approximate image 
-    std::string winName("Approximate Image (" + algorithm );
+    std::string winName("Approximate Image (" + winName );
     if(algorithm == "BAS11") {
         std::string str = std::to_string(a_param);
         str.erase (str.find_last_not_of('0') + 1, std::string::npos);
@@ -156,8 +175,8 @@ void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, double 
     }
     winName.append(")");
 
-    cv::namedWindow(winName.c_str(), cv::WINDOW_AUTOSIZE );
-    imshow(winName.c_str(), itransfImg);
+    cv::namedWindow(windowName.c_str(), cv::WINDOW_AUTOSIZE );
+    imshow(windowName.c_str(), itransfImg);
 }
 
 void usage(){
@@ -210,7 +229,9 @@ void assignGlobalValue(std::string globalvararg){
     }
     globalIdVal[1] = globalvararg;
     int val = std::stoi(globalIdVal[1]);
-    mapGlobalValue(globalIdVal[0], val);
+    conf.varName.push_back(globalIdVal[0]);
+    conf.varValue.push_back(val);
+    // mapGlobalValue(globalIdVal[0], val);
 }
 
 void mapGlobalValue(const std::string& id, const int val ){
@@ -503,4 +524,16 @@ void mapGlobalValue(const std::string& id, const int val ){
     
 }
 
+void setConfiguration(){
+    for(int i=0;i<conf.varName.size(); i++){
+        mapGlobalValue(conf.varName.at(i), conf.varValue.at(i));
+    }
+}
 
+void resetConfiguration(){
+    for(int i=0;i<conf.varName.size(); i++){
+        mapGlobalValue(conf.varName.at(i), 0);
+    }
+    mapGlobalValue("base_0", 8);
+
+}
