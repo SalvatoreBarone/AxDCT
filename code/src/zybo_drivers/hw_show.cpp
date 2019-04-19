@@ -41,8 +41,8 @@
 #define PRINT_MAT(mat, msg) std::cout<< std::endl <<msg <<":" <<std::endl <<mat <<std::endl;
 
 void usage();
-AxDCT_algorithm *stringToAlgorithm(std::string, double a_param = -1);
-void showAxDCTImage(const cv::Mat&, const std::string&, double = -1, bool save = true);
+AxDCT_algorithm *stringToAlgorithm(std::string, bool, double a_param = -1);
+void showAxDCTImage(const cv::Mat&, const std::string&, bool, double = -1, bool save = true);
 
 int main(int argc, char** argv )
 {
@@ -108,7 +108,8 @@ int main(int argc, char** argv )
     assert( bgrImg.data && "No image data");
 
 
-    showAxDCTImage(bgrImg,algorithm,a_param, save);
+    showAxDCTImage(bgrImg,algorithm, false, a_param, save);
+    showAxDCTImage(bgrImg,algorithm, true, a_param, save);
     
     
     
@@ -116,14 +117,14 @@ int main(int argc, char** argv )
     return 0;
 }
 
-void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, double a_param, bool save){
+void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, bool useCustomHw, double a_param, bool save){
     
     // Declare an empty image for transformation
     cv::Mat transfImg = bgrImg;
     cv::Mat itransfImg = bgrImg;
 
     // Direct and inverse transform
-    AxDCT_algorithm *alg = stringToAlgorithm(algorithm,a_param);
+    AxDCT_algorithm *alg = stringToAlgorithm(algorithm, useCustomHw, a_param);
 
     transformImage(bgrImg,transfImg, alg );
     inverseTransformImage(transfImg, itransfImg, alg);
@@ -141,6 +142,8 @@ void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, double 
         if(a_param != 0.5) str.append("0");
         winName.append(" - a=" + str);
     }
+    std::string arch = 
+    winName.append(" - " + ( useCustomHw ? (std::string("software")) : (std::string("hardware")) ) );
     winName.append(")");
 
     cv::namedWindow(winName.c_str(), cv::WINDOW_AUTOSIZE );
@@ -158,29 +161,55 @@ void usage(){
 
 }
 
-AxDCT_algorithm *stringToAlgorithm(std::string algorithm, double a_param){
-    if( algorithm == "BC12" || algorithm == "bc12"){
-        return new BC12_zybo;
+AxDCT_algorithm *stringToAlgorithm(std::string algorithm, bool useCustomHw, double a_param){
+    if(useCustomHw) {
+        if( algorithm == "BC12" || algorithm == "bc12"){
+            return new BC12_zybo;
 
-    } else if( algorithm == "CB11" || algorithm == "cb11"){
-        return new CB11_zybo;
+        } else if( algorithm == "CB11" || algorithm == "cb11"){
+            return new CB11_zybo;
 
-    } else if( algorithm == "BAS08" || algorithm == "bas08"){
-        return new BAS08_zybo;
+        } else if( algorithm == "BAS08" || algorithm == "bas08"){
+            return new BAS08_zybo;
 
-    } else if( algorithm == "BAS09" || algorithm == "bas09"){
-        return new BAS09_zybo;
+        } else if( algorithm == "BAS09" || algorithm == "bas09"){
+            return new BAS09_zybo;
 
-    } else if( algorithm == "BAS11" || algorithm == "bas11"){
-        return new BAS11_zybo(a_param);
+        } else if( algorithm == "BAS11" || algorithm == "bas11"){
+            return new BAS11_zybo(a_param);
 
-    } else if( algorithm == "PEA12" || algorithm == "pea12"){
-        return new PEA12_zybo;
+        } else if( algorithm == "PEA12" || algorithm == "pea12"){
+            return new PEA12_zybo;
 
-    } else if( algorithm == "PEA14" || algorithm == "pea14"){
-        return new PEA14_zybo;
+        } else if( algorithm == "PEA14" || algorithm == "pea14"){
+            return new PEA14_zybo;
 
-    } else return nullptr;
+        } else return nullptr;
+    } else {
+        if( algorithm == "BC12" || algorithm == "bc12"){
+            return new BC12;
+
+        } else if( algorithm == "CB11" || algorithm == "cb11"){
+            return new CB11;
+
+        } else if( algorithm == "BAS08" || algorithm == "bas08"){
+            return new BAS08;
+
+        } else if( algorithm == "BAS09" || algorithm == "bas09"){
+            return new BAS09;
+
+        } else if( algorithm == "BAS11" || algorithm == "bas11"){
+            return new BAS11(a_param);
+
+        } else if( algorithm == "PEA12" || algorithm == "pea12"){
+            return new PEA12;
+
+        } else if( algorithm == "PEA14" || algorithm == "pea14"){
+            return new PEA14;
+
+        } else return nullptr;
+    }
+    
 }
 
 
