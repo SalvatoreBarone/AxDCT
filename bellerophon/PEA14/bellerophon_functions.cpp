@@ -46,7 +46,7 @@ static std::string exec(const char* cmd);
 
 extern "C" double BELLERO_getError()
 {
-    std::string cmd = "~/AxDCT/code/build/bin/mutant_eval -s -f ~/image_dataset -x BC12 -m dssim";
+    std::string cmd = "~/AxDCT/code/build/bin/mutant_eval -s -f ~/image_dataset -x PEA14 -m dssim";
     
     cmd.append(" -n \"nab_124 " + std::to_string(nab_124) + "\"" );
     cmd.append(" -n \"nab_125 " + std::to_string(nab_125) + "\"" );
@@ -65,24 +65,21 @@ extern "C" double BELLERO_getError()
     cmd.append(" -n \"nab_138 " + std::to_string(nab_138) + "\"" );
 
 
-    cmd.append(" -n \"cellType_59 " + std::to_string(cellType_59) + "\"" );
-    cmd.append(" -n \"cellType_60 " + std::to_string(cellType_60) + "\"" );
-    cmd.append(" -n \"cellType_61 " + std::to_string(cellType_61) + "\"" );
-    cmd.append(" -n \"cellType_62 " + std::to_string(cellType_62) + "\"" );
-    cmd.append(" -n \"cellType_63 " + std::to_string(cellType_63) + "\"" );
-    cmd.append(" -n \"cellType_64 " + std::to_string(cellType_64) + "\"" );
-    cmd.append(" -n \"cellType_65 " + std::to_string(cellType_65) + "\"" );
-    cmd.append(" -n \"cellType_66 " + std::to_string(cellType_66) + "\"" );
-    cmd.append(" -n \"cellType_67 " + std::to_string(cellType_67) + "\"" );
-    cmd.append(" -n \"cellType_68 " + std::to_string(cellType_68) + "\"" );
-    cmd.append(" -n \"cellType_69 " + std::to_string(cellType_69) + "\"" );
-    cmd.append(" -n \"cellType_70 " + std::to_string(cellType_70) + "\"" );
-    cmd.append(" -n \"cellType_71 " + std::to_string(cellType_71) + "\"" );
-    cmd.append(" -n \"cellType_72 " + std::to_string(cellType_72) + "\"" );
-    cmd.append(" -n \"cellType_73 " + std::to_string(cellType_73) + "\"" );
-    cmd.append(" -n \"cellType_74 " + std::to_string(cellType_74) + "\"" );
-    cmd.append(" -n \"cellType_75 " + std::to_string(cellType_75) + "\"" );
-    cmd.append(" -n \"cellType_76 " + std::to_string(cellType_76) + "\"" );
+    cmd.append(" -n \"cellType_138 " + std::to_string(cellType_138) + "\"" );
+    cmd.append(" -n \"cellType_137 " + std::to_string(cellType_137) + "\"" );
+    cmd.append(" -n \"cellType_136 " + std::to_string(cellType_136) + "\"" );
+    cmd.append(" -n \"cellType_135 " + std::to_string(cellType_135) + "\"" );
+    cmd.append(" -n \"cellType_134 " + std::to_string(cellType_134) + "\"" );
+    cmd.append(" -n \"cellType_133 " + std::to_string(cellType_133) + "\"" );
+    cmd.append(" -n \"cellType_132 " + std::to_string(cellType_132) + "\"" );
+    cmd.append(" -n \"cellType_131 " + std::to_string(cellType_131) + "\"" );
+    cmd.append(" -n \"cellType_130 " + std::to_string(cellType_130) + "\"" );
+    cmd.append(" -n \"cellType_129 " + std::to_string(cellType_129) + "\"" );
+    cmd.append(" -n \"cellType_128 " + std::to_string(cellType_128) + "\"" );
+    cmd.append(" -n \"cellType_127 " + std::to_string(cellType_127) + "\"" );
+    cmd.append(" -n \"cellType_126 " + std::to_string(cellType_126) + "\"" );
+    cmd.append(" -n \"cellType_125 " + std::to_string(cellType_125) + "\"" );
+    cmd.append(" -n \"cellType_124 " + std::to_string(cellType_124) + "\"" );
 
     cmd.append(" -n \"base_0 " + std::to_string(base_0) + "\"" );
 
