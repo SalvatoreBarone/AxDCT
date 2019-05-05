@@ -298,23 +298,23 @@ void BC12::dct1d(const cv::Mat& input, cv::Mat& output){
     int16_t x1b = x1a + x6a;
     int16_t x2b = x2a + x5a;
     int16_t x3b = x3a + x4a;
-    int16_t x4b = x3a + (-x4a);
-    int16_t x5b = x2a + (-x5a);
-    int16_t x6b = x1a + (-x6a);
-    int16_t x7b = x0a + (-x7a);
+    int16_t x4b = x3a - x4a;
+    int16_t x5b = x2a - x5a;
+    int16_t x6b = x1a - x6a;
+    int16_t x7b = x0a - x7a;
 
     int16_t x0c = x0b + x3b;
     int16_t x1c = x1b + x2b;
-    int16_t x2c = x1b + (-x2b);
-    int16_t x3c = x0b + (-x3b);
-    int16_t x4c = -x4b;
-    int16_t x5c = -x5b;
-    int16_t x6c = -x6b;
+    int16_t x2c = x1b - x2b;
+    int16_t x3c = x0b - x3b;
+    int16_t x4c = 0 - x4b;
+    int16_t x5c = 0 - x5b;
+    int16_t x6c = 0 - x6b;
     int16_t x7c = x7b;
 
     int16_t x0d = x0c + x1c;
-    int16_t x1d = x0c + (-x1c);
-    int16_t x2d = -x2c;
+    int16_t x1d = x0c - x1c;
+    int16_t x2d = 0 - x2c;
     int16_t x3d = x3c;
     int16_t x4d = x4c;
     int16_t x5d = x5c;

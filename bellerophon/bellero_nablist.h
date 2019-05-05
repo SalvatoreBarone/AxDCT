@@ -25,9 +25,14 @@
  * @brief  Declaration of nab and base external variables for bellerophon optimization
  ******************************************************************************/
 
-//AxDCT_Algorithm
+#ifndef _BELLERO_NABLIST_H
+#define _BELLERO_NABLIST_H
+
+//AxDCT_algorithm
 int base_0 = 0;
 //BAS08
+int nab_19 = 0;
+int nab_18 = 0;
 int nab_17 = 0;
 int nab_16 = 0;
 int nab_15 = 0;
@@ -47,6 +52,10 @@ int nab_2 = 0;
 int nab_1 = 0;
 int nab_0 = 0;
 //BAS09
+int nab_39 = 0;
+int nab_38 = 0;
+int nab_37 = 0;
+int nab_36 = 0;
 int nab_35 = 0;
 int nab_34 = 0;
 int nab_33 = 0;
@@ -63,9 +72,11 @@ int nab_23 = 0;
 int nab_22 = 0;
 int nab_21 = 0;
 int nab_20 = 0;
-int nab_19 = 0;
-int nab_18 = 0;
 //BAS11
+int nab_58 = 0;
+int nab_57 = 0;
+int nab_56 = 0;
+int nab_55 = 0;
 int nab_54 = 0;
 int nab_53 = 0;
 int nab_52 = 0;
@@ -81,11 +92,15 @@ int nab_43 = 0;
 int nab_42 = 0;
 int nab_41 = 0;
 int nab_40 = 0;
-int nab_39 = 0;
-int nab_38 = 0;
-int nab_37 = 0;
-int nab_36 = 0;
 //BC12
+int nab_76 = 0;
+int nab_75 = 0;
+int nab_74 = 0;
+int nab_73 = 0;
+int nab_72 = 0;
+int nab_71 = 0;
+int nab_70 = 0;
+int nab_69 = 0;
 int nab_68 = 0;
 int nab_67 = 0;
 int nab_66 = 0;
@@ -96,11 +111,16 @@ int nab_62 = 0;
 int nab_61 = 0;
 int nab_60 = 0;
 int nab_59 = 0;
-int nab_58 = 0;
-int nab_57 = 0;
-int nab_56 = 0;
-int nab_55 = 0;
 //CB11
+int nab_99 = 0;
+int nab_98 = 0;
+int nab_97 = 0;
+int nab_96 = 0;
+int nab_95 = 0;
+int nab_94 = 0;
+int nab_93 = 0;
+int nab_92 = 0;
+int nab_91 = 0;
 int nab_90 = 0;
 int nab_89 = 0;
 int nab_88 = 0;
@@ -115,15 +135,16 @@ int nab_80 = 0;
 int nab_79 = 0;
 int nab_78 = 0;
 int nab_77 = 0;
-int nab_76 = 0;
-int nab_75 = 0;
-int nab_74 = 0;
-int nab_73 = 0;
-int nab_72 = 0;
-int nab_71 = 0;
-int nab_70 = 0;
-int nab_69 = 0;
 //PEA12
+int nab_123 = 0;
+int nab_122 = 0;
+int nab_121 = 0;
+int nab_120 = 0;
+int nab_119 = 0;
+int nab_118 = 0;
+int nab_117 = 0;
+int nab_116 = 0;
+int nab_115 = 0;
 int nab_114 = 0;
 int nab_113 = 0;
 int nab_112 = 0;
@@ -139,27 +160,21 @@ int nab_103 = 0;
 int nab_102 = 0;
 int nab_101 = 0;
 int nab_100 = 0;
-int nab_99 = 0;
-int nab_98 = 0;
-int nab_97 = 0;
-int nab_96 = 0;
-int nab_95 = 0;
-int nab_94 = 0;
-int nab_93 = 0;
-int nab_92 = 0;
-int nab_91 = 0;
 //PEA14
+int nab_138 = 0;
+int nab_137 = 0;
+int nab_136 = 0;
+int nab_135 = 0;
+int nab_134 = 0;
+int nab_133 = 0;
+int nab_132 = 0;
+int nab_131 = 0;
+int nab_130 = 0;
+int nab_129 = 0;
 int nab_128 = 0;
 int nab_127 = 0;
 int nab_126 = 0;
 int nab_125 = 0;
 int nab_124 = 0;
-int nab_123 = 0;
-int nab_122 = 0;
-int nab_121 = 0;
-int nab_120 = 0;
-int nab_119 = 0;
-int nab_118 = 0;
-int nab_117 = 0;
-int nab_116 = 0;
-int nab_115 = 0;
+
+#endif /* _BELLERO_NABLIST_H */

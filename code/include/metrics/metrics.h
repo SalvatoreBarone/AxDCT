@@ -48,5 +48,7 @@ double compute_md(const cv::Mat& orig, const cv::Mat& target);
 
 double compute_psnr(const cv::Mat& orig, const cv::Mat& target);
 double compute_mssim(const cv::Mat& orig, const cv::Mat& target);
+double compute_dssim(const cv::Mat& orig, const cv::Mat& target);
+
 
 #endif

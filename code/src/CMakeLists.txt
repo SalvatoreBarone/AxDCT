@@ -14,6 +14,10 @@ if (AXDCT_BUILD_MUTANTS)
     add_subdirectory(mutants_eval)
 endif()
 
+if (AXDCT_BUILD_ZYBO)
+    add_subdirectory(zybo_drivers)
+endif()
+
 
 add_executable( axdct axdct.cpp )
 

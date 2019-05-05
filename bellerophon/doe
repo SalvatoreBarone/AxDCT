@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -x
+FOLDER_NAME=$1
+
+POPSIZE=2000
+ERROR=0.2
+PMUT=0.7
+PCROSS=0.9
+SHIFTMUTRATE=0.8
+MAXGEN=6
+
+if [[ -z $FOLDER_NAME ]]; then
+    echo "Pass an experiment name as an argument"
+    exit 1
+fi
+
+mkdir -p $HOME/DOE/$FOLDER_NAME
+
+cd BC12 && ./launch_bellerophon --popSize=$POPSIZE --error=$ERROR --pmut=$PMUT --pCross=$PCROSS --shiftMutRate=$SHIFTMUTRATE --maxGen=$MAXGEN --output=$HOME/DOE/$FOLDER_NAME/BC12.txt 
+cd ../CB11 && ./launch_bellerophon --popSize=$POPSIZE --error=$ERROR --pmut=$PMUT --pCross=$PCROSS --shiftMutRate=$SHIFTMUTRATE --maxGen=$MAXGEN --output=$HOME/DOE/$FOLDER_NAME/CB11.txt 
+cd ../PEA12 && ./launch_bellerophon --popSize=$POPSIZE --error=$ERROR --pmut=$PMUT --pCross=$PCROSS --shiftMutRate=$SHIFTMUTRATE --maxGen=$MAXGEN --output=$HOME/DOE/$FOLDER_NAME/PEA12.txt 
+cd ../PEA14 && ./launch_bellerophon --popSize=$POPSIZE --error=$ERROR --pmut=$PMUT --pCross=$PCROSS --shiftMutRate=$SHIFTMUTRATE --maxGen=$MAXGEN --output=$HOME/DOE/$FOLDER_NAME/PEA14.txt 
+cd ../BAS08 && ./launch_bellerophon --popSize=$POPSIZE --error=$ERROR --pmut=$PMUT --pCross=$PCROSS --shiftMutRate=$SHIFTMUTRATE --maxGen=$MAXGEN --output=$HOME/DOE/$FOLDER_NAME/BAS08.txt 
+cd ../BAS09 && ./launch_bellerophon --popSize=$POPSIZE --error=$ERROR --pmut=$PMUT --pCross=$PCROSS --shiftMutRate=$SHIFTMUTRATE --maxGen=$MAXGEN --output=$HOME/DOE/$FOLDER_NAME/BAS09.txt 
+cd ../BAS11_0 && ./launch_bellerophon --popSize=$POPSIZE --error=$ERROR --pmut=$PMUT --pCross=$PCROSS --shiftMutRate=$SHIFTMUTRATE --maxGen=$MAXGEN --output=$HOME/DOE/$FOLDER_NAME/BAS11_0.txt 
+cd ../BAS11_05 && ./launch_bellerophon --popSize=$POPSIZE --error=$ERROR --pmut=$PMUT --pCross=$PCROSS --shiftMutRate=$SHIFTMUTRATE --maxGen=$MAXGEN --output=$HOME/DOE/$FOLDER_NAME/BAS11_05.txt 
+cd ../BAS11_1 && ./launch_bellerophon --popSize=$POPSIZE --error=$ERROR --pmut=$PMUT --pCross=$PCROSS --shiftMutRate=$SHIFTMUTRATE --maxGen=$MAXGEN --output=$HOME/DOE/$FOLDER_NAME/BAS11_1.txt 
+cd ../BAS11_2 && ./launch_bellerophon --popSize=$POPSIZE --error=$ERROR --pmut=$PMUT --pCross=$PCROSS --shiftMutRate=$SHIFTMUTRATE --maxGen=$MAXGEN --output=$HOME/DOE/$FOLDER_NAME/BAS11_2.txt 
+
+cd $HOME/DOE
+tar -zcvf bellero_$FOLDER_NAME.tar.gz $FOLDER_NAME
+echo "Lo script di Bellerofonte è terminato." | mail -s "Bellerofonte" "andrea.aletto8@gmail.com" -A bellero_$FOLDER_NAME.tar.gz

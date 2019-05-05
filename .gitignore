@@ -33,6 +33,7 @@
 
 # VC code
 .vscode/*
+code/.vscode/*
 
 # CMake
 build

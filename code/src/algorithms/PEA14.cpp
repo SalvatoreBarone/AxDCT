@@ -256,7 +256,7 @@ void PEA14::dct1d(const cv::Mat& input, cv::Mat& output){
 
     int16_t x0d = x0c + x1c;
     int16_t x1d = x0c - x1c;
-    int16_t x2d = -x2c;
+    int16_t x2d = 0 -x2c;
     int16_t x3d = x3c;
     int16_t x4d = x4c;
     int16_t x5d = x5c;

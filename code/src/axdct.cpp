@@ -35,7 +35,7 @@
 
 void usage();
 AxDCT_algorithm *stringToAlgorithm(std::string, double a_param = -1);
-void showAxDCTImage(const cv::Mat&, const std::string&, double = -1);
+void showAxDCTImage(const cv::Mat&, const std::string&, double = -1, bool save = true);
 
 int main(int argc, char** argv )
 {
@@ -48,8 +48,9 @@ int main(int argc, char** argv )
     std::string algorithm = "";
     double a_param = -1;
     std::string img_path = "";
+    bool save = false;
 
-	while ((c = getopt(argc, argv, ":p:x:i:hla")) != -1){
+	while ((c = getopt(argc, argv, ":p:x:i:hlas")) != -1){
 		switch (c)
 		{
         case 'x':
@@ -66,6 +67,10 @@ int main(int argc, char** argv )
 
         case 'i':
 			img_path = optarg;
+			break;
+
+        case 's':
+			save = true;
 			break;
 
 		case 'h':
@@ -100,18 +105,18 @@ int main(int argc, char** argv )
     assert( bgrImg.data && "No image data");
 
     if( algorithm == "__all") {
-        showAxDCTImage(bgrImg,"BC12");
-        showAxDCTImage(bgrImg,"CB11");
-        showAxDCTImage(bgrImg,"BAS08");
-        showAxDCTImage(bgrImg,"BAS09");
-        showAxDCTImage(bgrImg,"BAS11", 0);
-        showAxDCTImage(bgrImg,"BAS11", 0.5);
-        showAxDCTImage(bgrImg,"BAS11", 1.0);
-        showAxDCTImage(bgrImg,"BAS11", 2.0);
-        showAxDCTImage(bgrImg,"PEA12");
-        showAxDCTImage(bgrImg,"PEA14");
+        showAxDCTImage(bgrImg,"BC12", save);
+        showAxDCTImage(bgrImg,"CB11", save);
+        showAxDCTImage(bgrImg,"BAS08", save);
+        showAxDCTImage(bgrImg,"BAS09", save);
+        showAxDCTImage(bgrImg,"BAS11", 0, save);
+        showAxDCTImage(bgrImg,"BAS11", 0.5, save);
+        showAxDCTImage(bgrImg,"BAS11", 1.0, save);
+        showAxDCTImage(bgrImg,"BAS11", 2.0, save);
+        showAxDCTImage(bgrImg,"PEA12", save);
+        showAxDCTImage(bgrImg,"PEA14", save);
     } else {
-        showAxDCTImage(bgrImg,algorithm,a_param);
+        showAxDCTImage(bgrImg,algorithm,a_param, save);
     }
     
     
@@ -119,7 +124,7 @@ int main(int argc, char** argv )
     return 0;
 }
 
-void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, double a_param){
+void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, double a_param, bool save){
     
     // Declare an empty image for transformation
     cv::Mat transfImg = bgrImg;
@@ -133,6 +138,9 @@ void showAxDCTImage(const cv::Mat& bgrImg, const std::string& algorithm, double 
 
     delete alg;
 
+    if(save){
+        imwrite( "/home/seclab/approximate_image.bmp", itransfImg );
+    }
     // Show the approximate image 
     std::string winName("Approximate Image (" + algorithm );
     if(algorithm == "BAS11") {

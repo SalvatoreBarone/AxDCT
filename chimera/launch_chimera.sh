@@ -27,3 +27,11 @@ clang-chimera                                               \
         -I../code/include/core                              \
         -I/usr/local/include/opencv4                        \
         -lopencv_core   
+
+cat ./output/mutants/AxDCT_algorithm.cpp/2/axdct_report.csv ./output/mutants/BC12.cpp/2/axdct_report.csv > ./output/mutants/BC12.cpp/2/BC12_report.csv
+cat ./output/mutants/AxDCT_algorithm.cpp/2/axdct_report.csv ./output/mutants/CB11.cpp/2/axdct_report.csv > ./output/mutants/CB11.cpp/2/CB11_report.csv
+cat ./output/mutants/AxDCT_algorithm.cpp/2/axdct_report.csv ./output/mutants/BAS08.cpp/2/axdct_report.csv > ./output/mutants/BAS08.cpp/2/BAS08_report.csv
+cat ./output/mutants/AxDCT_algorithm.cpp/2/axdct_report.csv ./output/mutants/BAS09.cpp/2/axdct_report.csv > ./output/mutants/BAS09.cpp/2/BAS09_report.csv
+cat ./output/mutants/AxDCT_algorithm.cpp/2/axdct_report.csv ./output/mutants/BAS11.cpp/2/axdct_report.csv > ./output/mutants/BAS11.cpp/2/BAS11_report.csv
+cat ./output/mutants/AxDCT_algorithm.cpp/2/axdct_report.csv ./output/mutants/PEA12.cpp/2/axdct_report.csv > ./output/mutants/PEA12.cpp/2/PEA12_report.csv
+cat ./output/mutants/AxDCT_algorithm.cpp/2/axdct_report.csv ./output/mutants/PEA14.cpp/2/axdct_report.csv > ./output/mutants/PEA14.cpp/2/PEA14_report.csv

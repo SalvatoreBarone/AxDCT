@@ -8,6 +8,7 @@ add_library(metrics STATIC
     ad_metric_eval.cpp
     md_metric_eval.cpp
     mssim_metric_eval.cpp
+    dssim_metric_eval.cpp
     ${CMAKE_SOURCE_DIR}/include/utils/mat_operations.h
     ${CMAKE_SOURCE_DIR}/include/core/dct.h
     ${CMAKE_SOURCE_DIR}/include/metrics/metrics.h

@@ -30,6 +30,7 @@
 #include "metrics/metrics.h"
 #include "metrics/psnr_metric_eval.h"
 #include "metrics/mssim_metric_eval.h"
+#include "metrics/dssim_metric_eval.h"
 #include "metrics/mse_metric_eval.h"
 #include "metrics/ad_metric_eval.h"
 #include "metrics/md_metric_eval.h"
@@ -45,9 +46,17 @@
 #define ASSIGNVAL(var, nabstr, val) \
     if(nabstr == #var) { var = val; return; }
 
+typedef struct {
+    std::vector<std::string> varName;
+    std::vector<int> varValue;
+} ConfigVector;
 static void usage();
 static void assignGlobalValue(std::string globalvararg);
 static void mapGlobalValue(const std::string&, const int);
+static void setConfiguration();
+static void resetConfiguration();
+
+static ConfigVector conf;
 
 int main(int argc, char** argv){
     if( argc < 2){
@@ -63,6 +72,7 @@ int main(int argc, char** argv){
     bool isOutputSilent = false;
     std::string globalvararg = "";
     std::string metric = "";
+    int count = -1;
 
     double (*PEA14_compute_metric)(const cv::Mat& orig);
     double (*PEA12_compute_metric)(const cv::Mat& orig);
@@ -72,7 +82,7 @@ int main(int argc, char** argv){
     double (*BAS09_compute_metric)(const cv::Mat& orig);
     double (*BAS11_compute_metric)(const cv::Mat& orig, const double a_param);
 
-	while ((c = getopt(argc, argv, ":p:x:i:hlasn:f:m:")) != -1)
+	while ((c = getopt(argc, argv, ":p:x:i:hlsn:f:m:r:")) != -1)
 	{
 		switch (c)
 		{
@@ -80,9 +90,6 @@ int main(int argc, char** argv){
 			utils::printSupportedAlgsAndMetrics();
 			return EXIT_SUCCESS;
 
-		case 'a':
-			algorithm = "__all";
-			break;
         case 's':
             isOutputSilent = true;
             break;
@@ -111,6 +118,11 @@ int main(int argc, char** argv){
         case 'f':
             folder_path = optarg;
             break;
+
+        case 'r':
+            count = atoi(optarg);
+            break;
+
         
         case 'm':
             metric = optarg;
@@ -176,6 +188,14 @@ int main(int argc, char** argv){
         BAS08_compute_metric = &(metrics::BAS08_MSSIM);
         BAS09_compute_metric = &(metrics::BAS09_MSSIM);
         BAS11_compute_metric = &(metrics::BAS11_MSSIM);
+    } else if (( metric == "dssim")||(metric == "DSSIM")){
+        PEA14_compute_metric = &(metrics::PEA14_DSSIM);
+        PEA12_compute_metric = &(metrics::PEA12_DSSIM);
+        CB11_compute_metric = &(metrics::CB11_DSSIM);
+        BC12_compute_metric = &(metrics::BC12_DSSIM);
+        BAS08_compute_metric = &(metrics::BAS08_DSSIM);
+        BAS09_compute_metric = &(metrics::BAS09_DSSIM);
+        BAS11_compute_metric = &(metrics::BAS11_DSSIM);
     } else {
         std::cout << "\nA valid metric is mandatory.";
         usage();
@@ -191,38 +211,47 @@ int main(int argc, char** argv){
         cv::Mat bgrImg = imread( img_path.c_str(), cv::IMREAD_COLOR );
         assert( bgrImg.data && "No image data");
 
-        if( algorithm == "__all") {
-            vals.push_back(BC12_compute_metric(bgrImg) );
-            vals.push_back(CB11_compute_metric(bgrImg) );
-            vals.push_back(BAS08_compute_metric(bgrImg) );
-            vals.push_back(BAS09_compute_metric(bgrImg) );
-            vals.push_back(BAS11_compute_metric(bgrImg, 0.0) );
-            vals.push_back(BAS11_compute_metric(bgrImg, 0.5) );
-            vals.push_back(BAS11_compute_metric(bgrImg, 1.0) );
-            vals.push_back(BAS11_compute_metric(bgrImg, 2.0) );
-            vals.push_back(PEA12_compute_metric(bgrImg) );
-            vals.push_back(PEA14_compute_metric(bgrImg) );
-
-            utils::print_results(metric, vals, isOutputSilent);
-
-        } else if( algorithm == "BC12" || algorithm == "bc12"){
-            vals.push_back(BC12_compute_metric(bgrImg) );
+        cv::Mat aprxTransfImg = bgrImg;
+        cv::Mat aprxItransfImg = bgrImg;
+        
+        if( algorithm == "BC12" || algorithm == "bc12"){
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new BC12 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new BC12);
+            setConfiguration();
+            vals.push_back(BC12_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "CB11" || algorithm == "cb11"){
-            vals.push_back(CB11_compute_metric(bgrImg) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new CB11 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new CB11);
+            setConfiguration();
+            vals.push_back(CB11_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS08" || algorithm == "bas08"){
-            vals.push_back(BAS08_compute_metric(bgrImg) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new BAS08 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS08);
+            setConfiguration();
+            vals.push_back(BAS08_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS09" || algorithm == "bas09"){
-            vals.push_back(BAS09_compute_metric(bgrImg) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new BAS09 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS09);
+            setConfiguration();
+            vals.push_back(BAS09_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "BAS11" || algorithm == "bas11"){
-            vals.push_back(BAS11_compute_metric(bgrImg, a_param) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new BAS11(a_param) );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS11(a_param));
+            setConfiguration();
+            vals.push_back(BAS11_compute_metric(aprxItransfImg, a_param) );
             std::string str = std::to_string(a_param);
             str.erase (str.find_last_not_of('0') + 1, std::string::npos);
             if(a_param != 0.5) str.append("0");
@@ -230,11 +259,19 @@ int main(int argc, char** argv){
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "PEA12" || algorithm == "pea12"){
-            vals.push_back(PEA12_compute_metric(bgrImg) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new PEA12 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new PEA12);
+            setConfiguration();
+            vals.push_back(PEA12_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else if( algorithm == "PEA14" || algorithm == "pea14"){
-            vals.push_back(PEA14_compute_metric(bgrImg) );
+            resetConfiguration();
+            transformImage(bgrImg,aprxTransfImg, new PEA14 );
+            inverseTransformImage(aprxTransfImg, aprxItransfImg, new PEA14);
+            setConfiguration();
+            vals.push_back(PEA14_compute_metric(aprxItransfImg) );
             utils::print_single_result(metric, vals, algorithm, isOutputSilent);
 
         } else {
@@ -249,43 +286,77 @@ int main(int argc, char** argv){
             std::string anImg = folder_path;
             anImg.append("/");
             anImg.append(entry);
-            if(anImg.find(".bmp") == std::string::npos) continue;
+            if( (anImg.find(".tiff") == std::string::npos) && (anImg.find(".bmp") == std::string::npos) && (anImg.find(".png") == std::string::npos) && (anImg.find(".jpg") == std::string::npos) ) continue;
             // Load img
             cv::Mat bgrImg = imread( anImg.c_str(), cv::IMREAD_COLOR );
+
+            cv::Mat aprxTransfImg = bgrImg;
+            cv::Mat aprxItransfImg = bgrImg;
+
             if( bgrImg.data == nullptr){ 
                 continue;
             }
 
             if( algorithm == "BC12" || algorithm == "bc12"){
-                vals.push_back(BC12_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new BC12 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new BC12);
+                setConfiguration();
+                vals.push_back(BC12_compute_metric(aprxItransfImg) );
 
             } else if( algorithm == "CB11" || algorithm == "cb11"){
-                vals.push_back(CB11_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new CB11 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new CB11);
+                setConfiguration();
+                vals.push_back(CB11_compute_metric(aprxItransfImg) );
 
             } else if( algorithm == "BAS08" || algorithm == "bas08"){
-                vals.push_back(BAS08_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new BAS08 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS08);
+                setConfiguration();
+                vals.push_back(BAS08_compute_metric(aprxItransfImg) );
 
             } else if( algorithm == "BAS09" || algorithm == "bas09"){
-                vals.push_back(BAS09_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new BAS09 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS09);
+                setConfiguration();
+                vals.push_back(BAS09_compute_metric(aprxItransfImg) );
 
             } else if( algorithm == "BAS11" || algorithm == "bas11"){
-                vals.push_back(BAS11_compute_metric(bgrImg, a_param) );
-                std::string str = std::to_string(a_param);
-                str.erase (str.find_last_not_of('0') + 1, std::string::npos);
-                if(a_param != 0.5) str.append("0");
-                algorithm.append(" - a=" + str);
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new BAS11(a_param) );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new BAS11(a_param));
+                setConfiguration();
+                vals.push_back(BAS11_compute_metric(aprxItransfImg, a_param) );
+                // std::string str = std::to_string(a_param);
+                // str.erase (str.find_last_not_of('0') + 1, std::string::npos);
+                // if(a_param != 0.5) str.append("0");
+                // algorithm.append(" - a=" + str);
 
             } else if( algorithm == "PEA12" || algorithm == "pea12"){
-                vals.push_back(PEA12_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new PEA12 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new PEA12);
+                setConfiguration();
+                vals.push_back(PEA12_compute_metric(aprxItransfImg) );
 
             } else if( algorithm == "PEA14" || algorithm == "pea14"){
-                vals.push_back(PEA14_compute_metric(bgrImg) );
+                resetConfiguration();
+                transformImage(bgrImg,aprxTransfImg, new PEA14 );
+                inverseTransformImage(aprxTransfImg, aprxItransfImg, new PEA14);
+                setConfiguration();
+                vals.push_back(PEA14_compute_metric(aprxItransfImg) );
 
             } else {
                 std::cout << "\nChosen algorithm (" + algorithm + ") is not supported yet.\n";
                 usage();
                 return EXIT_FAILURE;
             }
+            
+            if(count-- == 0) break;
 
         }
 
@@ -307,8 +378,8 @@ void usage(){
 	std::cout << "\n\n psnr             [OPTION] [VALUE]                                \n";
 	std::cout << " -i	<VALUE>		    Source image path                               \n";
 	std::cout << " -f	<VALUE>		    Folder path (to run among several images)       \n";
+    std::cout << " -r	<VALUE>		    Maximum number of images to evaluate within the folder       \n";
     std::cout << " -x	<VALUE>		    Chosen AxDCT algorithm                          \n";
-	std::cout << " -a	    		    Compute PSNR for every algorithm                \n";
     std::cout << " -p   <VALUE>         Addition parameter for BAS11 algorithm          \n";
     std::cout << " -n   <ID>    <VALUE>	Assign a VALUE to the global variable ID        \n";
 	std::cout << " -m	<VALUE>		    Metric to evaluate                              \n";
@@ -333,12 +404,17 @@ void assignGlobalValue(std::string globalvararg){
     }
     globalIdVal[1] = globalvararg;
     int val = std::stoi(globalIdVal[1]);
-    mapGlobalValue(globalIdVal[0], val);
+    conf.varName.push_back(globalIdVal[0]);
+    conf.varValue.push_back(val);
+    // mapGlobalValue(globalIdVal[0], val);
 }
 
 void mapGlobalValue(const std::string& id, const int val ){
     
-    ASSIGNVAL(base_0, id, val)
+    if(id == "base_0") { 
+        (val > 8) ? (base_0 = 8) : (base_0 = val); 
+        return; 
+    }
     ASSIGNVAL(nab_0, id, val)
     ASSIGNVAL(nab_1, id, val)
     ASSIGNVAL(nab_2, id, val)
@@ -468,138 +544,171 @@ void mapGlobalValue(const std::string& id, const int val ){
     ASSIGNVAL(nab_126, id, val)
     ASSIGNVAL(nab_127, id, val)
     ASSIGNVAL(nab_128, id, val)
-    ASSIGNVAL(cellType_0, id, val)
-    ASSIGNVAL(cellType_1, id, val)
-    ASSIGNVAL(cellType_2, id, val)
-    ASSIGNVAL(cellType_3, id, val)
-    ASSIGNVAL(cellType_4, id, val)
-    ASSIGNVAL(cellType_5, id, val)
-    ASSIGNVAL(cellType_6, id, val)
-    ASSIGNVAL(cellType_7, id, val)
-    ASSIGNVAL(cellType_8, id, val)
-    ASSIGNVAL(cellType_9, id, val)
-    ASSIGNVAL(cellType_10, id, val)
-    ASSIGNVAL(cellType_11, id, val)
-    ASSIGNVAL(cellType_12, id, val)
-    ASSIGNVAL(cellType_13, id, val)
-    ASSIGNVAL(cellType_14, id, val)
-    ASSIGNVAL(cellType_15, id, val)
-    ASSIGNVAL(cellType_16, id, val)
-    ASSIGNVAL(cellType_17, id, val)
-    ASSIGNVAL(cellType_18, id, val)
-    ASSIGNVAL(cellType_19, id, val)
-    ASSIGNVAL(cellType_20, id, val)
-    ASSIGNVAL(cellType_21, id, val)
-    ASSIGNVAL(cellType_22, id, val)
-    ASSIGNVAL(cellType_23, id, val)
-    ASSIGNVAL(cellType_24, id, val)
-    ASSIGNVAL(cellType_25, id, val)
-    ASSIGNVAL(cellType_26, id, val)
-    ASSIGNVAL(cellType_27, id, val)
-    ASSIGNVAL(cellType_28, id, val)
-    ASSIGNVAL(cellType_29, id, val)
-    ASSIGNVAL(cellType_30, id, val)
-    ASSIGNVAL(cellType_31, id, val)
-    ASSIGNVAL(cellType_32, id, val)
-    ASSIGNVAL(cellType_33, id, val)
-    ASSIGNVAL(cellType_34, id, val)
-    ASSIGNVAL(cellType_35, id, val)
-    ASSIGNVAL(cellType_36, id, val)
-    ASSIGNVAL(cellType_37, id, val)
-    ASSIGNVAL(cellType_38, id, val)
-    ASSIGNVAL(cellType_39, id, val)
-    ASSIGNVAL(cellType_40, id, val)
-    ASSIGNVAL(cellType_41, id, val)
-    ASSIGNVAL(cellType_42, id, val)
-    ASSIGNVAL(cellType_43, id, val)
-    ASSIGNVAL(cellType_44, id, val)
-    ASSIGNVAL(cellType_45, id, val)
-    ASSIGNVAL(cellType_46, id, val)
-    ASSIGNVAL(cellType_47, id, val)
-    ASSIGNVAL(cellType_48, id, val)
-    ASSIGNVAL(cellType_49, id, val)
-    ASSIGNVAL(cellType_50, id, val)
-    ASSIGNVAL(cellType_51, id, val)
-    ASSIGNVAL(cellType_52, id, val)
-    ASSIGNVAL(cellType_53, id, val)
-    ASSIGNVAL(cellType_54, id, val)
-    ASSIGNVAL(cellType_55, id, val)
-    ASSIGNVAL(cellType_56, id, val)
-    ASSIGNVAL(cellType_57, id, val)
-    ASSIGNVAL(cellType_58, id, val)
-    ASSIGNVAL(cellType_59, id, val)
-    ASSIGNVAL(cellType_60, id, val)
-    ASSIGNVAL(cellType_61, id, val)
-    ASSIGNVAL(cellType_62, id, val)
-    ASSIGNVAL(cellType_63, id, val)
-    ASSIGNVAL(cellType_64, id, val)
-    ASSIGNVAL(cellType_65, id, val)
-    ASSIGNVAL(cellType_66, id, val)
-    ASSIGNVAL(cellType_67, id, val)
-    ASSIGNVAL(cellType_68, id, val)
-    ASSIGNVAL(cellType_69, id, val)
-    ASSIGNVAL(cellType_70, id, val)
-    ASSIGNVAL(cellType_71, id, val)
-    ASSIGNVAL(cellType_72, id, val)
-    ASSIGNVAL(cellType_73, id, val)
-    ASSIGNVAL(cellType_74, id, val)
-    ASSIGNVAL(cellType_75, id, val)
-    ASSIGNVAL(cellType_76, id, val)
-    ASSIGNVAL(cellType_77, id, val)
-    ASSIGNVAL(cellType_78, id, val)
-    ASSIGNVAL(cellType_79, id, val)
-    ASSIGNVAL(cellType_80, id, val)
-    ASSIGNVAL(cellType_81, id, val)
-    ASSIGNVAL(cellType_82, id, val)
-    ASSIGNVAL(cellType_83, id, val)
-    ASSIGNVAL(cellType_84, id, val)
-    ASSIGNVAL(cellType_85, id, val)
-    ASSIGNVAL(cellType_86, id, val)
-    ASSIGNVAL(cellType_87, id, val)
-    ASSIGNVAL(cellType_88, id, val)
-    ASSIGNVAL(cellType_89, id, val)
-    ASSIGNVAL(cellType_90, id, val)
-    ASSIGNVAL(cellType_91, id, val)
-    ASSIGNVAL(cellType_92, id, val)
-    ASSIGNVAL(cellType_93, id, val)
-    ASSIGNVAL(cellType_94, id, val)
-    ASSIGNVAL(cellType_95, id, val)
-    ASSIGNVAL(cellType_96, id, val)
-    ASSIGNVAL(cellType_97, id, val)
-    ASSIGNVAL(cellType_98, id, val)
-    ASSIGNVAL(cellType_99, id, val)
-    ASSIGNVAL(cellType_100, id, val)
-    ASSIGNVAL(cellType_101, id, val)
-    ASSIGNVAL(cellType_102, id, val)
-    ASSIGNVAL(cellType_103, id, val)
-    ASSIGNVAL(cellType_104, id, val)
-    ASSIGNVAL(cellType_105, id, val)
-    ASSIGNVAL(cellType_106, id, val)
-    ASSIGNVAL(cellType_107, id, val)
-    ASSIGNVAL(cellType_108, id, val)
-    ASSIGNVAL(cellType_109, id, val)
-    ASSIGNVAL(cellType_110, id, val)
-    ASSIGNVAL(cellType_111, id, val)
-    ASSIGNVAL(cellType_112, id, val)
-    ASSIGNVAL(cellType_113, id, val)
-    ASSIGNVAL(cellType_114, id, val)
-    ASSIGNVAL(cellType_115, id, val)
-    ASSIGNVAL(cellType_116, id, val)
-    ASSIGNVAL(cellType_117, id, val)
-    ASSIGNVAL(cellType_118, id, val)
-    ASSIGNVAL(cellType_119, id, val)
-    ASSIGNVAL(cellType_120, id, val)
-    ASSIGNVAL(cellType_121, id, val)
-    ASSIGNVAL(cellType_122, id, val)
-    ASSIGNVAL(cellType_123, id, val)
-    ASSIGNVAL(cellType_124, id, val)
-    ASSIGNVAL(cellType_125, id, val)
-    ASSIGNVAL(cellType_126, id, val)
-    ASSIGNVAL(cellType_127, id, val)
-    ASSIGNVAL(cellType_128, id, val)
+    ASSIGNVAL(nab_129, id, val)
+    ASSIGNVAL(nab_130, id, val)
+    ASSIGNVAL(nab_131, id, val)
+    ASSIGNVAL(nab_132, id, val)
+    ASSIGNVAL(nab_133, id, val)
+    ASSIGNVAL(nab_134, id, val)
+    ASSIGNVAL(nab_135, id, val)
+    ASSIGNVAL(nab_136, id, val)
+    ASSIGNVAL(nab_137, id, val)
+    ASSIGNVAL(nab_138, id, val)
+    ASSIGNVAL(cellType_0, id, val%10)
+    ASSIGNVAL(cellType_1, id, val%10)
+    ASSIGNVAL(cellType_2, id, val%10)
+    ASSIGNVAL(cellType_3, id, val%10)
+    ASSIGNVAL(cellType_4, id, val%10)
+    ASSIGNVAL(cellType_5, id, val%10)
+    ASSIGNVAL(cellType_6, id, val%10)
+    ASSIGNVAL(cellType_7, id, val%10)
+    ASSIGNVAL(cellType_8, id, val%10)
+    ASSIGNVAL(cellType_9, id, val%10)
+    ASSIGNVAL(cellType_10, id, val%10)
+    ASSIGNVAL(cellType_11, id, val%10)
+    ASSIGNVAL(cellType_12, id, val%10)
+    ASSIGNVAL(cellType_13, id, val%10)
+    ASSIGNVAL(cellType_14, id, val%10)
+    ASSIGNVAL(cellType_15, id, val%10)
+    ASSIGNVAL(cellType_16, id, val%10)
+    ASSIGNVAL(cellType_17, id, val%10)
+    ASSIGNVAL(cellType_18, id, val%10)
+    ASSIGNVAL(cellType_19, id, val%10)
+    ASSIGNVAL(cellType_20, id, val%10)
+    ASSIGNVAL(cellType_21, id, val%10)
+    ASSIGNVAL(cellType_22, id, val%10)
+    ASSIGNVAL(cellType_23, id, val%10)
+    ASSIGNVAL(cellType_24, id, val%10)
+    ASSIGNVAL(cellType_25, id, val%10)
+    ASSIGNVAL(cellType_26, id, val%10)
+    ASSIGNVAL(cellType_27, id, val%10)
+    ASSIGNVAL(cellType_28, id, val%10)
+    ASSIGNVAL(cellType_29, id, val%10)
+    ASSIGNVAL(cellType_30, id, val%10)
+    ASSIGNVAL(cellType_31, id, val%10)
+    ASSIGNVAL(cellType_32, id, val%10)
+    ASSIGNVAL(cellType_33, id, val%10)
+    ASSIGNVAL(cellType_34, id, val%10)
+    ASSIGNVAL(cellType_35, id, val%10)
+    ASSIGNVAL(cellType_36, id, val%10)
+    ASSIGNVAL(cellType_37, id, val%10)
+    ASSIGNVAL(cellType_38, id, val%10)
+    ASSIGNVAL(cellType_39, id, val%10)
+    ASSIGNVAL(cellType_40, id, val%10)
+    ASSIGNVAL(cellType_41, id, val%10)
+    ASSIGNVAL(cellType_42, id, val%10)
+    ASSIGNVAL(cellType_43, id, val%10)
+    ASSIGNVAL(cellType_44, id, val%10)
+    ASSIGNVAL(cellType_45, id, val%10)
+    ASSIGNVAL(cellType_46, id, val%10)
+    ASSIGNVAL(cellType_47, id, val%10)
+    ASSIGNVAL(cellType_48, id, val%10)
+    ASSIGNVAL(cellType_49, id, val%10)
+    ASSIGNVAL(cellType_50, id, val%10)
+    ASSIGNVAL(cellType_51, id, val%10)
+    ASSIGNVAL(cellType_52, id, val%10)
+    ASSIGNVAL(cellType_53, id, val%10)
+    ASSIGNVAL(cellType_54, id, val%10)
+    ASSIGNVAL(cellType_55, id, val%10)
+    ASSIGNVAL(cellType_56, id, val%10)
+    ASSIGNVAL(cellType_57, id, val%10)
+    ASSIGNVAL(cellType_58, id, val%10)
+    ASSIGNVAL(cellType_59, id, val%10)
+    ASSIGNVAL(cellType_60, id, val%10)
+    ASSIGNVAL(cellType_61, id, val%10)
+    ASSIGNVAL(cellType_62, id, val%10)
+    ASSIGNVAL(cellType_63, id, val%10)
+    ASSIGNVAL(cellType_64, id, val%10)
+    ASSIGNVAL(cellType_65, id, val%10)
+    ASSIGNVAL(cellType_66, id, val%10)
+    ASSIGNVAL(cellType_67, id, val%10)
+    ASSIGNVAL(cellType_68, id, val%10)
+    ASSIGNVAL(cellType_69, id, val%10)
+    ASSIGNVAL(cellType_70, id, val%10)
+    ASSIGNVAL(cellType_71, id, val%10)
+    ASSIGNVAL(cellType_72, id, val%10)
+    ASSIGNVAL(cellType_73, id, val%10)
+    ASSIGNVAL(cellType_74, id, val%10)
+    ASSIGNVAL(cellType_75, id, val%10)
+    ASSIGNVAL(cellType_76, id, val%10)
+    ASSIGNVAL(cellType_77, id, val%10)
+    ASSIGNVAL(cellType_78, id, val%10)
+    ASSIGNVAL(cellType_79, id, val%10)
+    ASSIGNVAL(cellType_80, id, val%10)
+    ASSIGNVAL(cellType_81, id, val%10)
+    ASSIGNVAL(cellType_82, id, val%10)
+    ASSIGNVAL(cellType_83, id, val%10)
+    ASSIGNVAL(cellType_84, id, val%10)
+    ASSIGNVAL(cellType_85, id, val%10)
+    ASSIGNVAL(cellType_86, id, val%10)
+    ASSIGNVAL(cellType_87, id, val%10)
+    ASSIGNVAL(cellType_88, id, val%10)
+    ASSIGNVAL(cellType_89, id, val%10)
+    ASSIGNVAL(cellType_90, id, val%10)
+    ASSIGNVAL(cellType_91, id, val%10)
+    ASSIGNVAL(cellType_92, id, val%10)
+    ASSIGNVAL(cellType_93, id, val%10)
+    ASSIGNVAL(cellType_94, id, val%10)
+    ASSIGNVAL(cellType_95, id, val%10)
+    ASSIGNVAL(cellType_96, id, val%10)
+    ASSIGNVAL(cellType_97, id, val%10)
+    ASSIGNVAL(cellType_98, id, val%10)
+    ASSIGNVAL(cellType_99, id, val%10)
+    ASSIGNVAL(cellType_100, id, val%10)
+    ASSIGNVAL(cellType_101, id, val%10)
+    ASSIGNVAL(cellType_102, id, val%10)
+    ASSIGNVAL(cellType_103, id, val%10)
+    ASSIGNVAL(cellType_104, id, val%10)
+    ASSIGNVAL(cellType_105, id, val%10)
+    ASSIGNVAL(cellType_106, id, val%10)
+    ASSIGNVAL(cellType_107, id, val%10)
+    ASSIGNVAL(cellType_108, id, val%10)
+    ASSIGNVAL(cellType_109, id, val%10)
+    ASSIGNVAL(cellType_110, id, val%10)
+    ASSIGNVAL(cellType_111, id, val%10)
+    ASSIGNVAL(cellType_112, id, val%10)
+    ASSIGNVAL(cellType_113, id, val%10)
+    ASSIGNVAL(cellType_114, id, val%10)
+    ASSIGNVAL(cellType_115, id, val%10)
+    ASSIGNVAL(cellType_116, id, val%10)
+    ASSIGNVAL(cellType_117, id, val%10)
+    ASSIGNVAL(cellType_118, id, val%10)
+    ASSIGNVAL(cellType_119, id, val%10)
+    ASSIGNVAL(cellType_120, id, val%10)
+    ASSIGNVAL(cellType_121, id, val%10)
+    ASSIGNVAL(cellType_122, id, val%10)
+    ASSIGNVAL(cellType_123, id, val%10)
+    ASSIGNVAL(cellType_124, id, val%10)
+    ASSIGNVAL(cellType_125, id, val%10)
+    ASSIGNVAL(cellType_126, id, val%10)
+    ASSIGNVAL(cellType_127, id, val%10)
+    ASSIGNVAL(cellType_128, id, val%10)
+    ASSIGNVAL(cellType_129, id, val%10)
+    ASSIGNVAL(cellType_130, id, val%10)
+    ASSIGNVAL(cellType_131, id, val%10)
+    ASSIGNVAL(cellType_132, id, val%10)
+    ASSIGNVAL(cellType_133, id, val%10)
+    ASSIGNVAL(cellType_134, id, val%10)
+    ASSIGNVAL(cellType_135, id, val%10)
+    ASSIGNVAL(cellType_136, id, val%10)
+    ASSIGNVAL(cellType_137, id, val%10)
+    ASSIGNVAL(cellType_138, id, val%10)
 
     std::cerr << "\nUnexpected nab value";
     assert(false);
     
 }
 
+void setConfiguration(){
+    for(int i=0;i<conf.varName.size(); i++){
+        mapGlobalValue(conf.varName.at(i), conf.varValue.at(i));
+    }
+}
+
+void resetConfiguration(){
+    for(int i=0;i<conf.varName.size(); i++){
+        mapGlobalValue(conf.varName.at(i), 0);
+    }
+    mapGlobalValue("base_0", 8);
+
+}
