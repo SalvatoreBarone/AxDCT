@@ -110,6 +110,7 @@ Supported metrics:
 - MSE
 - MD
 - AD
+- MSSIM
 ```
 
 Now we decide to see the effect of the algorithm BC12, so we run:
@@ -154,6 +155,18 @@ This compile process will generate a new executable, too:
 * ```mutants_eval``` - To evaluate metrics onto the AxDCT mutation.
 
 In particular, this executable introduces the flag -n, used to assign a static value to a global variable. The list of the available global variables can be found inside the csv produced by clang-chimera.
+
+### Compile ZyBo Drivers
+It is possible to build drivers for Linux as MMAP on /dev/mem, meant to be used together with the hardware design of [AxC-Adders_vhdl](https://github.com/andreaaletto/AxC-Adders_vhdl), implemented as AXI peripheral on armhf architecture.
+
+In order to include zybo drivers in the build process, you need to re-run cmake as follows:
+```
+$ cd $HOME/AxDCT/code/build
+$ cmake .. -G Ninja -DAXDCT_BUILD_ZYBO=ON
+$ ninja
+```
+
+TODO: documentation
 
 #### LICENSE
 --------
