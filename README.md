@@ -1,6 +1,8 @@
 # AxDCT
 [![Build Status](https://travis-ci.com/andreaaletto/AxDCT.svg?token=vSvxrpZbWB2t5qeWZ4CJ&branch=master)](https://travis-ci.com/andreaaletto/AxDCT) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+This repo is part of the thesis activity ***Reconfigurable hardware designs: analysis and implementation of approximate JPEG compression variants*** by [Andrea Aletto](https://www.linkedin.com/in/andrea-aletto)
+
 AxDCT is a collection of inexact DCT algorithms useful to evaluate the effect of _Approximate Computing_ techniques on _Image Computing_.
 This software suite is meant be used together with [IIDEAA](http://wpage.unina.it/mario.barbareschi/old/iideaa/handson/) tools (_Clang-Chimera_ and _Bellerophon_), but, however, it is possible to use it standalone.
 
